@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ExcepcionesPropias.ExcepcionesEntidades;
+
+namespace LogicaNegocio.ValueObjects.Usuario
+{
+    public class Contrasenia
+    {
+        public string Valor {  get; private set; }
+
+        public Contrasenia(string valor)
+        {
+            Valor = valor;
+            Validar();
+        }
+
+        private void Validar() 
+        {
+            if (Valor.ToString().Length < 8) 
+            {
+                throw new UsuarioException("La contraseña debe contener al menos 8 caracteres.");
+            }
+        }
+    }
+}
