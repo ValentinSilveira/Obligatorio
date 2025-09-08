@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ExcepcionesPropias.ExcepcionesEntidades
 {
-    internal class GastoException
+    public class GastoException : Exception
     {
+        public GastoException() { }
+
+        public GastoException(string message) : base(message) { }
+
+        public GastoException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ExcepcionesPropias.ExcepcionesEntidades
 {
-    internal class UnicoException
+    public class UnicoException : Exception
     {
+        public UnicoException() { }
+
+        public UnicoException(string message) : base(message) { }
+
+        public UnicoException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

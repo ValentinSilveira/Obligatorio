@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ExcepcionesPropias.ExcepcionesEntidades
 {
-    internal class RolException
+    public class RolException : Exception
     {
+        public RolException() { }
+
+        public RolException(string message) : base(message) { }
+
+        public RolException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

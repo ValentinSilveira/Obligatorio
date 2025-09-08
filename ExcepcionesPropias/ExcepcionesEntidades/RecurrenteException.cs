@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ExcepcionesPropias.ExcepcionesEntidades
 {
-    internal class RecurrenteException
+    public class RecurrenteException : Exception
     {
+        public RecurrenteException() { }
+
+        public RecurrenteException(string message) : base(message) { }
+
+        public RecurrenteException(string message, Exception innerException) : base(message, innerException) { }
     }
 }
