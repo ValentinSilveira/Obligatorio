@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogicaNegocio.EntidadesNegocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs
 {
-    internal class EquipoDTO
+    public class EquipoDTO
     {
+        public string Nombre;
+        public List<Usuario> Usuarios { get; set; }
     }
 }

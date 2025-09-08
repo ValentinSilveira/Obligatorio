@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CasosDeUsos.DTOs;
+using LogicaNegocio.EntidadesNegocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,13 @@ namespace LogicaAplicacion.Mappers
 {
     internal class MapperGasto
     {
+        public static Gasto GastoDTOToGasto(GastoDTO gastoDTO) 
+        {
+            if(gastoDTO == null)
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new Gasto(gastoDTO.Nombre, gastoDTO.Descripcion);
+        }
     }
 }
