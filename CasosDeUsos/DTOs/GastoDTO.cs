@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs
 {
-    internal class GastoDTO
+    public class GastoDTO
     {
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
     }
 }

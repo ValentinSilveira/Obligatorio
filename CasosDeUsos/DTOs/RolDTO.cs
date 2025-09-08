@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs
 {
-    internal class RolDTO
+    public class RolDTO
     {
+        public string Descripcion { get; set; }
     }
 }
