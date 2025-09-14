@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs
 {
-    public class RolDTO
+    public class UsuarioLoginDTO
     {
-        public int Id { get; set; }
+        public string Email { get; set; }
         public string Descripcion { get; set; }
     }
 }

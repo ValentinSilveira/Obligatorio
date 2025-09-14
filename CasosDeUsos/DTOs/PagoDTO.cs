@@ -1,5 +1,5 @@
 ﻿
-using LogicaNegocio.EntidadesNegocio;
+//using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +10,9 @@ namespace CasosDeUsos.DTOs
 {
     public class PagoDTO
     {
-        public Gasto TipoGasto { get; set; }
-        public Usuario Usuario { get; set; }
-        public string Descripcion { get; set; }
-        public int Monto { get; set; }
+        //public Gasto TipoGasto { get; set; }
+        //public Usuario Usuario { get; set; }
+        //public string Descripcion { get; set; }
+        //public int Monto { get; set; }
     }
 }

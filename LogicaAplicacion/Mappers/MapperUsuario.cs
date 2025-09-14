@@ -1,4 +1,5 @@
 ﻿using CasosDeUsos.DTOs;
+using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,21 @@ namespace LogicaAplicacion.Mappers
             {
                 throw new ArgumentNullException("Datos incorrectos");
             }
-            return new Usuario(usuarioDTO.Nombre, usuarioDTO.Apellido, usuarioDTO.Contrasenia, usuarioDTO.Email);
+            return new Usuario(usuarioDTO.Email, usuarioDTO.Contrasenia);
+        }
+
+        public static UsuarioLoginDTO UsuarioToUsuarioListadoDTO(Usuario usuario)
+        {
+            if (usuario == null)
+            {
+                throw new UsuarioException("El usuario y/o la password es incorrecta");
+
+            }
+            return new UsuarioLoginDTO()
+            {
+                Email = usuario.Email.Valor,
+                Descripcion = usuario.Rol.Descripcion
+            };
         }
     }
 }
