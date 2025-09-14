@@ -9,7 +9,7 @@ namespace LogicaNegocio.ValueObjects.Usuario
 {
     public class Contrasenia
     {
-        public string Valor {  get; private set; }
+        public string Valor {  get; init; }
 
         public Contrasenia(string valor)
         {

@@ -10,18 +10,9 @@ namespace LogicaNegocio.EntidadesNegocio
     public class Rol : IValidable
     {
         public int Id { get; set; }
-        private static int s_ultId;
         public string Descripcion { get; set; }
+        private Rol() { }
 
-        public Rol(string descripcion) 
-        {
-            Id = s_ultId++;
-            Descripcion = descripcion;
-            Validar();
-        }
 
-        private void Validar()
-        {
-        }
     }
 }

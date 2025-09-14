@@ -20,15 +20,12 @@ namespace LogicaNegocio.ValueObjects.Usuario
      */
     public class Email
     {
-        public string Nombre { get; private set; }
-        public string Apellido {  get; private set; }
-        public string Dominio = "@laEmpresa.com";
+        public string Valor { get; init; }
 
-        public Email(string nombre, string apellido)
+        public Email(string valor)
         {
-            Nombre = nombre;
-            Apellido = apellido;
-            Validar();
+            Valor = valor;
+            //Validar();
         }
 
         private void Validar()

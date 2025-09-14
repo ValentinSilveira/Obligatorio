@@ -12,5 +12,6 @@ namespace CasosDeUsos.DTOs
         public string Apellido { get; set; }
         public string Contrasenia { get; set; }
         public string Email { get; set; }
+        public int RolId { get; set; }
     }
 }

@@ -10,13 +10,14 @@ namespace LogicaAplicacion.Mappers
 {
     internal class MapperRol
     {
-        public static Rol RolDTOToRol(RolDTO rolDTO)
+        public static IEnumerable<RolDTO> ListRolToListRolDTO(
+             IEnumerable<Rol> Roles)
         {
-            if (rolDTO == null)
+            return Roles.Select(r => new RolDTO()
             {
-                throw new ArgumentNullException("Datos incorrectos");
-            }
-            return new Rol(rolDTO.Descripcion);
+                Id = r.Id,
+                Descripcion = r.Descripcion
+            });
         }
     }
 }
