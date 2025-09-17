@@ -1,3 +1,10 @@
+using LogicaAccesoDatos;
+using LogicaAccesoDatos.Repositorio;
+using LogicaAplicacion.CasosUso;
+using LogicaAplicacion.InterfacesCasosUsos;
+using LogicaNegocio.interfacesRepositorios;
+using Microsoft.EntityFrameworkCore;
+
 namespace Web
 {
     public class Program
@@ -5,6 +12,14 @@ namespace Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuarioEF>();
+            builder.Services.AddScoped<IRepositorioRol, RepositorioRolEF>();
+            builder.Services.AddScoped<IListadoRoles, ListadoRoles>();
+            builder.Services.AddScoped<ILogin, Login>();
+
+            string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");
+            builder.Services.AddDbContext<EmpresaContexto>(options => options.UseSqlServer(cadenaConexion));
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

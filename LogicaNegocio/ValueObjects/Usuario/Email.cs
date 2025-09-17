@@ -1,6 +1,7 @@
 ﻿using ExcepcionesPropias.ExcepcionesEntidades;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace LogicaNegocio.ValueObjects.Usuario
         juanun@laempresa.com y si ya existiera otro igual debería ser juanun1234@laempresa.com. El número (en el
         ejemplo 1234) deberá generarse en forma aleatoria.
      */
+    [ComplexType]
     public class Email
     {
         public string Valor { get; init; }

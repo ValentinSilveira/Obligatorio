@@ -19,6 +19,8 @@ namespace LogicaNegocio.EntidadesNegocio
         public string Nombre { get; set; }
         public string Apellido { get; set; }
 
+        private Usuario() { }
+
         public Usuario(string email) 
         {
             Email = new Email(email);
@@ -29,17 +31,6 @@ namespace LogicaNegocio.EntidadesNegocio
             Email = new Email(email);
             Contrasenia = new Contrasenia(contrasenia);
         }
-
-
-
-        /*public Usuario(string nombre, string apellido, string contrasenia, string email) 
-            {
-                Nombre = nombre;
-                Apellido = apellido;
-                Contrasenia = new Contrasenia(contrasenia);
-                Email = new Email(email);
-                Validar();
-            }*/
 
         public void Validar() { }
 

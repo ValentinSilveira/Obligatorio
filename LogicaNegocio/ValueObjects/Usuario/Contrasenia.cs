@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,8 @@ using ExcepcionesPropias.ExcepcionesEntidades;
 
 namespace LogicaNegocio.ValueObjects.Usuario
 {
-    public class Contrasenia
+    [ComplexType]
+    public record Contrasenia
     {
         public string Valor {  get; init; }
 

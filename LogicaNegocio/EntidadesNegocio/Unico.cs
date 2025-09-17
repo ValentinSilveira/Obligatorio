@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.EntidadesNegocio
 {
-    internal class Unico: Pago
+    public class Unico: Pago
     {
         public DateTime FechaPago { get; set; }
         public string NroRecibo { get; set; }

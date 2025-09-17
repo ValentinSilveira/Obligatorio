@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicaAccesoDatos.Repositorio
 {
-    internal class RecurrenteRepositorio
+    public class RecurrenteRepositorio
     {
     }
 }
