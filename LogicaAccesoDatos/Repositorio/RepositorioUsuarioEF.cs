@@ -10,6 +10,12 @@ namespace LogicaAccesoDatos.Repositorio
 {
     public class RepositorioUsuarioEF : IRepositorioUsuario
     {
+        public EmpresaContexto Contexto { get; set; }
+        public RepositorioUsuarioEF(EmpresaContexto contexto)
+        {
+            Contexto = contexto;
+        }
+
         public void Add(Usuario item)
         {
             throw new NotImplementedException();
@@ -27,7 +33,9 @@ namespace LogicaAccesoDatos.Repositorio
 
         public Usuario FindById(int id)
         {
-            throw new NotImplementedException();
+            return Contexto.Usuarios
+                .Where(c => c.Id == id)
+                .SingleOrDefault();
         }
 
         public void Update(Usuario item, int id)

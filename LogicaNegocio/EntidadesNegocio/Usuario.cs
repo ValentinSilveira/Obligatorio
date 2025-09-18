@@ -19,7 +19,7 @@ namespace LogicaNegocio.EntidadesNegocio
         public string Nombre { get; set; }
         public string Apellido { get; set; }
 
-        private Usuario() { }
+        public Usuario() { }
 
         public Usuario(string email) 
         {

@@ -50,5 +50,20 @@ namespace LogicaAplicacion.Mappers
                 Descripcion = usuario.Rol.Descripcion
             };
         }
+
+        public static DetalleClienteDTO ClienteToDetalleClienteDTO(Usuario usuario)
+        {
+            if (usuario == null)
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new DetalleClienteDTO()
+            {
+                Id = usuario.Id,
+                Email = usuario.Email.Valor,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido
+            };
+        }
     }
 }
