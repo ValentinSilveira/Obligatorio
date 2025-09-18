@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace LogicaAccesoDatos.Repositorio
 {
-    public class RepositorioUsuarioEF : IRepositorioUsuario
+    public class GastoRepositorioEF : IRepositorioRol
     {
-        public void Add(Usuario item)
+        public void Add(Rol item)
         {
             throw new NotImplementedException();
         }
@@ -20,27 +20,17 @@ namespace LogicaAccesoDatos.Repositorio
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Usuario> FindAll()
+        public IEnumerable<Rol> FindAll()
         {
             throw new NotImplementedException();
         }
 
-        public Usuario FindById(int id)
+        public Rol FindById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(Usuario item, int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Usuario FindByEmailAndPassword(string email, string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ExisteEmail(string email)
+        public void Update(Rol item, int id)
         {
             throw new NotImplementedException();
         }

@@ -10,12 +10,6 @@ namespace LogicaAccesoDatos
 {
     public class EmpresaContexto : DbContext
     {
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Rol> Rol { get; set; }
-        public DbSet<Pago> Pago { get; set; }
-        public DbSet<Gasto> Gasto { get; set; }
-        public DbSet<Equipo> Equipo { get; set; }
-
         public EmpresaContexto(DbContextOptions options) : base(options)
         {
         }

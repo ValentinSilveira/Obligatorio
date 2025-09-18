@@ -1,3 +1,4 @@
+using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using LogicaAccesoDatos;
 using LogicaAccesoDatos.Repositorio;
 using LogicaAplicacion.CasosUso;
@@ -15,6 +16,8 @@ namespace Web
             builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuarioEF>();
             builder.Services.AddScoped<IRepositorioRol, RepositorioRolEF>();
             builder.Services.AddScoped<IListadoRoles, ListadoRoles>();
+            builder.Services.AddScoped<ICUAltaUsuario, CUAltaUsuario>();
+            builder.Services.AddScoped<ICUListadoUsuario, CUListadoUsuarios>();
             builder.Services.AddScoped<ILogin, Login>();
 
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");
@@ -43,7 +46,7 @@ namespace Web
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Usuario}/{action=Login}/{id?}");
 
             app.Run();
         }

@@ -1,5 +1,7 @@
 ﻿using CasosDeUsos.DTOs;
+using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaAplicacion.CasosUso;
 using LogicaAplicacion.InterfacesCasosUsos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +13,16 @@ namespace Web.Controllers
     {
         public IListadoRoles ListadoRoles { get; set; }
         public ILogin LoginUsuario { get; set; }
+        public ICUAltaUsuario CUAltaUsuario { get; set; }
+        public ICUListadoUsuario CUListadoUsuario { get; set; }
 
-        public UsuarioController(IListadoRoles listadoRoles,
-            ILogin loginUsuario
+        public UsuarioController(IListadoRoles listadoRoles, ILogin loginUsuario, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario
             )
         {            
             ListadoRoles = listadoRoles;
             LoginUsuario = loginUsuario;
+            CUAltaUsuario = cUAltaUsuario;
+            CUListadoUsuario = cUListadoUsuario;
         }
         // GET: UsuarioController
         public ActionResult Index()
@@ -40,16 +45,29 @@ namespace Web.Controllers
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(UsuarioDTO usuarioDTO)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    CUAltaUsuario.Ejecutar(usuarioDTO);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.Mensaje = "Datos incorrectos";
+                }
             }
-            catch
+            catch (UsuarioException ex)
             {
-                return View();
+                ViewBag.Mensaje = ex.Message;
             }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error";
+            }
+            return View(usuarioDTO);
         }
 
         // GET: UsuarioController/Edit/5

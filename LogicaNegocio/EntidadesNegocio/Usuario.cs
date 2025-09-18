@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.EntidadesNegocio
 {
-    public class Usuario:IValidable
+    public class Usuario:IValidable, IEquatable<Usuario>
     {
         public int Id { get; private set; }
         public Email Email { get; set; }
@@ -32,7 +32,12 @@ namespace LogicaNegocio.EntidadesNegocio
             Contrasenia = new Contrasenia(contrasenia);
         }
 
+
         public void Validar() { }
 
+        public bool Equals(Usuario? other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -17,7 +17,24 @@ namespace LogicaAplicacion.Mappers
             {
                 throw new ArgumentNullException("Datos incorrectos");
             }
-            return new Usuario(usuarioDTO.Email, usuarioDTO.Contrasenia);
+            return new Usuario(usuarioDTO.Email, usuarioDTO.Contraseña);
+        }
+
+        public static IEnumerable<ListadoUsuarioDTO> UsuarioToUsuarioListadoDTO(IEnumerable<Usuario> Usuarios)
+        {
+            List<ListadoUsuarioDTO> listadoClientes = new List<ListadoUsuarioDTO>();
+
+            foreach (Usuario usuario in Usuarios)
+            {
+                listadoClientes.Add(new ListadoUsuarioDTO()
+                {
+                    Id = usuario.Id,
+                    Email = usuario.Email.Valor,
+                    Nombre = usuario.Nombre,
+                });
+
+            }
+            return listadoClientes;
         }
 
         public static UsuarioLoginDTO UsuarioToUsuarioListadoDTO(Usuario usuario)

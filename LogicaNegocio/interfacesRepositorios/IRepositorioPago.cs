@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.interfacesRepositorios
 {
-    public interface IRepositorioUsuario : IRepositorio<Usuario>
+    public interface IRepositorioPago : IRepositorio<Pago>
     {
-        Usuario FindByEmailAndPassword(string email, string password);
-        bool ExisteEmail(string email);
+
     }
 }
