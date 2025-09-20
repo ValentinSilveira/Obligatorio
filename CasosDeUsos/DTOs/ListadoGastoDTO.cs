@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicaNegocio.InterfacesNegocio
+namespace CasosDeUsos.DTOs
 {
-    public interface IEntity
+    public class ListadoGastoDTO
     {
         public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        
     }
 }

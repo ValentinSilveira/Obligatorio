@@ -2,64 +2,61 @@
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.CasosUso;
-using LogicaAplicacion.InterfacesCasosUsos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Web.Models.Usuarios;
 
 namespace Web.Controllers
 {
-    public class UsuarioController : Controller
+    public class GastoController : Controller
     {
-        public IListadoRoles ListadoRoles { get; set; }        
-        public ICUAltaUsuario CUAltaUsuario { get; set; }
-        public ICUListadoUsuario CUListadoUsuario { get; set; }
-        public ICUBuscarUsuario CUBuscarUsuario { get; set; }
-        public ICUEliminarUsuario CUEliminarUsuario { get; set; }
-
-
-        public UsuarioController(IListadoRoles listadoRoles, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario
-,                                  ICUEliminarUsuario cUEliminarUsuario )
+        public ICUAltaGasto CUAltaGasto { get; set; }
+        public ICUListadoGasto CUListadoGasto { get; set; }
+        public ICUBuscarGasto CUBuscarGasto { get; set; }
+        public ICUEliminarGasto CUEliminarGasto { get; set; }
+        //public ICUActualizarGasto CUActualizarGasto { get; set; }
+        public GastoController(ICUAltaGasto cUAltaGasto, ICUListadoGasto cUListadoGasto, ICUBuscarGasto cUBuscarGasto
+                                 , ICUEliminarGasto cUEliminarGasto /*ICUActualizarGasto cUActualizarGasto*/)
         {
-            ListadoRoles = listadoRoles;
-            CUAltaUsuario = cUAltaUsuario;
-            CUListadoUsuario = cUListadoUsuario;
-            CUBuscarUsuario = cUBuscarUsuario;
-            CUEliminarUsuario = cUEliminarUsuario;
+            CUAltaGasto = cUAltaGasto;
+            CUListadoGasto = cUListadoGasto;
+            CUBuscarGasto = cUBuscarGasto;
+            CUEliminarGasto = cUEliminarGasto;
+            //CUActualizarGasto = cUActualizarGasto;
         }
 
-        // GET: UsuarioController
+
+        // GET: GastoController
         public ActionResult Index()
         {
-            IEnumerable<ListadoUsuarioDTO> listadoUsuarios = new List<ListadoUsuarioDTO>();
+            IEnumerable<ListadoGastoDTO> listadoGastos = new List<ListadoGastoDTO>();
             try
             {
-                listadoUsuarios = CUListadoUsuario.Ejecutar();
+                listadoGastos = CUListadoGasto.Ejecutar();
             }
             catch (Exception ex)
             {
                 ViewBag.Mensaje = "Error";
             }
 
-            return View(listadoUsuarios);
+            return View(listadoGastos);
         }
 
-        // GET: UsuarioController/Details/5
+        // GET: GastoController/Details/5
         public ActionResult Details(int id)
         {
-            DetalleUsuarioDTO detalleUsuario = new DetalleUsuarioDTO();
+            DetalleGastoDTO detalleGasto = new DetalleGastoDTO();
             try
             {
                 if (id > 0)
                 {
-                    detalleUsuario = CUBuscarUsuario.Ejecutar(id);
+                    detalleGasto = CUBuscarGasto.Ejecutar(id);
                 }
                 else
                 {
-                    throw new ArgumentException("Id no válido");
+                    throw new ArgumentException("Gasto no válido");
                 }
             }
-            catch (UsuarioException ex)
+            catch (GastoException ex)
             {
                 ViewBag.Mensaje = ex.Message;
             }
@@ -75,25 +72,25 @@ namespace Web.Controllers
             {
                 ViewBag.Mensaje = "Error";
             }
-            return View(detalleUsuario);
+            return View(detalleGasto);
         }
 
-        // GET: UsuarioController/Create
+        // GET: GastoController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: UsuarioController/Create
+        // POST: GastoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(UsuarioDTO usuarioDTO)
+        public ActionResult Create(GastoDTO gastoDTO)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    CUAltaUsuario.Ejecutar(usuarioDTO);
+                    CUAltaGasto.Ejecutar(gastoDTO);
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -101,7 +98,7 @@ namespace Web.Controllers
                     ViewBag.Mensaje = "Datos incorrectos";
                 }
             }
-            catch (UsuarioException ex)
+            catch (GastoException ex)
             {
                 ViewBag.Mensaje = ex.Message;
             }
@@ -109,16 +106,16 @@ namespace Web.Controllers
             {
                 ViewBag.Mensaje = "Error";
             }
-            return View(usuarioDTO);
+            return View(gastoDTO);
         }
 
-        // GET: UsuarioController/Edit/5
+        // GET: GastoController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: UsuarioController/Edit/5
+        // POST: GastoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -133,15 +130,15 @@ namespace Web.Controllers
             }
         }
 
-        // GET: UsuarioController/Delete/5
+        // GET: GastoController/Delete/5
         public ActionResult Delete(int id)
         {
-            DetalleUsuarioDTO detalleUsuario = new DetalleUsuarioDTO();
+            DetalleGastoDTO detalleGasto = new DetalleGastoDTO();
             try
             {
                 if (id > 0)
                 {
-                    detalleUsuario = CUBuscarUsuario.Ejecutar(id);
+                    detalleGasto = CUBuscarGasto.Ejecutar(id);
                 }
                 else
                 {
@@ -164,19 +161,19 @@ namespace Web.Controllers
             {
                 ViewBag.Mensaje = "Error";
             }
-            return View(detalleUsuario);
+            return View(detalleGasto);
         }
 
-        // POST: UsuarioController/Delete/5
+        // POST: GastoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, DetalleUsuarioDTO detalleUsuario)
+        public ActionResult Delete(int id, DetalleGastoDTO detalleGasto)
         {
             try
             {
                 if (id > 0)
                 {
-                    CUEliminarUsuario.Ejecutar(id);
+                    CUEliminarGasto.Ejecutar(id);
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -184,7 +181,7 @@ namespace Web.Controllers
                     throw new ArgumentException("Id no válido");
                 }
             }
-            catch (UsuarioException ex)
+            catch (GastoException ex)
             {
                 ViewBag.Mensaje = ex.Message;
             }
@@ -196,13 +193,7 @@ namespace Web.Controllers
             {
                 ViewBag.Mensaje = "Error";
             }
-            return View(detalleUsuario);
-        }
-
-        public ActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("login");
+            return View(detalleGasto);
         }
     }
 }

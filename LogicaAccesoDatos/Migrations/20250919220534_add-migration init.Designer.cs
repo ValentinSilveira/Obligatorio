@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LogicaAccesoDatos.Migrations
 {
-    [DbContext(typeof(EmpresaContexto))]
+    [DbContext(typeof(ObligatorioContexto))]
     [Migration("20250919220534_add-migration init")]
     partial class addmigrationinit
     {

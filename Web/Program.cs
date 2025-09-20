@@ -1,3 +1,4 @@
+﻿
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using LogicaAccesoDatos;
 using LogicaAccesoDatos.Repositorio;
@@ -13,29 +14,44 @@ namespace Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // 🔧 Registro de servicios
+            builder.Services.AddScoped<ICUAltaUsuario, CUAltaUsuario>();
+            builder.Services.AddScoped<ICUAltaGasto, CUAltaGasto>();
+            builder.Services.AddScoped<ICUBuscarUsuario, CUBuscarUsuario>();
+            builder.Services.AddScoped<ICUBuscarGasto, CUBuscarGasto>();
+            builder.Services.AddScoped<ICUListadoUsuario, CUListadoUsuarios>();
+            builder.Services.AddScoped<ICUListadoGasto, CUListadoGasto>();
+            builder.Services.AddScoped<ICUEliminarUsuario, CUEliminarUsuario>();
+            builder.Services.AddScoped<ICUEliminarGasto, CUEliminarGasto>();
             builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuarioEF>();
+            builder.Services.AddScoped<IRepositorioGasto, GastoRepositorioEF>();
             builder.Services.AddScoped<IRepositorioRol, RepositorioRolEF>();
             builder.Services.AddScoped<IListadoRoles, ListadoRoles>();
-            builder.Services.AddScoped<ICUAltaUsuario, CUAltaUsuario>();
-            builder.Services.AddScoped<ICUListadoUsuario, CUListadoUsuarios>();
             builder.Services.AddScoped<ILogin, CULogin>();
-            builder.Services.AddScoped<ICUBuscarUsuario, CUBuscarUsuario>();
 
-
+            // 🔧 Configuración de EF Core
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");
-            builder.Services.AddDbContext<EmpresaContexto>(options => options.UseSqlServer(cadenaConexion));
+            builder.Services.AddDbContext<ObligatorioContexto>(options => options.UseSqlServer(cadenaConexion));
 
+            // 🔧 Configuración de sesión
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
-            // Add services to the container.
+            // 🔧 MVC
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // 🔧 Middleware
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -44,13 +60,18 @@ namespace Web
 
             app.UseRouting();
 
+            app.UseSession(); // ✅ Habilita el uso de sesiones
+
             app.UseAuthorization();
 
+            // 🔧 Rutas
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Usuario}/{action=Login}/{id?}");
+                pattern: "{controller=Home}/{action=Login}/{id?}");
 
             app.Run();
         }
     }
 }
+
+

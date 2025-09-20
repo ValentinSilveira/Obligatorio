@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LogicaAccesoDatos.Migrations
 {
-    [DbContext(typeof(EmpresaContexto))]
+    [DbContext(typeof(ObligatorioContexto))]
     partial class EmpresaContextoModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

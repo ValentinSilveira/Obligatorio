@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.EntidadesNegocio
 {
-    public class Usuario:IEntity
+    public class Usuario:IValidable, IEquatable<Usuario>
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string Email { get; set; }
         public Password Password { get; set; }
         public int RolId { get; set; }
@@ -52,5 +52,9 @@ namespace LogicaNegocio.EntidadesNegocio
 
         }
 
+        public bool Equals(Usuario? other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -10,30 +10,30 @@ using System.Threading.Tasks;
 
 namespace LogicaAplicacion.CasosUso
 {
-    public class CUEliminarUsuario : ICUEliminarUsuario
+    public class CUEliminarGasto : ICUEliminarGasto
     {
-        public IRepositorioUsuario RepoUsuario { get; set; }
+        public IRepositorioGasto RepoGasto { get; set; }
 
-        public CUEliminarUsuario(IRepositorioUsuario repoUsuario)
+        public CUEliminarGasto(IRepositorioGasto repoGasto)
         {
-            RepoUsuario = repoUsuario;
+            RepoGasto = repoGasto;
         }
 
         public void Ejecutar(int id)
         {
-            Usuario usuario = RepoUsuario.FindById(id);
+            Gasto gasto = RepoGasto.FindById(id);
             if (id > 0)
             {
-                if (usuario != null)
+                if (gasto != null)
                 {
-                    RepoUsuario.Delete(usuario);
+                    RepoGasto.Delete(gasto);
                 }
                 else
                 {
-                    throw new UsuarioException("El usuario con ese id no existe");
+                    throw new GastoException("El gasto con ese id no existe");
                 }
             }
-            else 
+            else
             {
                 throw new ArgumentException("El id es incorrecto");
             }

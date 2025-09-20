@@ -15,7 +15,7 @@ namespace LogicaAccesoDatos.Repositorio
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public void Delete(Rol item)
         {
             throw new NotImplementedException();
         }
@@ -30,7 +30,7 @@ namespace LogicaAccesoDatos.Repositorio
             throw new NotImplementedException();
         }
 
-        public void Update(Rol item, int id)
+        public void Update(Rol item)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
-﻿using LogicaNegocio.InterfacesNegocio;
+﻿using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaNegocio.InterfacesNegocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,26 @@ namespace LogicaNegocio.EntidadesNegocio
 
         public Gasto(){}
 
-        private void Validar()
+        public void Validar()
         {
-           
+            ValidarNombre();
+            ValidarDescripcion();
+        }
+        private void ValidarNombre()
+        {
+            if (string.IsNullOrEmpty(Nombre))
+            {
+                throw new UsuarioException("El nombre no puede estar vacío.");
+            }
+
+        }
+        private void ValidarDescripcion()
+        {
+            if (string.IsNullOrEmpty(Nombre))
+            {
+                throw new UsuarioException("El apellido no puede estar vacío.");
+            }
+
         }
     }
 }

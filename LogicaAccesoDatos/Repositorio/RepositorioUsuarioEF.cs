@@ -1,6 +1,7 @@
 ﻿using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,9 @@ namespace LogicaAccesoDatos.Repositorio
 {
     public class RepositorioUsuarioEF : IRepositorioUsuario
     {
-        public EmpresaContexto Contexto { get; set; }
+        public ObligatorioContexto Contexto { get; set; }
 
-        public RepositorioUsuarioEF(EmpresaContexto contexto)
+        public RepositorioUsuarioEF(ObligatorioContexto contexto)
         {
             Contexto = contexto;
         }
@@ -54,6 +55,7 @@ namespace LogicaAccesoDatos.Repositorio
         public Usuario FindById(int id)
         {
             return Contexto.Usuarios
+                .Include(u => u.Rol)
                 .Where(c => c.Id == id)
                 .SingleOrDefault();
         }
@@ -63,9 +65,11 @@ namespace LogicaAccesoDatos.Repositorio
             throw new NotImplementedException();
         }
 
-        public Usuario FindByEmailAndPassword(string name, string password)
+        public Usuario FindByEmailAndPassword(string email, string password)
         {
-            throw new NotImplementedException();
+            return Contexto.Usuarios
+                    .Include(u => u.Rol)
+                    .FirstOrDefault(u => u.Email == email && u.Password.Valor == password);
         }
     }
 }

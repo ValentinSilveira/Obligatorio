@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LogicaAccesoDatos
 {
-    public class EmpresaContexto : DbContext
+    public class ObligatorioContexto : DbContext
     {
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
@@ -16,7 +16,7 @@ namespace LogicaAccesoDatos
         public DbSet<Equipo> Equipos { get; set; }
         public DbSet<Gasto> Gastos { get; set; }
 
-        public EmpresaContexto(DbContextOptions options) : base(options){}
+        public ObligatorioContexto(DbContextOptions options) : base(options){}
 
 
     }

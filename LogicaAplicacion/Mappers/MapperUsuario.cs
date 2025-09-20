@@ -20,7 +20,6 @@ namespace LogicaAplicacion.Mappers
             }
             return new Usuario(usuarioDTO.Email, usuarioDTO.Contraseña);
         }
-
         public static IEnumerable<ListadoUsuarioDTO> UsuarioToUsuarioListadoDTO(IEnumerable<Usuario> Usuarios)
         {
             List<ListadoUsuarioDTO> listadoClientes = new List<ListadoUsuarioDTO>();
@@ -37,7 +36,6 @@ namespace LogicaAplicacion.Mappers
             }
             return listadoClientes;
         }
-
         public static UsuarioLoginDTO UsuarioToUsuarioListadoDTO(Usuario usuario)
         {
             if (usuario == null)
@@ -48,25 +46,10 @@ namespace LogicaAplicacion.Mappers
             return new UsuarioLoginDTO()
             {
                 Email = usuario.Email,
-                NombreRol = usuario.Rol.Descripcion
+                NombreRol = usuario.Rol?.Descripcion ?? "Sin rol"
             };
-        }
 
-        public static CasosDeUsos.DTOs.DetalleUsuarioDTO ClienteToDetalleClienteDTO(Usuario usuario)
-        {
-            if (usuario == null)
-            {
-                throw new ArgumentNullException("Datos incorrectos");
-            }
-            return new CasosDeUsos.DTOs.DetalleUsuarioDTO()
-            {
-                Id = usuario.Id,
-                Email = usuario.Email,
-                Nombre = usuario.Nombre,
-                Apellido = usuario.Apellido
-            };
         }
-
         public static DetalleUsuarioDTO UsuarioToDetalleUsuarioDTO(Usuario usuario)
         {
             if (usuario == null)

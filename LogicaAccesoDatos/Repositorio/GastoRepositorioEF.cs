@@ -8,29 +8,47 @@ using System.Threading.Tasks;
 
 namespace LogicaAccesoDatos.Repositorio
 {
-    public class GastoRepositorioEF : IRepositorioRol
+    public class GastoRepositorioEF : IRepositorioGasto
     {
-        public void Add(Rol item)
+        public ObligatorioContexto Contexto { get; set; }
+        public GastoRepositorioEF(ObligatorioContexto contexto)
         {
-            throw new NotImplementedException();
+            Contexto = contexto;
+        }
+        public void Add(Gasto item)
+        {
+            item.Validar();
+            Gasto gasto = FindById(item.Id);
+            if (gasto == null)
+            {
+                Contexto.Gastos.Add(item);
+                Contexto.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("El gasto ya existe");
+            }
         }
 
-        public void Delete(int id)
+        public void Delete(Gasto item)
         {
-            throw new NotImplementedException();
+            Contexto.Gastos.Remove(item);
+            Contexto.SaveChanges();
         }
 
-        public IEnumerable<Rol> FindAll()
+        public IEnumerable<Gasto> FindAll()
         {
-            throw new NotImplementedException();
+            return Contexto.Gastos;
         }
 
-        public Rol FindById(int id)
+        public Gasto FindById(int id)
         {
-            throw new NotImplementedException();
+            return Contexto.Gastos
+                .Where(c => c.Id == id)
+                .SingleOrDefault();
         }
 
-        public void Update(Rol item, int id)
+        public void Update(Gasto item)
         {
             throw new NotImplementedException();
         }
