@@ -1,5 +1,6 @@
 ﻿using CasosDeUsos.DTOs;
 using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaAplicacion.CasosUso;
 using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace LogicaAplicacion.Mappers
                 listadoClientes.Add(new ListadoUsuarioDTO()
                 {
                     Id = usuario.Id,
-                    Email = usuario.Email.Valor,
+                    Email = usuario.Email,
                     Nombre = usuario.Nombre,
                 });
 
@@ -46,24 +47,41 @@ namespace LogicaAplicacion.Mappers
             }
             return new UsuarioLoginDTO()
             {
-                Email = usuario.Email.Valor,
-                Descripcion = usuario.Rol.Descripcion
+                Email = usuario.Email,
+                NombreRol = usuario.Rol.Descripcion
             };
         }
 
-        public static DetalleClienteDTO ClienteToDetalleClienteDTO(Usuario usuario)
+        public static CasosDeUsos.DTOs.DetalleUsuarioDTO ClienteToDetalleClienteDTO(Usuario usuario)
         {
             if (usuario == null)
             {
                 throw new ArgumentNullException("Datos incorrectos");
             }
-            return new DetalleClienteDTO()
+            return new CasosDeUsos.DTOs.DetalleUsuarioDTO()
             {
                 Id = usuario.Id,
-                Email = usuario.Email.Valor,
+                Email = usuario.Email,
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido
             };
+        }
+
+        public static DetalleUsuarioDTO UsuarioToDetalleUsuarioDTO(Usuario usuario)
+        {
+            if (usuario == null)
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new DetalleUsuarioDTO()
+            {
+                Id = usuario.Id,
+                Email = usuario.Email,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                DescripcionRol = usuario.Rol.Descripcion
+            };
+            
         }
     }
 }

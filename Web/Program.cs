@@ -18,7 +18,9 @@ namespace Web
             builder.Services.AddScoped<IListadoRoles, ListadoRoles>();
             builder.Services.AddScoped<ICUAltaUsuario, CUAltaUsuario>();
             builder.Services.AddScoped<ICUListadoUsuario, CUListadoUsuarios>();
-            builder.Services.AddScoped<ILogin, Login>();
+            builder.Services.AddScoped<ILogin, CULogin>();
+            builder.Services.AddScoped<ICUBuscarUsuario, CUBuscarUsuario>();
+
 
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");
             builder.Services.AddDbContext<EmpresaContexto>(options => options.UseSqlServer(cadenaConexion));

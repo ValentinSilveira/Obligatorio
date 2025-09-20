@@ -9,8 +9,8 @@ namespace LogicaNegocio.interfacesRepositorios
     public interface IRepositorio<T>
     {
         void Add(T item);
-        void Delete(int id);
-        void Update(T item, int id);
+        void Delete(T item);
+        void Update(T item);
         T FindById(int id);
         IEnumerable<T> FindAll();
     }

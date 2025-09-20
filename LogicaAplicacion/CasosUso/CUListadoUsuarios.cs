@@ -14,6 +14,7 @@ namespace LogicaAplicacion.CasosUso
     public class CUListadoUsuarios : ICUListadoUsuario
     {
         public IRepositorioUsuario RepoCliente { get; set; }
+        public ICUListadoUsuario CUListadoUsuario { get; set; }
 
         public CUListadoUsuarios(IRepositorioUsuario repoCliente)
         {

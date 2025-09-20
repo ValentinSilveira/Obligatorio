@@ -15,25 +15,67 @@ namespace Web.Controllers
         public ILogin LoginUsuario { get; set; }
         public ICUAltaUsuario CUAltaUsuario { get; set; }
         public ICUListadoUsuario CUListadoUsuario { get; set; }
+        public ICUBuscarUsuario CUBuscarUsuario { get; set; }
 
-        public UsuarioController(IListadoRoles listadoRoles, ILogin loginUsuario, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario
+
+        public UsuarioController(IListadoRoles listadoRoles, ILogin loginUsuario, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario
             )
-        {            
+        {
             ListadoRoles = listadoRoles;
             LoginUsuario = loginUsuario;
             CUAltaUsuario = cUAltaUsuario;
             CUListadoUsuario = cUListadoUsuario;
+            CUBuscarUsuario = cUBuscarUsuario;
         }
+
         // GET: UsuarioController
         public ActionResult Index()
         {
-            return View();
+            IEnumerable<ListadoUsuarioDTO> listadoUsuarios = new List<ListadoUsuarioDTO>();
+            try
+            {
+                listadoUsuarios = CUListadoUsuario.Ejecutar();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error";
+            }
+
+            return View(listadoUsuarios);
         }
 
         // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            DetalleUsuarioDTO detalleCliente = new DetalleUsuarioDTO();
+            try
+            {
+                if (id > 0)
+                {
+                    detalleCliente = CUBuscarUsuario.Ejecutar(id);
+                }
+                else
+                {
+                    throw new ArgumentException("Id no válido");
+                }
+            }
+            catch (UsuarioException ex)
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (ArgumentNullException ex)
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error";
+            }
+            return View(detalleCliente);
         }
 
         // GET: UsuarioController/Create
@@ -115,12 +157,11 @@ namespace Web.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            UsuarioViewModel usuarioVM = new UsuarioViewModel();
+            UsuarioLoginViewModel usuarioVM = new UsuarioLoginViewModel();
             return View(usuarioVM);
-
         }
         [HttpPost]
-        public ActionResult Login(UsuarioViewModel usuarioVM)
+        public ActionResult Login(UsuarioLoginViewModel usuarioVM)
         {
             try
             {
@@ -128,7 +169,7 @@ namespace Web.Controllers
                     usuarioVM.Password);
                 if (usuarioDTO != null)
                 {
-                    HttpContext.Session.SetString("Rol", usuarioDTO.Descripcion);
+                    HttpContext.Session.SetString("Rol", usuarioDTO.NombreRol);
                     HttpContext.Session.SetString("Email", usuarioDTO.Email);
                     return RedirectToAction("Index", "Home");
                 }
@@ -142,6 +183,7 @@ namespace Web.Controllers
                 ViewBag.Mensaje = "Error";
             }
             return View();
+
         }
         public ActionResult Logout()
         {

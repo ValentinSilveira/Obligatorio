@@ -9,6 +9,6 @@ namespace CasosDeUsos.DTOs
     public class UsuarioLoginDTO
     {
         public string Email { get; set; }
-        public string Descripcion { get; set; }
+        public string NombreRol { get; set; }
     }
 }

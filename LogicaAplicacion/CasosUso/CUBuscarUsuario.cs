@@ -1,4 +1,6 @@
-﻿using ExcepcionesPropias.ExcepcionesEntidades;
+﻿using CasosDeUsos.DTOs;
+using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
+using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.Mappers;
 using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
@@ -11,13 +13,17 @@ using System.Threading.Tasks;
 
 namespace LogicaAplicacion.CasosUso
 {
-    public class CUBuscarCliente
+    public class CUBuscarUsuario : ICUBuscarUsuario
     {
         public IRepositorioUsuario RepoUsuario { get; set; }
 
-        public CUBuscarCliente(IRepositorioUsuario repoUsuario)
+        public CUBuscarUsuario(IRepositorioUsuario repoUsuario)
         {
             RepoUsuario = repoUsuario;
+        }
+
+        public CUBuscarUsuario()
+        {
         }
 
         public DetalleUsuarioDTO Ejecutar(int id) 

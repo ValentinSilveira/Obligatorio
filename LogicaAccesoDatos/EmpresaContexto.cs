@@ -10,7 +10,14 @@ namespace LogicaAccesoDatos
 {
     public class EmpresaContexto : DbContext
     {
-        public DbSet<Usuario> Usuarios { get; set; } // Cambiado de private a public
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Rol> Roles { get; set; }
+        public DbSet<Pago> Pagos { get; set; }
+        public DbSet<Equipo> Equipos { get; set; }
+        public DbSet<Gasto> Gastos { get; set; }
+
         public EmpresaContexto(DbContextOptions options) : base(options){}
+
+
     }
 }

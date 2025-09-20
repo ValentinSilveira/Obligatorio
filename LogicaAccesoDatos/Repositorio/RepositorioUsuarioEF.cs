@@ -1,4 +1,5 @@
-﻿using LogicaNegocio.EntidadesNegocio;
+﻿using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace LogicaAccesoDatos.Repositorio
     public class RepositorioUsuarioEF : IRepositorioUsuario
     {
         public EmpresaContexto Contexto { get; set; }
+
         public RepositorioUsuarioEF(EmpresaContexto contexto)
         {
             Contexto = contexto;
@@ -18,17 +20,35 @@ namespace LogicaAccesoDatos.Repositorio
 
         public void Add(Usuario item)
         {
-            throw new NotImplementedException();
+            item.Validar();
+            Usuario usuario = FindByEmailAndPassword(item.Email);
+            if (usuario == null)
+            {
+                Contexto.Usuarios.Add(item);
+                Contexto.SaveChanges();
+            }
+            else
+            {
+                throw new UsuarioException("El rut ya existe");
+            }
         }
 
-        public void Delete(int id)
+        private Usuario FindByEmailAndPassword(string email)
         {
-            throw new NotImplementedException();
+            return Contexto.Usuarios
+                .Where(c => c.Email == email)
+                .SingleOrDefault();
+        }
+
+        public void Delete(Usuario item)
+        {
+            Contexto.Usuarios.Remove(item);
+            Contexto.SaveChanges();
         }
 
         public IEnumerable<Usuario> FindAll()
         {
-            throw new NotImplementedException();
+            return Contexto.Usuarios;
         }
 
         public Usuario FindById(int id)
@@ -38,17 +58,12 @@ namespace LogicaAccesoDatos.Repositorio
                 .SingleOrDefault();
         }
 
-        public void Update(Usuario item, int id)
+        public void Update(Usuario item)
         {
             throw new NotImplementedException();
         }
 
-        public Usuario FindByEmailAndPassword(string email, string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ExisteEmail(string email)
+        public Usuario FindByEmailAndPassword(string name, string password)
         {
             throw new NotImplementedException();
         }

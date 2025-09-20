@@ -1,4 +1,5 @@
-﻿using LogicaNegocio.InterfacesNegocio;
+﻿using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaNegocio.InterfacesNegocio;
 using LogicaNegocio.ValueObjects.Usuario;
 using System;
 using System.Collections.Generic;
@@ -9,35 +10,47 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.EntidadesNegocio
 {
-    public class Usuario:IValidable, IEquatable<Usuario>
+    public class Usuario:IEntity
     {
-        public int Id { get; private set; }
-        public Email Email { get; set; }
-        public Contrasenia Contrasenia { get; set; }
+        public int Id { get; set; }
+        public string Email { get; set; }
+        public Password Password { get; set; }
         public int RolId { get; set; }
         public Rol Rol { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-
-        public Usuario() { }
-
-        public Usuario(string email) 
+        private Usuario() { }
+        public Usuario(string email, string password) 
         {
-            Email = new Email(email);
+            Email = email;
+            Password = new Password(password);
+            Validar();
         }
 
-        public Usuario(string email, string contrasenia) 
+        public void Validar()
         {
-            Email = new Email(email);
-            Contrasenia = new Contrasenia(contrasenia);
+            ValidarNombre();
+            ValidarApellido();
+
         }
 
-
-        public void Validar() { }
-
-        public bool Equals(Usuario? other)
+        private void ValidarNombre()
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(Nombre))
+            {
+                throw new UsuarioException("El nombre no puede estar vacío.");
+            }
+
         }
+
+        private void ValidarApellido()
+        {
+            if (string.IsNullOrEmpty(Nombre))
+            {
+                throw new UsuarioException("El apellido no puede estar vacío.");
+            }
+
+        }
+
     }
 }

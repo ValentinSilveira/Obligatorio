@@ -10,7 +10,7 @@ namespace LogicaNegocio.EntidadesNegocio
     public class Equipo : IValidable
     {
         public int Id { get; set; }
-        public string Nombre;
+        public string Nombre { get; set; }
         public List<Usuario> Usuarios { get; set; }
 
         public Equipo(string nombre, List<Usuario> usuarios)

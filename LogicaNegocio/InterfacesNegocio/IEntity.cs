@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.InterfacesNegocio
 {
-    internal interface IValidable
+    public interface IEntity
     {
-        public void Validar(){ }
+        public int Id { get; set; }
     }
 }
