@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace LogicaAplicacion.CasosUso
 {
-    public class Login : ILogin
+    public class CULogin : ILogin
     {
         public IRepositorioUsuario RepoUsuarios { get; set; }
 
-        public Login(IRepositorioUsuario repoUsuarios)
+        public CULogin(IRepositorioUsuario repoUsuarios)
         {
             RepoUsuarios = repoUsuarios;
         }

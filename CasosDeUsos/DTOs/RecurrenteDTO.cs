@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs
 {
-    internal class RecurrenteDTO
+    public class RecurrenteDTO
     {
+
     }
 }

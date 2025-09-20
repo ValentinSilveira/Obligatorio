@@ -18,5 +18,37 @@ namespace LogicaAplicacion.Mappers
             }
             return new Gasto(gastoDTO.Nombre, gastoDTO.Descripcion);
         }
+
+        public static DetalleGastoDTO GastoToDetalleGastoDTO(Gasto gasto)
+        {
+            if (gasto == null)
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new DetalleGastoDTO()
+            {
+                Id = gasto.Id,
+                Nombre = gasto.Nombre,
+                Descripcion = gasto.Descripcion
+
+            };
+
+        }
+        public static IEnumerable<ListadoGastoDTO> GastoToGastoListadoDTO(IEnumerable<Gasto> Gastos)
+        {
+            List<ListadoGastoDTO> listadoGastos = new List<ListadoGastoDTO>();
+
+            foreach (Gasto gasto in Gastos)
+            {
+                listadoGastos.Add(new ListadoGastoDTO()
+                {
+                    Id = gasto.Id,                    
+                    Nombre = gasto.Nombre,
+                    Descripcion = gasto.Descripcion
+                });
+
+            }
+            return listadoGastos;
+        }
     }
 }

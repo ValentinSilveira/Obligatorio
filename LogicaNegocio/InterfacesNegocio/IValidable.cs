@@ -8,7 +8,6 @@ namespace LogicaNegocio.InterfacesNegocio
 {
     internal interface IValidable
     {
-
         public void Validar(){ }
     }
 }

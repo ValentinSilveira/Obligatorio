@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicaAccesoDatos.Repositorio
+namespace CasosDeUsos.InterfacesCasosUsos.IUsuarioCU
 {
-    internal class RolRepositorio
+    public interface ICUEliminarGasto
     {
+        void Ejecutar(int id);
     }
 }

@@ -10,17 +10,17 @@ namespace LogicaNegocio.EntidadesNegocio
     public class Equipo : IValidable
     {
         public int Id { get; set; }
-        private static int s_ultId;
-        public string Nombre;
+        public string Nombre { get; set; }
         public List<Usuario> Usuarios { get; set; }
 
         public Equipo(string nombre, List<Usuario> usuarios)
         {
-            Id = s_ultId++;
             Nombre = nombre;
             Usuarios = usuarios;
             Validar();
         }
+
+        public Equipo() { }
 
         private void Validar()
         {
