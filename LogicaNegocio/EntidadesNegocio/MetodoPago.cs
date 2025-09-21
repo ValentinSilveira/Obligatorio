@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasosDeUsos.InterfacesCasosUsos.IUsuarioCU
+namespace LogicaNegocio.EntidadesNegocio
 {
-    public interface ICUEliminarGasto
+    public enum MetodoPago
     {
-        void Ejecutar(int id);
+        CREDITO,
+        EFECTIVO
     }
 }

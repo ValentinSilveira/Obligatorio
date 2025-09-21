@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicaAplicacion.CasosUso
+namespace LogicaAplicacion.CasosUso.CUUsuarios
 {
     public class CUBuscarUsuario : ICUBuscarUsuario
     {

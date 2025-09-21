@@ -10,9 +10,25 @@ namespace LogicaAccesoDatos.Repositorio
 {
     public class PagoRepositorioEF : IRepositorioPago
     {
+        public ObligatorioContexto Contexto { get; set; }
+
+        public PagoRepositorioEF(ObligatorioContexto contexto) 
+        {
+            Contexto = contexto;
+        }
         public void Add(Pago item)
         {
-            throw new NotImplementedException();
+            item.Validar();
+            Pago pago = FindById(item.Id);
+            if (pago == null)
+            {
+                Contexto.Pagos.Add(item);
+                Contexto.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("El Pago ya existe");
+            }
         }
 
         public void Delete(Pago item)
@@ -27,7 +43,7 @@ namespace LogicaAccesoDatos.Repositorio
 
         public Pago FindById(int id)
         {
-            throw new NotImplementedException();
+            return Contexto.Pagos.Where(p => p.Id == id).SingleOrDefault();                    
         }
 
         public void Update(Pago item)

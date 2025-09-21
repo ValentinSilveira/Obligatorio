@@ -10,7 +10,7 @@ namespace LogicaNegocio.EntidadesNegocio
     {
         public DateTime FechaPago { get; set; }
         public string NroRecibo { get; set; }
-        public Unico(Gasto tipoGasto, Usuario usuario, string descripcion, int monto, DateTime fechaPago,string nroRecibo) : base(tipoGasto, usuario, descripcion, monto)
+        public Unico(Gasto tipoGasto, Usuario usuario,MetodoPago metodo, string descripcion, int monto, DateTime fechaPago,string nroRecibo) : base(tipoGasto, usuario,metodo, descripcion, monto)
         {
             FechaPago = fechaPago;
             NroRecibo = nroRecibo;

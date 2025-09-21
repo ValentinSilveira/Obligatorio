@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasosDeUsos.InterfacesCasosUsos.IUsuarioCU
+namespace CasosDeUsos.InterfacesCasosUsos.IGastoCU
 {
-    public interface ICUBuscarGasto
+    public interface ICUAltaGasto
     {
-        DetalleGastoDTO Ejecutar(int id);
+        void Ejecutar(GastoDTO gastoDTO);
     }
 }

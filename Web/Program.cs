@@ -1,8 +1,10 @@
 ﻿
+using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using LogicaAccesoDatos;
 using LogicaAccesoDatos.Repositorio;
-using LogicaAplicacion.CasosUso;
+using LogicaAplicacion.CasosUso.CUGastos;
+using LogicaAplicacion.CasosUso.CUUsuarios;
 using LogicaAplicacion.InterfacesCasosUsos;
 using LogicaNegocio.interfacesRepositorios;
 using Microsoft.EntityFrameworkCore;

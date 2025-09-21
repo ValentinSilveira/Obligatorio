@@ -1,4 +1,4 @@
-﻿using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
+﻿using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicaAplicacion.CasosUso
+namespace LogicaAplicacion.CasosUso.CUGastos
 {
     public class CUEliminarGasto : ICUEliminarGasto
     {

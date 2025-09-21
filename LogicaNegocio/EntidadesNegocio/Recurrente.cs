@@ -10,7 +10,7 @@ namespace LogicaNegocio.EntidadesNegocio
     {
         public DateTime FechaDesde {  get; set; }
         public DateTime FechaHasta { get; set; }
-        public Recurrente(Gasto tipoGasto, Usuario usuario, string descripcion, int monto, DateTime fechaDesde, DateTime fechaHasta) : base(tipoGasto, usuario, descripcion, monto)
+        public Recurrente(Gasto tipoGasto, Usuario usuario,MetodoPago metodo, string descripcion, int monto, DateTime fechaDesde, DateTime fechaHasta) : base(tipoGasto, usuario,metodo, descripcion, monto)
         {
             FechaDesde = fechaDesde;
             FechaHasta = fechaHasta;

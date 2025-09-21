@@ -44,7 +44,7 @@ namespace LogicaAccesoDatos.Repositorio
         public Gasto FindById(int id)
         {
             return Contexto.Gastos
-                .Where(c => c.Id == id)
+                .Where(g => g.Id == id)
                 .SingleOrDefault();
         }
 

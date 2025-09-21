@@ -1,5 +1,5 @@
 ﻿using CasosDeUsos.DTOs;
-using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
+using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.CasosUso;
 using Microsoft.AspNetCore.Http;
