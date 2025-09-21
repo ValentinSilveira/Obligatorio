@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasosDeUsos.DTOs
+namespace CasosDeUsos.DTOs.DTOsUsuario
 {
     public class UsuarioDTO
     {

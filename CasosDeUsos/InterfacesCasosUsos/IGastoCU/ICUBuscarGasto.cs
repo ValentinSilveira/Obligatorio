@@ -1,11 +1,11 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.DTOsGasto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasosDeUsos.InterfacesCasosUsos.IUsuarioCU
+namespace CasosDeUsos.InterfacesCasosUsos.IGastoCU
 {
     public interface ICUBuscarGasto
     {

@@ -1,4 +1,4 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.DTOsGasto;
 using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
@@ -49,6 +49,15 @@ namespace LogicaAplicacion.Mappers
 
             }
             return listadoGastos;
+        }
+
+        public static Gasto DetalleGastoDTOToGasto(DetalleGastoDTO detalleGasto) 
+        {
+            if(detalleGasto == null) 
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new Gasto(detalleGasto.Nombre, detalleGasto.Descripcion);
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.DTOsUsuario;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.Mappers;
 using LogicaNegocio.EntidadesNegocio;
-using LogicaNegocio.interfacesRepositorios;
+using LogicaNegocio.interfacesRepositorios.InterfacesUsuarios;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicaAplicacion.CasosUso
+namespace LogicaAplicacion.CasosUso.CUUsuario
 {
     public class CUBuscarUsuario : ICUBuscarUsuario
     {
