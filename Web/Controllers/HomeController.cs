@@ -1,4 +1,4 @@
-using CasosDeUsos.DTOs;
+using CasosDeUsos.DTOs.DTOsUsuario;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.InterfacesCasosUsos;
 using Microsoft.AspNetCore.Mvc;

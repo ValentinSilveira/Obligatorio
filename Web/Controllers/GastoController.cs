@@ -1,5 +1,5 @@
-﻿using CasosDeUsos.DTOs;
-using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
+﻿using CasosDeUsos.DTOs.DTOsGasto;
+using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.CasosUso;
 using Microsoft.AspNetCore.Http;
@@ -13,15 +13,16 @@ namespace Web.Controllers
         public ICUListadoGasto CUListadoGasto { get; set; }
         public ICUBuscarGasto CUBuscarGasto { get; set; }
         public ICUEliminarGasto CUEliminarGasto { get; set; }
-        //public ICUActualizarGasto CUActualizarGasto { get; set; }
+       
+        public ICUModificarGasto CUModificarGasto{ get; set; }
         public GastoController(ICUAltaGasto cUAltaGasto, ICUListadoGasto cUListadoGasto, ICUBuscarGasto cUBuscarGasto
-                                 , ICUEliminarGasto cUEliminarGasto /*ICUActualizarGasto cUActualizarGasto*/)
+                                 , ICUEliminarGasto cUEliminarGasto, ICUModificarGasto cUModificarGasto)
         {
             CUAltaGasto = cUAltaGasto;
             CUListadoGasto = cUListadoGasto;
             CUBuscarGasto = cUBuscarGasto;
             CUEliminarGasto = cUEliminarGasto;
-            //CUActualizarGasto = cUActualizarGasto;
+            CUModificarGasto = cUModificarGasto;
         }
 
 
@@ -112,22 +113,57 @@ namespace Web.Controllers
         // GET: GastoController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            DetalleGastoDTO detalleGasto = new DetalleGastoDTO();
+            try 
+            {
+                if (id > 0)
+                {
+                    detalleGasto = CUBuscarGasto.Ejecutar(id);
+                }
+                else throw new ArgumentException("El id es incorrecto");
+            }
+            catch (GastoException ex) 
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (ArgumentException ex) 
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (Exception ex) 
+            {
+                ViewBag.Mensaje = "Error";
+            }
+            return View(detalleGasto);
         }
 
         // POST: GastoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, DetalleGastoDTO detalleGasto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if(id > 0 && ModelState.IsValid) 
+                {
+                    CUModificarGasto.Ejecutar(detalleGasto, id);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    throw new ArgumentException("Los datos no son correctos");
+                }
+                
             }
-            catch
+            catch(ArgumentException ex)
             {
-                return View();
+                ViewBag.Mensaje = ex.Message;
             }
+            catch(Exception ex) 
+            {
+                ViewBag.Mensaje = "Error";
+            }
+            return View(detalleGasto);
         }
 
         // GET: GastoController/Delete/5

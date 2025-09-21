@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicaNegocio.interfacesRepositorios
+namespace LogicaNegocio.interfacesRepositorios.InterfacesUsuarios
 {
     public interface IRepositorioUsuario : IRepositorio<Usuario>
     {
