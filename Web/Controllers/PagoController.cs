@@ -37,8 +37,8 @@ namespace Web.Controllers
             return View();
         }
 
-        // GET: PagoController/Create
-        public ActionResult Create()
+        // GET: PagoController/CreatePagoUnico
+        public ActionResult CreatePagoUnico()
         {
             PagoUnicoDTO UnicoDTO = new PagoUnicoDTO();
             try 
@@ -53,10 +53,26 @@ namespace Web.Controllers
             return View(UnicoDTO);
         }
 
-        // POST: PagoController/Create
+        // GET: PagoController/CreatePagoRecurrente
+        public ActionResult CreatePagoRecurrente() 
+        {
+            PagoRecurrenteDTO recurrenteDTO = new PagoRecurrenteDTO();
+            try
+            {
+                recurrenteDTO.Usuarios = CUListadoUsuario.Ejecutar();
+                recurrenteDTO.Gastos = CUListadoGasto.Ejecutar();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error";
+            }
+            return View(recurrenteDTO);
+        }
+
+        // POST: PagoController/CreatePagoUnico
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PagoUnicoDTO unicoDTO)
+        public ActionResult CreatePagoUnico(PagoUnicoDTO unicoDTO)
         {
             try
             {
@@ -75,6 +91,30 @@ namespace Web.Controllers
                 ViewBag.Mensaje = "Error";
             }
             return View(unicoDTO);
+        }
+
+        // POST: PagoController/CreatePagoRecurrente
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreatePagoRecurrente(PagoRecurrenteDTO recurrenteDTO)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    CUAltaPagoRecurrente.Ejecutar(recurrenteDTO);
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (PagoException ex)
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error";
+            }
+            return View(recurrenteDTO);
         }
 
         // GET: PagoController/Edit/5

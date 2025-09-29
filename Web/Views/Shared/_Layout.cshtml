@@ -23,7 +23,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="Create">Alta Pago</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoUnico">Alta Pago Único</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoRecurrente">Alta Pago Recurrente</a>
                         </li>
                         @if(Context.Session.GetString("Rol") == "Gerente"){                        
                         <li class="nav-item">

@@ -34,6 +34,7 @@ namespace Web
             builder.Services.AddScoped<IListadoRoles, ListadoRoles>();
             builder.Services.AddScoped<ILogin, CULogin>();
             builder.Services.AddScoped<ICUAltaPagoUnico, CUAltaPagoUnico>();
+            builder.Services.AddScoped<ICUAltaPagoRecurrente, CUAltaPagoRecurrente>();
             builder.Services.AddScoped<IRepositorioPago, PagoRepositorioEF>();
 
             // 🔧 Configuración de EF Core

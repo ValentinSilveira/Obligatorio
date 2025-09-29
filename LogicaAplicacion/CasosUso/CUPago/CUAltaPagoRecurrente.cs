@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LogicaAplicacion.CasosUso.CUPago
 {
-    internal class CUAltaPagoRecurrente : ICUAltaPagoRecurrente
+    public class CUAltaPagoRecurrente : ICUAltaPagoRecurrente
     {
         public IRepositorioPago RepoPago { get; set; }
         public IRepositorioUsuario RepoUsuario { get; set; }
