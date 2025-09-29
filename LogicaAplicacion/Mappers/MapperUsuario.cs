@@ -1,4 +1,4 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.UsuariosDTO;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.CasosUso;
 using LogicaNegocio.EntidadesNegocio;

@@ -1,4 +1,4 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.UsuariosDTO;
 using LogicaAplicacion.InterfacesCasosUsos;
 using LogicaAplicacion.Mappers;
 using LogicaNegocio.EntidadesNegocio;

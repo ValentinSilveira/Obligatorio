@@ -1,4 +1,5 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.GastoDTO;
+using CasosDeUsos.DTOs.GastosDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

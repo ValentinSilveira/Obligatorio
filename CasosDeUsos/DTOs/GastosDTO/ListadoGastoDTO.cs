@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasosDeUsos.DTOs
+namespace CasosDeUsos.DTOs.GastoDTO.GastoDTO
 {
-    public class GastoDTO
+    public class ListadoGastoDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
+        
     }
 }

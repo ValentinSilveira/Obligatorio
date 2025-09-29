@@ -13,22 +13,20 @@ namespace LogicaNegocio.EntidadesNegocio
         public int Id { get; set; }
         public Gasto TipoGasto { get; set; }
         public Usuario Usuario { get; set; }
-
-        public MetodoPago Metodo {  get; set; }
+        //public MetodoPago Metodo {  get; set; }
         public string Descripcion {  get; set; }
         public int Monto { get; set; }
 
-        public Pago(Gasto tipoGasto, Usuario usuario, MetodoPago metodo, string descripcion, int monto)
+        public Pago(Gasto tipoGasto, Usuario usuario, /*MetodoPago metodo*/ string descripcion, int monto)
         {
             TipoGasto = tipoGasto;
             Usuario = usuario;
-            Metodo = metodo;
+            //Metodo = metodo;
             Descripcion = descripcion;
             Monto = monto;
             Validar();
         }
-
-        public Pago() { }
+        protected Pago() { }
 
         public void Validar()
         {
@@ -36,7 +34,7 @@ namespace LogicaNegocio.EntidadesNegocio
             ValidarGasto();
             ValidarDescripcion();
             ValidarMonto();
-            ValidarMetodo();
+            //ValidarMetodo();
         }
 
         private void ValidarUsuario() 
@@ -70,7 +68,7 @@ namespace LogicaNegocio.EntidadesNegocio
                 throw new PagoException("El monto debe ser mayor que 0");
             }
         }
-
+        /*
         private void ValidarMetodo() 
         {
             if(Metodo.ToString() != "CREDITO" || Metodo.ToString() != "EFECTIVO") 
@@ -78,5 +76,6 @@ namespace LogicaNegocio.EntidadesNegocio
                 throw new PagoException("Debe seleccionar un método de pago válido");
             }
         }
+        */
     }
 }

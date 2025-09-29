@@ -1,4 +1,6 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.GastoDTO;
+using CasosDeUsos.DTOs.GastoDTO.GastoDTO;
+using CasosDeUsos.DTOs.GastosDTO;
 using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.CasosUso;

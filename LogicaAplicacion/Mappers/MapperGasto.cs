@@ -1,4 +1,5 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.GastoDTO.GastoDTO;
+using CasosDeUsos.DTOs.GastosDTO;
 using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;

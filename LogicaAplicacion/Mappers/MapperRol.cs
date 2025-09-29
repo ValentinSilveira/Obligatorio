@@ -1,4 +1,4 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.UsuariosDTO;
 using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasosDeUsos.DTOs
+namespace CasosDeUsos.DTOs.GastosDTO
 {
-    public class DetalleGastoDTO
+    public class GastoDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; }

@@ -1,4 +1,5 @@
 ﻿using CasosDeUsos.DTOs;
+using CasosDeUsos.DTOs.PagosDTO;
 using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,23 @@ namespace LogicaAplicacion.Mappers
 {
     public class MapperPago
     {
-        /*
-        public static Pago PagoDTOToPago(PagoDTO pagoDTO) 
+        
+        public static Unico PagoUnicoDTOToPagoUnico(PagoUnicoDTO pagoUnicoDTO, Usuario usuario, Gasto gasto) 
         {
-            if (pagoDTO == null) 
+            if (pagoUnicoDTO == null) 
             {
                throw new ArgumentNullException("Datos incorrectos");
             }
-           return new Pago(pagoDTO.TipoGasto, pagoDTO.Usuario, pagoDTO.Descripcion, pagoDTO.Monto);
+           return new Unico(gasto,usuario,pagoUnicoDTO.Descripcion,pagoUnicoDTO.Monto,pagoUnicoDTO.FechaPago,pagoUnicoDTO.Recibo);
         }
-       */
+       
+        public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteDTO pagoRecurrenteDTO, Usuario usuario, Gasto gasto) 
+        {
+            if(pagoRecurrenteDTO == null) 
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new Recurrente(gasto, usuario, pagoRecurrenteDTO.Descripcion, pagoRecurrenteDTO.Monto, pagoRecurrenteDTO.FechaDesde, pagoRecurrenteDTO.FechaHasta);
+        }
     }
 }

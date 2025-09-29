@@ -1,4 +1,5 @@
 ﻿using CasosDeUsos.DTOs;
+using CasosDeUsos.DTOs.PagosDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.InterfacesCasosUsos.IPagoCU
 {
-    public interface ICUAltaPago
+    public interface ICUAltaPagoUnico
     {
-        void Ejecutar(PagoDTO pagoDTO);
+        void Ejecutar(PagoUnicoDTO pagoUnicoDTO);
     }
 }
