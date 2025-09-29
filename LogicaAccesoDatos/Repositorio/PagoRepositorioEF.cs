@@ -1,5 +1,5 @@
 ﻿using LogicaNegocio.EntidadesNegocio;
-using LogicaNegocio.interfacesRepositorios;
+using LogicaNegocio.interfacesRepositorios.InterfacesPagos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

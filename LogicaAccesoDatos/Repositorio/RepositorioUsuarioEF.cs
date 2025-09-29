@@ -1,6 +1,6 @@
 ﻿using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaNegocio.EntidadesNegocio;
-using LogicaNegocio.interfacesRepositorios;
+using LogicaNegocio.interfacesRepositorios.InterfacesUsuarios;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿using CasosDeUsos.DTOs.GastoDTO.GastoDTO;
-=======
 ﻿using CasosDeUsos.DTOs.DTOsGasto;
->>>>>>> origin
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.InterfacesCasosUsos.IGastoCU
 {
-    public interface ICUListadoGasto
+    public interface ICUModificarGasto
     {
-        IEnumerable<ListadoGastoDTO> Ejecutar();
+        void Ejecutar(DetalleGastoDTO detalleGastoDTO, int id);
     }
 }

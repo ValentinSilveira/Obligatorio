@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿using CasosDeUsos.DTOs.GastoDTO;
 using CasosDeUsos.DTOs.GastosDTO;
+=======
+﻿using CasosDeUsos.DTOs.DTOsGasto;
+>>>>>>> origin
 using System;
 using System.Collections.Generic;
 using System.Linq;

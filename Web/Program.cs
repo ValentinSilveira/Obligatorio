@@ -1,5 +1,6 @@
 ﻿
 using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
+<<<<<<< HEAD
 using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using LogicaAccesoDatos;
@@ -7,8 +8,16 @@ using LogicaAccesoDatos.Repositorio;
 using LogicaAplicacion.CasosUso.CUGastos;
 using LogicaAplicacion.CasosUso.CUPago;
 using LogicaAplicacion.CasosUso.CUUsuarios;
+=======
+using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
+using LogicaAccesoDatos;
+using LogicaAccesoDatos.Repositorio;
+using LogicaAplicacion.CasosUso.CUGasto;
+using LogicaAplicacion.CasosUso.CUUsuario;
+>>>>>>> origin
 using LogicaAplicacion.InterfacesCasosUsos;
-using LogicaNegocio.interfacesRepositorios;
+using LogicaNegocio.interfacesRepositorios.InterfacesGastos;
+using LogicaNegocio.interfacesRepositorios.InterfacesUsuarios;
 using Microsoft.EntityFrameworkCore;
 
 namespace Web
@@ -33,9 +42,13 @@ namespace Web
             builder.Services.AddScoped<IRepositorioRol, RepositorioRolEF>();
             builder.Services.AddScoped<IListadoRoles, ListadoRoles>();
             builder.Services.AddScoped<ILogin, CULogin>();
+<<<<<<< HEAD
             builder.Services.AddScoped<ICUAltaPagoUnico, CUAltaPagoUnico>();
             builder.Services.AddScoped<ICUAltaPagoRecurrente, CUAltaPagoRecurrente>();
             builder.Services.AddScoped<IRepositorioPago, PagoRepositorioEF>();
+=======
+            builder.Services.AddScoped<ICUModificarGasto, CUModificarGasto>();
+>>>>>>> origin
 
             // 🔧 Configuración de EF Core
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");

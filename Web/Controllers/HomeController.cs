@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 using CasosDeUsos.DTOs.UsuariosDTO;
+=======
+using CasosDeUsos.DTOs.DTOsUsuario;
+>>>>>>> origin
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.InterfacesCasosUsos;
 using Microsoft.AspNetCore.Mvc;

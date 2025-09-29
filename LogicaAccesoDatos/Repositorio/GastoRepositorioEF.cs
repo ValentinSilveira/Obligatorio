@@ -1,5 +1,6 @@
-﻿using LogicaNegocio.EntidadesNegocio;
-using LogicaNegocio.interfacesRepositorios;
+﻿using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaNegocio.EntidadesNegocio;
+using LogicaNegocio.interfacesRepositorios.InterfacesGastos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,15 @@ namespace LogicaAccesoDatos.Repositorio
 
         public void Update(Gasto item)
         {
-            throw new NotImplementedException();
+            Gasto gasto = FindById(item.Id);
+            if(gasto == null || gasto.Id == item.Id) 
+            {
+                Contexto.SaveChanges();
+            }
+            else 
+            {
+                throw new GastoException("No se encontró un gasto para actualizar");
+            }
         }
     }
 }
