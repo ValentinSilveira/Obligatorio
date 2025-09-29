@@ -1,8 +1,12 @@
 ﻿
+using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
+using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using LogicaAccesoDatos;
 using LogicaAccesoDatos.Repositorio;
-using LogicaAplicacion.CasosUso;
+using LogicaAplicacion.CasosUso.CUGastos;
+using LogicaAplicacion.CasosUso.CUPago;
+using LogicaAplicacion.CasosUso.CUUsuarios;
 using LogicaAplicacion.InterfacesCasosUsos;
 using LogicaNegocio.interfacesRepositorios;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +33,9 @@ namespace Web
             builder.Services.AddScoped<IRepositorioRol, RepositorioRolEF>();
             builder.Services.AddScoped<IListadoRoles, ListadoRoles>();
             builder.Services.AddScoped<ILogin, CULogin>();
+            builder.Services.AddScoped<ICUAltaPagoUnico, CUAltaPagoUnico>();
+            builder.Services.AddScoped<ICUAltaPagoRecurrente, CUAltaPagoRecurrente>();
+            builder.Services.AddScoped<IRepositorioPago, PagoRepositorioEF>();
 
             // 🔧 Configuración de EF Core
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");

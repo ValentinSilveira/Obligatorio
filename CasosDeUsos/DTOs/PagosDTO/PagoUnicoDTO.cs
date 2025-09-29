@@ -1,0 +1,30 @@
+﻿using CasosDeUsos.DTOs.GastoDTO.GastoDTO;
+using CasosDeUsos.DTOs.GastosDTO;
+using CasosDeUsos.DTOs.UsuariosDTO;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CasosDeUsos.DTOs.PagosDTO
+{
+    public class PagoUnicoDTO
+    {
+        [DisplayName("Seleccione un Gasto")]
+        public int GastoId { get; set; }
+        public IEnumerable<ListadoGastoDTO> Gastos { get; set; } = new List<ListadoGastoDTO>();
+
+        [DisplayName("Seleccione un Usuario")]
+        public int UsuarioId { get; set; }
+        public IEnumerable<ListadoUsuarioDTO> Usuarios { get; set; } = new List<ListadoUsuarioDTO>();
+        public string Descripcion { get; set; }
+        public int Monto { get; set; }
+
+        public DateTime FechaPago { get; set; }
+
+        public string Recibo { get; set; }
+
+    }
+}

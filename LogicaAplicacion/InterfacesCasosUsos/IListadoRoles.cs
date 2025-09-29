@@ -1,4 +1,4 @@
-﻿using CasosDeUsos.DTOs;
+﻿using CasosDeUsos.DTOs.UsuariosDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
