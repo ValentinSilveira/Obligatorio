@@ -18,6 +18,15 @@ namespace LogicaAccesoDatos
 
         public ObligatorioContexto(DbContextOptions options) : base(options){}
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
+            // Configuración de herencia TPH para Pago
+            modelBuilder.Entity<Pago>()
+                .HasDiscriminator<string>("TipoPago")
+                .HasValue<Recurrente>("Recurrente")
+                .HasValue<Unico>("Unico");
+        }
     }
 }

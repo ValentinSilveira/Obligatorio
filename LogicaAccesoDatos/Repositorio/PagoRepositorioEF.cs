@@ -1,5 +1,6 @@
 ﻿using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,17 +39,36 @@ namespace LogicaAccesoDatos.Repositorio
 
         public IEnumerable<Pago> FindAll()
         {
-            throw new NotImplementedException();
+            return Contexto.Pagos
+                .Include(p => p.TipoGasto)
+                .Include(p => p.Usuario);
         }
 
         public Pago FindById(int id)
         {
-            return Contexto.Pagos.Where(p => p.Id == id).SingleOrDefault();                    
+            return Contexto.Pagos
+                .Include(p => p.TipoGasto)
+                .Include(p => p.Usuario)
+                .Where(p => p.Id == id).SingleOrDefault();                    
         }
 
         public void Update(Pago item)
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<Pago> FindByMesAnio(int mes, int anio)
+        {
+            return Contexto.Pagos
+                .Include(p => p.TipoGasto)
+                .Include(p => p.Usuario)
+                .Where(p =>
+                    (p is Unico && ((Unico)p).FechaPago.Month == mes && ((Unico)p).FechaPago.Year == anio)
+                    ||
+                    (p is Recurrente && ((Recurrente)p).FechaDesde.Month == mes && ((Recurrente)p).FechaDesde.Year == anio)
+                )
+                .ToList();
+        }
+
     }
 }

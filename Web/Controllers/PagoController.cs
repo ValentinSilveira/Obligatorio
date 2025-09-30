@@ -14,21 +14,32 @@ namespace Web.Controllers
         public ICUAltaPagoUnico CUAltaPagoUnico { get; set; }
         public ICUAltaPagoRecurrente CUAltaPagoRecurrente { get; set; }
         public ICUListadoUsuario CUListadoUsuario { get; set; }
-
+        public ICUListadoPago CUListadoPago { get; set; }
         public ICUListadoGasto CUListadoGasto { get; set; }
 
-        public PagoController(ICUAltaPagoUnico CuAltaPagoUnico,ICUAltaPagoRecurrente cUAltaPagoRecurrente, ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto)
+        public PagoController(ICUAltaPagoUnico CuAltaPagoUnico,ICUAltaPagoRecurrente cUAltaPagoRecurrente, 
+            ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto,ICUListadoPago cUListadoPago)
         {
             CUAltaPagoUnico = CuAltaPagoUnico;
             CUAltaPagoRecurrente = cUAltaPagoRecurrente;
             CUListadoUsuario = cUListadoUsuario;
             CUListadoGasto = cUListadoGasto;
+            CUListadoPago = cUListadoPago;
         }
 
         // GET: PagoController
         public ActionResult Index()
         {
-            return View();
+            try
+            {
+                var pagos = CUListadoPago.Ejecutar();
+                return View(pagos);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error al obtener pagos";
+                return View(new List<ListadoPagoDTO>());
+            }
         }
 
         // GET: PagoController/Details/5

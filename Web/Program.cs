@@ -36,6 +36,7 @@ namespace Web
             builder.Services.AddScoped<ICUAltaPagoUnico, CUAltaPagoUnico>();
             builder.Services.AddScoped<ICUAltaPagoRecurrente, CUAltaPagoRecurrente>();
             builder.Services.AddScoped<IRepositorioPago, PagoRepositorioEF>();
+            builder.Services.AddScoped<ICUListadoPago, CUListadoPago>();
 
             // 🔧 Configuración de EF Core
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");
