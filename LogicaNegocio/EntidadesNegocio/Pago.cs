@@ -16,14 +16,16 @@ namespace LogicaNegocio.EntidadesNegocio
         //public MetodoPago Metodo {  get; set; }
         public string Descripcion {  get; set; }
         public int Monto { get; set; }
+        //public DateTime FechaPago { get; set; }
 
-        public Pago(Gasto tipoGasto, Usuario usuario, /*MetodoPago metodo*/ string descripcion, int monto)
+        public Pago(Gasto tipoGasto, Usuario usuario, /*MetodoPago metodo*/ string descripcion, int monto /*DateTime fechaPago*/)
         {
             TipoGasto = tipoGasto;
             Usuario = usuario;
             //Metodo = metodo;
             Descripcion = descripcion;
             Monto = monto;
+            //FechaPago = fechaPago;
             Validar();
         }
         protected Pago() { }
