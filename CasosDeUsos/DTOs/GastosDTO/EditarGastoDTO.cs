@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs.GastosDTO
 {
-    internal class EditarGastoDTO
+    public class EditarGastoDTO
     {
+
     }
 }
