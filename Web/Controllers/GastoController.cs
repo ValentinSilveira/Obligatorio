@@ -30,6 +30,12 @@ namespace Web.Controllers
         // GET: GastoController
         public ActionResult Index()
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             IEnumerable<ListadoGastoDTO> listadoGastos = new List<ListadoGastoDTO>();
             try
             {
@@ -46,6 +52,12 @@ namespace Web.Controllers
         // GET: GastoController/Details/5
         public ActionResult Details(int id)
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             DetalleGastoDTO detalleGasto = new DetalleGastoDTO();
             try
             {
@@ -80,6 +92,12 @@ namespace Web.Controllers
         // GET: GastoController/Create
         public ActionResult Create()
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             return View();
         }
 
@@ -87,7 +105,7 @@ namespace Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(GastoDTO gastoDTO)
-        {
+        {            
             try
             {
                 if (ModelState.IsValid)
@@ -122,6 +140,12 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             try
             {
                 return RedirectToAction(nameof(Index));
@@ -135,6 +159,12 @@ namespace Web.Controllers
         // GET: GastoController/Delete/5
         public ActionResult Delete(int id)
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             DetalleGastoDTO detalleGasto = new DetalleGastoDTO();
             try
             {

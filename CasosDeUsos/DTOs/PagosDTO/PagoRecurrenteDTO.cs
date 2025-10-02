@@ -1,5 +1,6 @@
 ﻿using CasosDeUsos.DTOs.GastoDTO.GastoDTO;
 using CasosDeUsos.DTOs.UsuariosDTO;
+using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,10 +21,9 @@ namespace CasosDeUsos.DTOs.PagosDTO
         public IEnumerable<ListadoUsuarioDTO> Usuarios { get; set; } = new List<ListadoUsuarioDTO>();
         public string Descripcion { get; set; }
         public int Monto { get; set; }
+        [DisplayName("Seleccione un Metodo de Pago")]
+        public MetodoPago MetodoPago { get; set; }
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
-
-
-
     }
 }

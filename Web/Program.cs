@@ -19,7 +19,7 @@ namespace Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // 🔧 Registro de servicios
+            
             builder.Services.AddScoped<ICUAltaUsuario, CUAltaUsuario>();
             builder.Services.AddScoped<ICUAltaGasto, CUAltaGasto>();
             builder.Services.AddScoped<ICUBuscarUsuario, CUBuscarUsuario>();
@@ -37,12 +37,13 @@ namespace Web
             builder.Services.AddScoped<ICUAltaPagoRecurrente, CUAltaPagoRecurrente>();
             builder.Services.AddScoped<IRepositorioPago, PagoRepositorioEF>();
             builder.Services.AddScoped<ICUListadoPago, CUListadoPago>();
+            builder.Services.AddScoped<ICUObtenerMetodoPago, CUObtenerMetodoPago>();
 
-            // 🔧 Configuración de EF Core
+            
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");
             builder.Services.AddDbContext<ObligatorioContexto>(options => options.UseSqlServer(cadenaConexion));
 
-            // 🔧 Configuración de sesión
+            
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -51,12 +52,12 @@ namespace Web
                 options.Cookie.IsEssential = true;
             });
 
-            // 🔧 MVC
+            
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            // 🔧 Middleware
+            
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -68,11 +69,11 @@ namespace Web
 
             app.UseRouting();
 
-            app.UseSession(); // ✅ Habilita el uso de sesiones
+            app.UseSession(); 
 
             app.UseAuthorization();
 
-            // 🔧 Rutas
+           
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Login}/{id?}");

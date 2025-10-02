@@ -16,15 +16,18 @@ namespace Web.Controllers
         public ICUListadoUsuario CUListadoUsuario { get; set; }
         public ICUListadoPago CUListadoPago { get; set; }
         public ICUListadoGasto CUListadoGasto { get; set; }
+        public ICUObtenerMetodoPago CUObtenerMetodoPago { get; set; }
 
-        public PagoController(ICUAltaPagoUnico CuAltaPagoUnico,ICUAltaPagoRecurrente cUAltaPagoRecurrente, 
-            ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto,ICUListadoPago cUListadoPago)
+        public PagoController(ICUAltaPagoUnico CuAltaPagoUnico, ICUAltaPagoRecurrente cUAltaPagoRecurrente,
+            ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto, ICUListadoPago cUListadoPago
+            , ICUObtenerMetodoPago cUObtenerMetodoPago)
         {
             CUAltaPagoUnico = CuAltaPagoUnico;
             CUAltaPagoRecurrente = cUAltaPagoRecurrente;
             CUListadoUsuario = cUListadoUsuario;
             CUListadoGasto = cUListadoGasto;
             CUListadoPago = cUListadoPago;
+            CUObtenerMetodoPago = cUObtenerMetodoPago;
         }
 
         // GET: PagoController
@@ -49,13 +52,21 @@ namespace Web.Controllers
         }
 
         // GET: PagoController/CreatePagoUnico
-        public ActionResult CreatePagoUnico()
+        public ActionResult CreatePagoUnico()        
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
+
             PagoUnicoDTO UnicoDTO = new PagoUnicoDTO();
             try 
             {
                 UnicoDTO.Usuarios = CUListadoUsuario.Ejecutar();
                 UnicoDTO.Gastos = CUListadoGasto.Ejecutar();
+                UnicoDTO.MetodoPago = string.Join(", ", CUObtenerMetodoPago.Ejecutar());
             }
             catch(Exception ex) 
             {
@@ -67,6 +78,12 @@ namespace Web.Controllers
         // GET: PagoController/CreatePagoRecurrente
         public ActionResult CreatePagoRecurrente() 
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             PagoRecurrenteDTO recurrenteDTO = new PagoRecurrenteDTO();
             try
             {
