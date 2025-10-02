@@ -1,4 +1,5 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,28 +23,36 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoUnico">Alta Pago Único</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoRecurrente">Alta Pago Recurrente</a>
-                        </li>
-                        @if(Context.Session.GetString("Rol") == "Gerente"){                        
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Create">Crear Cliente</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Listado</a>
-                        </li>
+                        @if (Context.Session.GetString("Rol") == "Gerente")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Create">Crear Cliente</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Listado</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoUnico">Alta Pago Único</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoRecurrente">Alta Pago Recurrente</a>
+                            </li>
                         }
-                         @if(Context.Session.GetString("Rol") == "Administracion"){
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Gasto" asp-action="Create">Crear Gasto</a>
-                        </li> 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Gasto" asp-action="Index">Listado</a>
-                        </li>
-                         }
+                        @if (Context.Session.GetString("Rol") == "Administracion")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Gasto" asp-action="Create">Crear Gasto</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Gasto" asp-action="Index">Listado Gastos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoUnico">Alta Pago Único</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoRecurrente">Alta Pago Recurrente</a>
+                            </li>
+                        }
                         @if (Context.Session.GetString("Rol") == "Empleado")
                         {
                             <li class="nav-item">
@@ -51,6 +60,12 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Gasto" asp-action="Index">Listado</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoUnico">Alta Pago Único</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="CreatePagoRecurrente">Alta Pago Recurrente</a>
                             </li>
                         }
                     </ul>

@@ -22,7 +22,13 @@
                 @Html.DisplayNameFor(model => model.Monto)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Fecha)
+                @Html.DisplayNameFor(model => model.MetodoPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaDesde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaHasta)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.UsuarioNombre)
@@ -34,32 +40,40 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tipo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Monto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UsuarioNombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GastoDescripcion)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tipo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Monto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MetodoPago)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaDesde)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaHasta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioNombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GastoDescripcion)
+                </td>
+
+                @* <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td> *@
+            </tr>
+        }
     </tbody>
 </table>

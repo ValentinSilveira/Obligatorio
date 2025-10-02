@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.EntidadesNegocio
 {
-    public class Unico: Pago, IValidable
-    {
+    public class Unico : Pago, IValidable
+    {        
         public DateTime FechaPago { get; set; }
         public string NroRecibo { get; set; }
-        public Unico(Gasto tipoGasto, Usuario usuario, string descripcion, int monto, DateTime fechaPago,string nroRecibo) : base(tipoGasto, usuario,/*metodo,*/ descripcion, monto)
+        public Unico(Gasto tipoGasto, Usuario usuario, MetodoPago metodo, string descripcion, int monto, DateTime fechaPago, string nroRecibo) : base(tipoGasto, usuario, metodo, descripcion, monto)
         {
             FechaPago = fechaPago;
             NroRecibo = nroRecibo;
             Validar();
         }
-        protected Unico():base(){ }
+        protected Unico() : base() { }
 
-        public void Validar() 
+        public void Validar()
         {
             ValidarFechaPago();
             ValidarRecibo();
@@ -28,15 +28,15 @@ namespace LogicaNegocio.EntidadesNegocio
 
         private void ValidarFechaPago()
         {
-            if(FechaPago == null)
+            if (FechaPago == null)
             {
                 throw new PagoException("Debe indicar una fecha valida");
             }
         }
 
-        private void ValidarRecibo() 
+        private void ValidarRecibo()
         {
-            if(NroRecibo == null)
+            if (NroRecibo == null)
             {
                 throw new PagoException("Debe indicar el número de recibo");
             }

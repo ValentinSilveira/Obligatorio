@@ -6,47 +6,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LogicaAplicacion.Mappers
 {
     public class MapperPago
     {
-        
-        public static Unico PagoUnicoDTOToPagoUnico(PagoUnicoDTO pagoUnicoDTO, Usuario usuario, Gasto gasto) 
+
+
+        public static Unico PagoUnicoDTOToPagoUnico(PagoUnicoDTO pagoUnicoDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
         {
-            if (pagoUnicoDTO == null) 
-            {
-               throw new ArgumentNullException("Datos incorrectos");
-            }
-           return new Unico(gasto,usuario,pagoUnicoDTO.Descripcion,pagoUnicoDTO.Monto,pagoUnicoDTO.FechaPago,pagoUnicoDTO.Recibo);
-        }
-       
-        public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteDTO pagoRecurrenteDTO, Usuario usuario, Gasto gasto) 
-        {
-            if(pagoRecurrenteDTO == null) 
+            if (pagoUnicoDTO == null)
             {
                 throw new ArgumentNullException("Datos incorrectos");
             }
-            return new Recurrente(gasto, usuario, pagoRecurrenteDTO.Descripcion, pagoRecurrenteDTO.Monto, pagoRecurrenteDTO.FechaDesde, pagoRecurrenteDTO.FechaHasta);
+
+            return new Unico(gasto, usuario, metodoPago, pagoUnicoDTO.Descripcion, pagoUnicoDTO.Monto, pagoUnicoDTO.FechaPago, pagoUnicoDTO.Recibo);
         }
 
-        public static IEnumerable<ListadoPagoDTO> PagoToPagoListadoDTO (IEnumerable<Pago> pagos) 
+
+        public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteDTO pagoRecurrenteDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
+        {
+            if (pagoRecurrenteDTO == null)
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new Recurrente(gasto, usuario,metodoPago, pagoRecurrenteDTO.Descripcion, pagoRecurrenteDTO.Monto, pagoRecurrenteDTO.FechaDesde, pagoRecurrenteDTO.FechaHasta);
+        }
+
+        public static IEnumerable<ListadoPagoDTO> PagoToPagoListadoDTO(IEnumerable<Pago> pagos)
         {
             List<ListadoPagoDTO> listadoPagos = new List<ListadoPagoDTO>();
-            foreach (Pago pago in pagos) 
+            foreach (Pago pago in pagos)
             {
                 listadoPagos.Add(new ListadoPagoDTO()
                 {
                     Id = pago.Id,
                     Tipo = pago.TipoGasto.Nombre,
                     Monto = pago.Monto,
-                    Fecha = pago is Unico ? ((Unico)pago).FechaPago : ((Recurrente)pago).FechaDesde,
+                    FechaDesde = pago is Unico ? ((Unico)pago).FechaPago : ((Recurrente)pago).FechaDesde,
                     UsuarioNombre = pago.Usuario.Nombre,
-                    GastoDescripcion = pago.TipoGasto.Descripcion
+                    GastoDescripcion = pago.TipoGasto.Descripcion,
+                    MetodoPago=pago.Metodo.ToString()
                 });
             }
             return listadoPagos;
         }
-        
+
+        public static IEnumerable<SelectListItem> GetMetodosDePagoSelectList()
+        {
+            return Enum.GetValues(typeof(MetodoPago))
+                       .Cast<MetodoPago>()
+                       .Select(m => new SelectListItem
+                       {
+                           Value = ((int)m).ToString(),
+                           Text = m.ToString()
+                       });
+        }
+
+        //public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteDTO dto, Usuario usuario, Gasto gasto)
+        //{
+        //    if (dto == null)
+        //    {
+        //        throw new ArgumentNullException("Datos incorrectos");
+        //    }
+
+        //    // acá pasás también el MetodoPago al constructor de Recurrente
+        //    return new Recurrente(gasto, usuario, dto.Descripcion, dto.Monto, dto.FechaDesde, dto.FechaHasta, dto.MetodoPago);
+        //}
+
     }
 }

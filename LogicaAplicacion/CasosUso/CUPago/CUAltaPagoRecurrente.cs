@@ -25,6 +25,7 @@ namespace LogicaAplicacion.CasosUso.CUPago
             RepoGasto = repoGasto;
         }
 
+
         public void Ejecutar(PagoRecurrenteDTO pagoRecurrenteDTO)
         {
             Usuario usuario = RepoUsuario.FindById(pagoRecurrenteDTO.UsuarioId);
@@ -32,14 +33,19 @@ namespace LogicaAplicacion.CasosUso.CUPago
 
             if (usuario != null && gasto != null)
             {
-                Recurrente pagoRecurrente = MapperPago.PagoRecurrenteDTOToPagoRecurrente(pagoRecurrenteDTO, usuario, gasto);
+                // Usar el valor del enum directamente desde el DTO
+                MetodoPago metodoPago = pagoRecurrenteDTO.MetodoPago;
+
+                // Crear el objeto Recurrente usando el mapper
+                Recurrente pagoRecurrente = MapperPago.PagoRecurrenteDTOToPagoRecurrente(pagoRecurrenteDTO, usuario, gasto, metodoPago);
+
+                // Guardar el pago
                 RepoPago.Add(pagoRecurrente);
             }
             else
             {
-                throw new ArgumentNullException("El usuario o el gasto no son validos");
-
+                throw new ArgumentNullException("El usuario o el gasto no son válidos");
             }
-        }
+        }     
     }
 }

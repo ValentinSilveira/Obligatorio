@@ -26,21 +26,30 @@ namespace LogicaAplicacion.CasosUso.CUPago
             RepoGasto = repoGasto;
         }
 
+
         public void Ejecutar(PagoUnicoDTO pagoUnicoDTO)
         {
             Usuario usuario = RepoUsuario.FindById(pagoUnicoDTO.UsuarioId);
             Gasto gasto = RepoGasto.FindById(pagoUnicoDTO.GastoId);
 
-            if(usuario != null && gasto != null) 
+            if (usuario != null && gasto != null)
             {
-                Unico pagoUnico = MapperPago.PagoUnicoDTOToPagoUnico(pagoUnicoDTO, usuario, gasto);
+                // Convertir el string del DTO a enum MetodoPago
+                if (!Enum.TryParse(pagoUnicoDTO.MetodoPago, true, out MetodoPago metodoPago))
+                {
+                    throw new ArgumentException("Método de pago inválido");
+                }
+
+                // Crear el objeto Unico usando el mapper
+                Unico pagoUnico = MapperPago.PagoUnicoDTOToPagoUnico(pagoUnicoDTO, usuario, gasto, metodoPago);
+
+                // Guardar el pago
                 RepoPago.Add(pagoUnico);
             }
-            else 
+            else
             {
-                throw new ArgumentNullException("El usuario o el gasto no son validos");
+                throw new ArgumentNullException("El usuario o el gasto no son válidos");
             }
-            
-        }
+        }        
     }
 }
