@@ -10,20 +10,13 @@ namespace LogicaAccesoDatos.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Metodo",
-                table: "Pagos",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Metodo",
-                table: "Pagos");
+            
         }
     }
 }

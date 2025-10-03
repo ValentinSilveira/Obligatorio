@@ -64,5 +64,10 @@ namespace Web.Controllers
             }
             return View();
         }
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("login");
+        }
     }
 }

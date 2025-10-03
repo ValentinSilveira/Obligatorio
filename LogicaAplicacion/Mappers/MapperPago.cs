@@ -45,6 +45,7 @@ namespace LogicaAplicacion.Mappers
                     Tipo = pago.TipoGasto.Nombre,
                     Monto = pago.Monto,
                     FechaDesde = pago is Unico ? ((Unico)pago).FechaPago : ((Recurrente)pago).FechaDesde,
+                    FechaHasta = pago is Recurrente ? ((Recurrente)pago).FechaHasta : null,
                     UsuarioNombre = pago.Usuario.Nombre,
                     GastoDescripcion = pago.TipoGasto.Descripcion,
                     MetodoPago=pago.Metodo.ToString()
@@ -63,17 +64,5 @@ namespace LogicaAplicacion.Mappers
                            Text = m.ToString()
                        });
         }
-
-        //public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteDTO dto, Usuario usuario, Gasto gasto)
-        //{
-        //    if (dto == null)
-        //    {
-        //        throw new ArgumentNullException("Datos incorrectos");
-        //    }
-
-        //    // acá pasás también el MetodoPago al constructor de Recurrente
-        //    return new Recurrente(gasto, usuario, dto.Descripcion, dto.Monto, dto.FechaDesde, dto.FechaHasta, dto.MetodoPago);
-        //}
-
     }
 }

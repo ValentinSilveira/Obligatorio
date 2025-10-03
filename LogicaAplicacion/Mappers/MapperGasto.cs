@@ -51,5 +51,14 @@ namespace LogicaAplicacion.Mappers
             }
             return listadoGastos;
         }
+        
+        public static Gasto DetalleGastoDTOToGasto(DetalleGastoDTO detalleGasto)
+        {
+            if (detalleGasto == null)
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new Gasto(detalleGasto.Nombre, detalleGasto.Descripcion);
+        }
     }
 }

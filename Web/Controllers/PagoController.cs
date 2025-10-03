@@ -33,6 +33,12 @@ namespace Web.Controllers
         // GET: PagoController
         public ActionResult Index()
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             try
             {
                 var pagos = CUListadoPago.Ejecutar();
@@ -48,6 +54,11 @@ namespace Web.Controllers
         // GET: PagoController/Details/5
         public ActionResult Details(int id)
         {
+            var rol = HttpContext.Session.GetString("Rol");
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             return View();
         }
 

@@ -50,7 +50,8 @@ namespace LogicaAccesoDatos.Repositorio
 
         public void Update(Gasto item)
         {
-            throw new NotImplementedException();
+            Contexto.Gastos.Update(item);
+            Contexto.SaveChanges();
         }
     }
 }
