@@ -4,6 +4,7 @@ using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using LogicaAccesoDatos;
 using LogicaAccesoDatos.Repositorio;
+using LogicaAplicacion.CasosUso.CUGasto;
 using LogicaAplicacion.CasosUso.CUGastos;
 using LogicaAplicacion.CasosUso.CUPago;
 using LogicaAplicacion.CasosUso.CUUsuarios;
@@ -38,8 +39,9 @@ namespace Web
             builder.Services.AddScoped<IRepositorioPago, PagoRepositorioEF>();
             builder.Services.AddScoped<ICUListadoPago, CUListadoPago>();
             builder.Services.AddScoped<ICUObtenerMetodoPago, CUObtenerMetodoPago>();
+            builder.Services.AddScoped<ICUEditarGasto, CUEditarGasto>();
 
-            
+
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");
             builder.Services.AddDbContext<ObligatorioContexto>(options => options.UseSqlServer(cadenaConexion));
 

@@ -21,15 +21,7 @@ namespace LogicaNegocio.EntidadesNegocio
             Validar();
         }
         protected Recurrente() :base(){}
-
-        //public Recurrente(Gasto gasto, Usuario usuario, string descripcion, int monto, DateTime fechaDesde, DateTime fechaHasta) : this(gasto)
-        //{
-        //    this.usuario = usuario;
-        //    Descripcion = descripcion;
-        //    Monto = monto;
-        //    FechaDesde = fechaDesde;
-        //    FechaHasta = fechaHasta;
-        //}
+        
 
         public void Validar() 
         {

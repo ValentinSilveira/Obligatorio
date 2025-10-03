@@ -20,7 +20,7 @@ namespace CasosDeUsos.DTOs.PagosDTO
         [DisplayName("Fecha desde")]
         public DateTime FechaDesde { get; set; }
         [DisplayName("Fecha hasta")]
-        public DateTime FechaHasta { get; set; }
+        public DateTime ? FechaHasta { get; set; }
         [DisplayName("Usuario")]
         public string UsuarioNombre { get; set; }
         [DisplayName("Tipo de gasto")]

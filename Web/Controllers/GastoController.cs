@@ -4,6 +4,7 @@ using CasosDeUsos.DTOs.GastosDTO;
 using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.CasosUso;
+using LogicaAplicacion.CasosUso.CUGasto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,15 +16,15 @@ namespace Web.Controllers
         public ICUListadoGasto CUListadoGasto { get; set; }
         public ICUBuscarGasto CUBuscarGasto { get; set; }
         public ICUEliminarGasto CUEliminarGasto { get; set; }
-        //public ICUActualizarGasto CUActualizarGasto { get; set; }
+        public ICUEditarGasto CUEditarGasto { get; set; }
         public GastoController(ICUAltaGasto cUAltaGasto, ICUListadoGasto cUListadoGasto, ICUBuscarGasto cUBuscarGasto
-                                 , ICUEliminarGasto cUEliminarGasto /*ICUActualizarGasto cUActualizarGasto*/)
+                                 , ICUEliminarGasto cUEliminarGasto, ICUEditarGasto cUEditarGasto)
         {
             CUAltaGasto = cUAltaGasto;
             CUListadoGasto = cUListadoGasto;
             CUBuscarGasto = cUBuscarGasto;
             CUEliminarGasto = cUEliminarGasto;
-            //CUActualizarGasto = cUActualizarGasto;
+            CUEditarGasto = cUEditarGasto;
         }
 
 
@@ -94,7 +95,7 @@ namespace Web.Controllers
         {
             var rol = HttpContext.Session.GetString("Rol");
 
-            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
             {
                 return RedirectToAction("AccesoDenegado");
             }
@@ -132,13 +133,47 @@ namespace Web.Controllers
         // GET: GastoController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
+            DetalleGastoDTO detalleGasto = new DetalleGastoDTO();
+            try
+            {
+                if (id > 0)
+                {
+                    detalleGasto = CUBuscarGasto.Ejecutar(id);
+                }
+                else
+                {
+                    throw new ArgumentException("Id no válido");
+                }
+            }
+            catch (UsuarioException ex)
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (ArgumentNullException ex)
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                ViewBag.Mensaje = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error";
+            }
+            return View(detalleGasto);
         }
 
         // POST: GastoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, DetalleGastoDTO detalleGasto)
         {
             var rol = HttpContext.Session.GetString("Rol");
 
@@ -146,14 +181,28 @@ namespace Web.Controllers
             {
                 return RedirectToAction("AccesoDenegado");
             }
+            
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (id>0 && ModelState.IsValid)
+                {
+                    CUEditarGasto.Ejecutar(detalleGasto, id);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    throw new ArgumentException("Los datos no son correctos");
+                }
             }
-            catch
+            catch (ArgumentException ex)
             {
-                return View();
+                ViewBag.Mensaje = ex.Message;
             }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error";
+            }
+            return View(detalleGasto);
         }
 
         // GET: GastoController/Delete/5

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CasosDeUsos.DTOs.GastoDTO.GastoDTO;
+using CasosDeUsos.DTOs.GastosDTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,6 @@ namespace CasosDeUsos.InterfacesCasosUsos.IGastoCU
 {
     public interface ICUEditarGasto
     {
-
+        void Ejecutar(DetalleGastoDTO detalle, int id);
     }
 }

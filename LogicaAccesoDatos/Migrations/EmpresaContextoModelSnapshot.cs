@@ -37,7 +37,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Equipos");
+                    b.ToTable("Equipos", (string)null);
                 });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Gasto", b =>
@@ -58,7 +58,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gastos");
+                    b.ToTable("Gastos", (string)null);
                 });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Pago", b =>
@@ -96,7 +96,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Pagos");
+                    b.ToTable("Pagos", (string)null);
 
                     b.HasDiscriminator<string>("TipoPago").HasValue("Pago");
 
@@ -117,7 +117,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Usuario", b =>
@@ -161,7 +161,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Recurrente", b =>

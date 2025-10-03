@@ -31,6 +31,12 @@ namespace Web.Controllers
         // GET: UsuarioController
         public ActionResult Index()
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             IEnumerable<ListadoUsuarioDTO> listadoUsuarios = new List<ListadoUsuarioDTO>();
             try
             {
@@ -47,6 +53,12 @@ namespace Web.Controllers
         // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             DetalleUsuarioDTO detalleUsuario = new DetalleUsuarioDTO();
             try
             {
@@ -81,6 +93,12 @@ namespace Web.Controllers
         // GET: UsuarioController/Create
         public ActionResult Create()
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             return View();
         }
 
@@ -88,7 +106,7 @@ namespace Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(UsuarioDTO usuarioDTO)
-        {
+        {            
             try
             {
                 if (ModelState.IsValid)
@@ -136,6 +154,12 @@ namespace Web.Controllers
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             DetalleUsuarioDTO detalleUsuario = new DetalleUsuarioDTO();
             try
             {
@@ -172,6 +196,12 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, DetalleUsuarioDTO detalleUsuario)
         {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
             try
             {
                 if (id > 0)
