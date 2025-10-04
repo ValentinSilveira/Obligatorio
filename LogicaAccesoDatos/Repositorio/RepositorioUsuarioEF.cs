@@ -71,5 +71,10 @@ namespace LogicaAccesoDatos.Repositorio
                     .Include(u => u.Rol)
                     .FirstOrDefault(u => u.Email == email && u.Password.Valor == password);
         }
+
+        public bool ExisteEmail(string email)
+        {
+            return Contexto.Usuarios.Any(c => c.Email == email);
+        }
     }
 }

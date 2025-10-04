@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs.UsuariosDTO
 {
-    public class RolDTO
+    public class ListadoRolDTO
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
