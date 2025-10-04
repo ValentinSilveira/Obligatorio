@@ -32,7 +32,7 @@ namespace Web
             builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuarioEF>();
             builder.Services.AddScoped<IRepositorioGasto, GastoRepositorioEF>();
             builder.Services.AddScoped<IRepositorioRol, RepositorioRolEF>();
-            builder.Services.AddScoped<IListadoRoles, ListadoRoles>();
+            builder.Services.AddScoped<ICUListadoRol, ListadoRoles>();
             builder.Services.AddScoped<ILogin, CULogin>();
             builder.Services.AddScoped<ICUAltaPagoUnico, CUAltaPagoUnico>();
             builder.Services.AddScoped<ICUAltaPagoRecurrente, CUAltaPagoRecurrente>();
@@ -40,6 +40,7 @@ namespace Web
             builder.Services.AddScoped<ICUListadoPago, CUListadoPago>();
             builder.Services.AddScoped<ICUObtenerMetodoPago, CUObtenerMetodoPago>();
             builder.Services.AddScoped<ICUEditarGasto, CUEditarGasto>();
+
 
 
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");

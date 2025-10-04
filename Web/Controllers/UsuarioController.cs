@@ -11,17 +11,17 @@ namespace Web.Controllers
 {
     public class UsuarioController : Controller
     {
-        public IListadoRoles ListadoRoles { get; set; }        
+        public ICUListadoRol CUListadoRoles { get; set; }        
         public ICUAltaUsuario CUAltaUsuario { get; set; }
         public ICUListadoUsuario CUListadoUsuario { get; set; }
         public ICUBuscarUsuario CUBuscarUsuario { get; set; }
         public ICUEliminarUsuario CUEliminarUsuario { get; set; }
 
 
-        public UsuarioController(IListadoRoles listadoRoles, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario
-,                                  ICUEliminarUsuario cUEliminarUsuario )
+        public UsuarioController(ICUListadoRol listadoRoles, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario
+,                                  ICUEliminarUsuario cUEliminarUsuario)
         {
-            ListadoRoles = listadoRoles;
+            CUListadoRoles = listadoRoles;
             CUAltaUsuario = cUAltaUsuario;
             CUListadoUsuario = cUListadoUsuario;
             CUBuscarUsuario = cUBuscarUsuario;
@@ -99,7 +99,17 @@ namespace Web.Controllers
             {
                 return RedirectToAction("AccesoDenegado");
             }
-            return View();
+            UsuarioDTO usuarioDTO = new UsuarioDTO();
+            try
+            {
+                usuarioDTO.Roles = CUListadoRoles.Ejecutar();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Error al cargar los roles";
+                usuarioDTO.Roles = new List<ListadoRolDTO>();
+            }
+            return View(usuarioDTO);
         }
 
         // POST: UsuarioController/Create

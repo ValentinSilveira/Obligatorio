@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace LogicaAplicacion.Mappers
 {
-    internal class MapperRol
+    public class MapperRol
     {
-        public static IEnumerable<RolDTO> ListRolToListRolDTO(
+        public static IEnumerable<ListadoRolDTO> ListRolToListRolDTO(
              IEnumerable<Rol> Roles)
         {
-            return Roles.Select(r => new RolDTO()
+            return Roles.Select(r => new ListadoRolDTO()
             {
                 Id = r.Id,
                 Descripcion = r.Descripcion

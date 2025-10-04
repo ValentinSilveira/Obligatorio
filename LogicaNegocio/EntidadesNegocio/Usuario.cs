@@ -13,17 +13,19 @@ namespace LogicaNegocio.EntidadesNegocio
     public class Usuario:IValidable, IEquatable<Usuario>
     {
         public int Id { get; private set; }
-        public string Email { get; set; }
+        public string Email { get; private set; }
         public Password Password { get; set; }
         public int RolId { get; set; }
         public Rol Rol { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
+        public string Nombre { get; private set; }
+        public string Apellido { get; private set; }
         private Usuario() { }
-        public Usuario(string email, string password) 
+        public Usuario(string password, string apellido, string nombre) 
         {
-            Email = email;
+            Nombre = nombre;
+            Apellido = apellido;
             Password = new Password(password);
+            Email = GenerarEmail(nombre, apellido);
             Validar();
         }
 
@@ -31,7 +33,6 @@ namespace LogicaNegocio.EntidadesNegocio
         {
             ValidarNombre();
             ValidarApellido();
-
         }
 
         private void ValidarNombre()
@@ -55,6 +56,13 @@ namespace LogicaNegocio.EntidadesNegocio
         public bool Equals(Usuario? other)
         {
             throw new NotImplementedException();
+        }
+
+        private string GenerarEmail(string nombre, string apellido, string agregado = "")
+        {
+            string nomb = nombre.Substring(0, Math.Min(3, nombre.Length)).ToLower();
+            string apel = apellido.Substring(0, Math.Min(3, apellido.Length)).ToLower();
+            return $"{nomb}{apel}@laEmpresa.com".ToLower(); ;
         }
     }
 }

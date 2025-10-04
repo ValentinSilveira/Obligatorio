@@ -10,5 +10,6 @@ namespace LogicaNegocio.interfacesRepositorios
     public interface IRepositorioUsuario : IRepositorio<Usuario>
     {
         Usuario FindByEmailAndPassword(string name, string password);
+        bool ExisteEmail(string email);
     }
 }

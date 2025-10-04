@@ -1,5 +1,5 @@
 ﻿@using CasosDeUsos.DTOs.UsuariosDTO
-@model UsuarioDTO
+@model CasosDeUsos.DTOs.UsuariosDTO.UsuarioDTO
 
 @{
     ViewData["Title"] = "Create";
@@ -29,13 +29,11 @@
                 <span asp-validation-for="Contraseña" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="RolId" class="control-label"></label>
-                <input asp-for="RolId" class="form-control" />
+                <select asp-for="RolId" class="form-control"
+                        asp-items="@(new SelectList(Model.Roles, "Id", "Descripcion"))">
+                    <option value="">-- Seleccione un rol --</option>
+                </select>
                 <span asp-validation-for="RolId" class="text-danger"></span>
             </div>
             <div class="form-group">
