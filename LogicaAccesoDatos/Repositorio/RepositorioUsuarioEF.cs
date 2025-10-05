@@ -49,7 +49,10 @@ namespace LogicaAccesoDatos.Repositorio
 
         public IEnumerable<Usuario> FindAll()
         {
-            return Contexto.Usuarios;
+            return Contexto.Usuarios
+                .Include(u => u.Rol)
+                .Include(u => u.Equipo)
+                .ToList();
         }
 
         public Usuario FindById(int id)

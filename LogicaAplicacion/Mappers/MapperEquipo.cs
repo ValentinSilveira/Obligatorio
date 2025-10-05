@@ -1,4 +1,5 @@
 ﻿using CasosDeUsos.DTOs;
+using CasosDeUsos.DTOs.UsuariosDTO;
 using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,14 @@ namespace LogicaAplicacion.Mappers
 {
     internal class MapperEquipo
     {
-        //public static Equipo EquipoDTOToEquipo(EquipoDTO equipoDTO)
-        //{
-        //    if (equipoDTO == null)
-        //    {
-        //        throw new ArgumentNullException("Datos incorrectos");
-        //    }
-        //    return new Equipo(equipoDTO.Nombre, equipoDTO.Usuarios);
-        //}
+        public static IEnumerable<ListadoEquipoDTO> ListEquipoToListEquipoDTO(
+             IEnumerable<Equipo> Equipos)
+        {
+            return Equipos.Select(e => new ListadoEquipoDTO()
+            {
+                Id = e.Id,
+                Nombre = e.Nombre,
+            });
+        }
     }
 }

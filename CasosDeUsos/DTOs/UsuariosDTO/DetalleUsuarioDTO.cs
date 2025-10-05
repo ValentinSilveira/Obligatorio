@@ -13,5 +13,6 @@ namespace CasosDeUsos.DTOs.UsuariosDTO
         public string Email { get; set; }
         public string Apellido { get; set; }
         public string DescripcionRol { get; set; }
+        public string Equipo { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace Web.Controllers
         // GET: PagoController
         public ActionResult Index()
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
 
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
             {
@@ -41,7 +41,7 @@ namespace Web.Controllers
             }
             try
             {
-                var pagos = CUListadoPago.Ejecutar();
+                IEnumerable<ListadoPagoDTO> pagos = CUListadoPago.Ejecutar();
                 return View(pagos);
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace Web.Controllers
         // GET: PagoController/Details/5
         public ActionResult Details(int id)
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -65,7 +65,7 @@ namespace Web.Controllers
         // GET: PagoController/CreatePagoUnico
         public ActionResult CreatePagoUnico()        
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
 
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
@@ -75,6 +75,7 @@ namespace Web.Controllers
             PagoUnicoDTO UnicoDTO = new PagoUnicoDTO();
             try 
             {
+                UnicoDTO.FechaPago = DateTime.Now.Date;
                 UnicoDTO.Usuarios = CUListadoUsuario.Ejecutar();
                 UnicoDTO.Gastos = CUListadoGasto.Ejecutar();
                 UnicoDTO.MetodoPago = string.Join(", ", CUObtenerMetodoPago.Ejecutar());
@@ -89,7 +90,7 @@ namespace Web.Controllers
         // GET: PagoController/CreatePagoRecurrente
         public ActionResult CreatePagoRecurrente() 
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
 
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
@@ -98,6 +99,8 @@ namespace Web.Controllers
             PagoRecurrenteDTO recurrenteDTO = new PagoRecurrenteDTO();
             try
             {
+                recurrenteDTO.FechaDesde = DateTime.Now.Date;
+                recurrenteDTO.FechaHasta = DateTime.Now.Date;
                 recurrenteDTO.Usuarios = CUListadoUsuario.Ejecutar();
                 recurrenteDTO.Gastos = CUListadoGasto.Ejecutar();
             }

@@ -16,22 +16,24 @@ namespace Web.Controllers
         public ICUListadoUsuario CUListadoUsuario { get; set; }
         public ICUBuscarUsuario CUBuscarUsuario { get; set; }
         public ICUEliminarUsuario CUEliminarUsuario { get; set; }
+        public ICUListadoEquipo CUListadoEquipo { get; set; }
 
 
         public UsuarioController(ICUListadoRol listadoRoles, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario
-,                                  ICUEliminarUsuario cUEliminarUsuario)
+,                                  ICUEliminarUsuario cUEliminarUsuario, ICUListadoEquipo cUListadoEquipo)
         {
             CUListadoRoles = listadoRoles;
             CUAltaUsuario = cUAltaUsuario;
             CUListadoUsuario = cUListadoUsuario;
             CUBuscarUsuario = cUBuscarUsuario;
             CUEliminarUsuario = cUEliminarUsuario;
+            CUListadoEquipo = cUListadoEquipo;
         }
 
         // GET: UsuarioController
         public ActionResult Index()
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
 
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
@@ -53,7 +55,7 @@ namespace Web.Controllers
         // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
 
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
@@ -93,7 +95,7 @@ namespace Web.Controllers
         // GET: UsuarioController/Create
         public ActionResult Create()
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
 
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
@@ -103,12 +105,14 @@ namespace Web.Controllers
             try
             {
                 usuarioDTO.Roles = CUListadoRoles.Ejecutar();
+                usuarioDTO.Equipos = CUListadoEquipo.Ejecutar();
             }
             catch (Exception ex)
             {
-                ViewBag.Mensaje = "Error al cargar los roles";
+                ViewBag.Mensaje = "Error al cargar los datos";
                 usuarioDTO.Roles = new List<ListadoRolDTO>();
-            }
+                usuarioDTO.Equipos = new List<ListadoEquipoDTO>();
+            }            
             return View(usuarioDTO);
         }
 
@@ -164,7 +168,7 @@ namespace Web.Controllers
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
 
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
@@ -206,7 +210,7 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, DetalleUsuarioDTO detalleUsuario)
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            string rol = HttpContext.Session.GetString("Rol");
 
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
