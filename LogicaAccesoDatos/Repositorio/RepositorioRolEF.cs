@@ -33,10 +33,7 @@ namespace LogicaAccesoDatos.Repositorio
 
         public Rol FindById(int id)
         {
-            throw new NotImplementedException();
-            //return Contexto.Roles
-            //    .Where(c => c.Id == id)
-            //    .SingleOrDefault();
+            throw new NotImplementedException();            
         }
 
         public void Update(Rol item)

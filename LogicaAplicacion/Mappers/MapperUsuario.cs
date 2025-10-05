@@ -20,7 +20,8 @@ namespace LogicaAplicacion.Mappers
             }
             Usuario usuario = new Usuario(usuarioDTO.Contraseña, usuarioDTO.Apellido, usuarioDTO.Nombre)
             {
-                RolId = usuarioDTO.RolId
+                RolId = usuarioDTO.RolId,
+                EquipoId = usuarioDTO.EquipoId
             };
 
             return usuario;
@@ -67,7 +68,8 @@ namespace LogicaAplicacion.Mappers
                 Email = usuario.Email,
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
-                DescripcionRol = usuario.Rol.Descripcion
+                DescripcionRol = usuario.Rol.Descripcion,
+                Equipo = usuario.Equipo.Nombre
             };
             
         }

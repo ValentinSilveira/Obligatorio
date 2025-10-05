@@ -16,6 +16,11 @@ namespace CasosDeUsos.DTOs.UsuariosDTO
         public string Apellido { get; set; }
         [Required(ErrorMessage = "la contraseña es obligatoria")]
         public string Contraseña { get; set; }
+        [DisplayName("Seleccione un equipo")]
+        [Required(ErrorMessage = "El equipo es obligatoria")]
+        public int EquipoId { get; set; }
+        public IEnumerable<ListadoEquipoDTO> Equipos { get; set; } = new List<ListadoEquipoDTO>();
+
         [DisplayName("Seleccione un Rol")]
         [Required(ErrorMessage = "El rol es obligatoria")]
         public int RolId { get; set; }

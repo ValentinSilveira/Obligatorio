@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicaAplicacion.CasosUso.CUUsuarios
+namespace LogicaAplicacion.CasosUso.CUUsuario
 {
     public class CUListadoUsuarios : ICUListadoUsuario
     {

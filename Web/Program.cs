@@ -7,6 +7,7 @@ using LogicaAccesoDatos.Repositorio;
 using LogicaAplicacion.CasosUso.CUGasto;
 using LogicaAplicacion.CasosUso.CUGastos;
 using LogicaAplicacion.CasosUso.CUPago;
+using LogicaAplicacion.CasosUso.CUUsuario;
 using LogicaAplicacion.CasosUso.CUUsuarios;
 using LogicaAplicacion.InterfacesCasosUsos;
 using LogicaNegocio.interfacesRepositorios;
@@ -32,7 +33,7 @@ namespace Web
             builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuarioEF>();
             builder.Services.AddScoped<IRepositorioGasto, GastoRepositorioEF>();
             builder.Services.AddScoped<IRepositorioRol, RepositorioRolEF>();
-            builder.Services.AddScoped<ICUListadoRol, ListadoRoles>();
+            builder.Services.AddScoped<ICUListadoRol, CUListadoRoles>();
             builder.Services.AddScoped<ILogin, CULogin>();
             builder.Services.AddScoped<ICUAltaPagoUnico, CUAltaPagoUnico>();
             builder.Services.AddScoped<ICUAltaPagoRecurrente, CUAltaPagoRecurrente>();
@@ -40,7 +41,8 @@ namespace Web
             builder.Services.AddScoped<ICUListadoPago, CUListadoPago>();
             builder.Services.AddScoped<ICUObtenerMetodoPago, CUObtenerMetodoPago>();
             builder.Services.AddScoped<ICUEditarGasto, CUEditarGasto>();
-
+            builder.Services.AddScoped<ICUListadoEquipo, CUListadoEquipos>();
+            builder.Services.AddScoped<IRepositorioEquipo, RepositorioEquipoEF>();
 
 
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");

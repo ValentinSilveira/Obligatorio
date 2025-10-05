@@ -10,14 +10,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicaAplicacion.CasosUso.CUUsuarios
+namespace LogicaAplicacion.CasosUso.CUUsuario
 {
-    public class ListadoRoles : ICUListadoRol
+    public class CUListadoRoles : ICUListadoRol
     {
         public IRepositorioRol RepoRol { get; set; }
-        public ICUListadoRol CUListadoRoles { get; set; }
+        public ICUListadoRol CUListadoRol { get; set; }
         
-        public ListadoRoles(IRepositorioRol repoRol)
+        public CUListadoRoles(IRepositorioRol repoRol)
         {
             RepoRol = repoRol;
         }
