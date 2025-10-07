@@ -1,7 +1,9 @@
 ﻿using CasosDeUsos.DTOs.UsuariosDTO;
+using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.CasosUso;
+using LogicaAplicacion.CasosUso.CUPago;
 using LogicaAplicacion.InterfacesCasosUsos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +13,16 @@ namespace Web.Controllers
 {
     public class UsuarioController : Controller
     {
-        public ICUListadoRol CUListadoRoles { get; set; }        
+        public ICUListadoRol CUListadoRoles { get; set; }
         public ICUAltaUsuario CUAltaUsuario { get; set; }
         public ICUListadoUsuario CUListadoUsuario { get; set; }
         public ICUBuscarUsuario CUBuscarUsuario { get; set; }
         public ICUEliminarUsuario CUEliminarUsuario { get; set; }
         public ICUListadoEquipo CUListadoEquipo { get; set; }
+        public ICUListadoPago CUListadoPago { get; set; }
 
-
-        public UsuarioController(ICUListadoRol listadoRoles, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario
-,                                  ICUEliminarUsuario cUEliminarUsuario, ICUListadoEquipo cUListadoEquipo)
+        public UsuarioController(ICUListadoRol listadoRoles, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario,
+                                ICUEliminarUsuario cUEliminarUsuario, ICUListadoEquipo cUListadoEquipo, ICUListadoPago cUListadoPago)
         {
             CUListadoRoles = listadoRoles;
             CUAltaUsuario = cUAltaUsuario;
@@ -28,13 +30,13 @@ namespace Web.Controllers
             CUBuscarUsuario = cUBuscarUsuario;
             CUEliminarUsuario = cUEliminarUsuario;
             CUListadoEquipo = cUListadoEquipo;
+            CUListadoPago = cUListadoPago;
         }
 
         // GET: UsuarioController
         public ActionResult Index()
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -56,8 +58,7 @@ namespace Web.Controllers
         public ActionResult Details(int id)
         {
             string rol = HttpContext.Session.GetString("Rol");
-
-            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
             {
                 return RedirectToAction("AccesoDenegado");
             }
@@ -96,8 +97,7 @@ namespace Web.Controllers
         public ActionResult Create()
         {
             string rol = HttpContext.Session.GetString("Rol");
-
-            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion"))
             {
                 return RedirectToAction("AccesoDenegado");
             }
@@ -112,7 +112,7 @@ namespace Web.Controllers
                 ViewBag.Mensaje = "Error al cargar los datos";
                 usuarioDTO.Roles = new List<ListadoRolDTO>();
                 usuarioDTO.Equipos = new List<ListadoEquipoDTO>();
-            }            
+            }
             return View(usuarioDTO);
         }
 
@@ -120,7 +120,7 @@ namespace Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(UsuarioDTO usuarioDTO)
-        {            
+        {
             try
             {
                 if (ModelState.IsValid)
@@ -248,5 +248,48 @@ namespace Web.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("login");
         }
+
+        public ActionResult FiltrarPorMonto(decimal? montoMinimo)
+        {
+            string rol = HttpContext.Session.GetString("Rol");
+            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
+            {
+                return RedirectToAction("AccesoDenegado");
+            }
+
+            try
+            {
+                IEnumerable<ListadoUsuarioDTO> usuarios = new List<ListadoUsuarioDTO>();
+
+                if (montoMinimo.HasValue && montoMinimo.Value > 0)
+                {
+                    var pagos = CUListadoPago.Ejecutar();
+                    var pagosUnicos = pagos
+                        .Where(p => p.TipoPago == "Unico" && p.Monto > montoMinimo.Value);
+
+                    var usuariosConPagosAltos = pagosUnicos
+                        .GroupBy(p => new { p.UsuarioNombre, p.Id })
+                        .Select(g => new ListadoUsuarioDTO
+                        {
+                            Id = g.Key.Id,
+                            Nombre = g.Key.UsuarioNombre,
+                            TotalPagado = g.Sum(x => x.Monto)
+                        })
+                        .OrderByDescending(u => u.TotalPagado);
+
+                    usuarios = usuariosConPagosAltos;
+                }
+
+                ViewBag.MontoMinimo = montoMinimo;
+
+                return View(usuarios);
+            }
+            catch (Exception)
+            {
+                ViewBag.Mensaje = "Error al filtrar usuarios por monto.";
+                return View(new List<ListadoUsuarioDTO>());
+            }
+        }
     }
+
 }

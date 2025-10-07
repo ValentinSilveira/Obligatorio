@@ -31,10 +31,9 @@ namespace Web.Controllers
         }
 
         // GET: PagoController
-        public ActionResult Index()
+        public ActionResult Index(DateTime? fechaDesde, DateTime? fechaHasta)
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -42,9 +41,20 @@ namespace Web.Controllers
             try
             {
                 IEnumerable<ListadoPagoDTO> pagos = CUListadoPago.Ejecutar();
+                if (fechaDesde.HasValue && fechaHasta.HasValue)
+                {
+                    pagos = CUListadoPago.Ejecutar()
+                .Where(p =>
+                    p.FechaDesde >= fechaDesde.Value &&
+                    p.FechaDesde <= fechaHasta.Value);
+                }
+
+                ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
+                ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
+
                 return View(pagos);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ViewBag.Mensaje = "Error al obtener pagos";
                 return View(new List<ListadoPagoDTO>());
@@ -66,12 +76,10 @@ namespace Web.Controllers
         public ActionResult CreatePagoUnico()        
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
                 return RedirectToAction("AccesoDenegado");
             }
-
             PagoUnicoDTO UnicoDTO = new PagoUnicoDTO();
             try 
             {
@@ -91,7 +99,6 @@ namespace Web.Controllers
         public ActionResult CreatePagoRecurrente() 
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -121,7 +128,8 @@ namespace Web.Controllers
                 if (ModelState.IsValid) 
                 {
                     CUAltaPagoUnico.Ejecutar(unicoDTO);
-                    return RedirectToAction(nameof(Index));
+                    TempData["Exito"] = "Pago único creado correctamente.";
+                    return RedirectToAction(nameof(CreatePagoUnico));
                 }
             }
             catch(PagoException ex)
@@ -145,7 +153,8 @@ namespace Web.Controllers
                 if (ModelState.IsValid)
                 {
                     CUAltaPagoRecurrente.Ejecutar(recurrenteDTO);
-                    return RedirectToAction(nameof(Index));
+                    TempData["Exito"] = "Pago recurrente creado correctamente.";
+                    return RedirectToAction(nameof(CreatePagoRecurrente));
                 }
             }
             catch (PagoException ex)

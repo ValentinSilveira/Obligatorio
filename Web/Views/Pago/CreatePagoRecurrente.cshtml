@@ -10,6 +10,18 @@
 
 <h4>PagoRecurrenteDTO</h4>
 <hr />
+@if (TempData["Exito"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Exito"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="CreatePagoRecurrente">

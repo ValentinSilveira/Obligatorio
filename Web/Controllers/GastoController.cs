@@ -32,7 +32,6 @@ namespace Web.Controllers
         public ActionResult Index()
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -54,7 +53,6 @@ namespace Web.Controllers
         public ActionResult Details(int id)
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -94,7 +92,6 @@ namespace Web.Controllers
         public ActionResult Create()
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -134,7 +131,6 @@ namespace Web.Controllers
         public ActionResult Edit(int id)
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -176,7 +172,6 @@ namespace Web.Controllers
         public ActionResult Edit(int id, DetalleGastoDTO detalleGasto)
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
             {
                 return RedirectToAction("AccesoDenegado");
@@ -209,7 +204,6 @@ namespace Web.Controllers
         public ActionResult Delete(int id)
         {
             string rol = HttpContext.Session.GetString("Rol");
-
             if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
             {
                 return RedirectToAction("AccesoDenegado");
