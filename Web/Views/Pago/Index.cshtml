@@ -1,79 +1,66 @@
 ﻿@model IEnumerable<CasosDeUsos.DTOs.PagosDTO.ListadoPagoDTO>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de Pagos";
 }
 
-<h1>Index</h1>
+<h1>Listado de Pagos</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tipo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Monto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MetodoPago)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaDesde)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaHasta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UsuarioNombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GastoDescripcion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tipo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Monto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MetodoPago)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaDesde)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaHasta)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UsuarioNombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GastoDescripcion)
-                </td>
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="fechaDesde">Fecha Desde:</label>
+            <input type="date" id="fechaDesde" name="fechaDesde" class="form-control" value="@ViewBag.FechaDesde" />
+        </div>
+        <div class="col-md-3">
+            <label for="fechaHasta">Fecha Hasta:</label>
+            <input type="date" id="fechaHasta" name="fechaHasta" class="form-control" value="@ViewBag.FechaHasta" />
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </div>
+</form>
 
-                @* <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td> *@
-            </tr>
-        }
-    </tbody>
-</table>
+@if (ViewBag.FechaDesde != null && ViewBag.FechaHasta != null)
+{
+    if (Model != null && Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Id)</th>
+                    <th>@Html.DisplayNameFor(model => model.Tipo)</th>
+                    <th>@Html.DisplayNameFor(model => model.Monto)</th>
+                    <th>@Html.DisplayNameFor(model => model.MetodoPago)</th>
+                    <th>@Html.DisplayNameFor(model => model.FechaDesde)</th>
+                    <th>@Html.DisplayNameFor(model => model.FechaHasta)</th>
+                    <th>@Html.DisplayNameFor(model => model.UsuarioNombre)</th>
+                    <th>@Html.DisplayNameFor(model => model.GastoDescripcion)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Tipo)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Monto)</td>
+                        <td>@Html.DisplayFor(modelItem => item.MetodoPago)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FechaDesde)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FechaHasta)</td>
+                        <td>@Html.DisplayFor(modelItem => item.UsuarioNombre)</td>
+                        <td>@Html.DisplayFor(modelItem => item.GastoDescripcion)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning mt-3" role="alert">
+            No se encontraron pagos para las fechas seleccionadas.
+        </div>
+    }
+}

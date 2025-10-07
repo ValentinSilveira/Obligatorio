@@ -59,6 +59,7 @@ namespace LogicaAccesoDatos.Repositorio
         {
             return Contexto.Usuarios
                 .Include(u => u.Rol)
+                .Include(u => u.Equipo)
                 .Where(c => c.Id == id)
                 .SingleOrDefault();
         }

@@ -42,13 +42,14 @@ namespace LogicaAplicacion.Mappers
                 listadoPagos.Add(new ListadoPagoDTO()
                 {
                     Id = pago.Id,
+                    TipoPago = pago is Unico ? "Unico" : "Recurrente",
                     Tipo = pago.TipoGasto.Nombre,
                     Monto = pago.Monto,
                     FechaDesde = pago is Unico ? ((Unico)pago).FechaPago : ((Recurrente)pago).FechaDesde,
                     FechaHasta = pago is Recurrente ? ((Recurrente)pago).FechaHasta : null,
                     UsuarioNombre = pago.Usuario.Nombre,
                     GastoDescripcion = pago.TipoGasto.Descripcion,
-                    MetodoPago=pago.Metodo.ToString()
+                    MetodoPago = pago.Metodo.ToString()
                 });
             }
             return listadoPagos;
