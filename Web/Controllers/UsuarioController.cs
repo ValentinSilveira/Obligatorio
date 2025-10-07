@@ -19,10 +19,9 @@ namespace Web.Controllers
         public ICUBuscarUsuario CUBuscarUsuario { get; set; }
         public ICUEliminarUsuario CUEliminarUsuario { get; set; }
         public ICUListadoEquipo CUListadoEquipo { get; set; }
-        public ICUListadoPago CUListadoPago { get; set; }
 
         public UsuarioController(ICUListadoRol listadoRoles, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario,
-                                ICUEliminarUsuario cUEliminarUsuario, ICUListadoEquipo cUListadoEquipo, ICUListadoPago cUListadoPago)
+                                ICUEliminarUsuario cUEliminarUsuario, ICUListadoEquipo cUListadoEquipo)
         {
             CUListadoRoles = listadoRoles;
             CUAltaUsuario = cUAltaUsuario;
@@ -30,7 +29,6 @@ namespace Web.Controllers
             CUBuscarUsuario = cUBuscarUsuario;
             CUEliminarUsuario = cUEliminarUsuario;
             CUListadoEquipo = cUListadoEquipo;
-            CUListadoPago = cUListadoPago;
         }
 
         // GET: UsuarioController
@@ -249,47 +247,7 @@ namespace Web.Controllers
             return RedirectToAction("login");
         }
 
-        public ActionResult FiltrarPorMonto(decimal? montoMinimo)
-        {
-            string rol = HttpContext.Session.GetString("Rol");
-            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
-            {
-                return RedirectToAction("AccesoDenegado");
-            }
-
-            try
-            {
-                IEnumerable<ListadoUsuarioDTO> usuarios = new List<ListadoUsuarioDTO>();
-
-                if (montoMinimo.HasValue && montoMinimo.Value > 0)
-                {
-                    var pagos = CUListadoPago.Ejecutar();
-                    var pagosUnicos = pagos
-                        .Where(p => p.TipoPago == "Unico" && p.Monto > montoMinimo.Value);
-
-                    var usuariosConPagosAltos = pagosUnicos
-                        .GroupBy(p => new { p.UsuarioNombre, p.Id })
-                        .Select(g => new ListadoUsuarioDTO
-                        {
-                            Id = g.Key.Id,
-                            Nombre = g.Key.UsuarioNombre,
-                            TotalPagado = g.Sum(x => x.Monto)
-                        })
-                        .OrderByDescending(u => u.TotalPagado);
-
-                    usuarios = usuariosConPagosAltos;
-                }
-
-                ViewBag.MontoMinimo = montoMinimo;
-
-                return View(usuarios);
-            }
-            catch (Exception)
-            {
-                ViewBag.Mensaje = "Error al filtrar usuarios por monto.";
-                return View(new List<ListadoUsuarioDTO>());
-            }
-        }
+        
     }
 
 }
