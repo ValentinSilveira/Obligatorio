@@ -13,8 +13,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ObligatorioContexto))]
-    [Migration("20250919220534_add-migration init")]
-    partial class addmigrationinit
+    [Migration("20251010005531_Auditoria")]
+    partial class Auditoria
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,40 @@ namespace LogicaAccesoDatos.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Auditoria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Detalle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Entidad")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Operacion")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Usuario")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Auditorias");
+                });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Equipo", b =>
                 {
@@ -76,11 +110,22 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Metodo")
+                        .HasColumnType("int");
+
                     b.Property<int>("Monto")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("SaldoPendiente")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("TipoGastoId")
                         .HasColumnType("int");
+
+                    b.Property<string>("TipoPago")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -92,6 +137,10 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Pagos");
+
+                    b.HasDiscriminator<string>("TipoPago").HasValue("Pago");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Rol", b =>
@@ -123,7 +172,11 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EquipoId")
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EquipoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
@@ -133,16 +186,7 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<int>("RolId")
                         .HasColumnType("int");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Contrasenia", "LogicaNegocio.EntidadesNegocio.Usuario.Contrasenia#Contrasenia", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Valor")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("Email", "LogicaNegocio.EntidadesNegocio.Usuario.Email#Email", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Password", "LogicaNegocio.EntidadesNegocio.Usuario.Password#Password", b1 =>
                         {
                             b1.IsRequired();
 
@@ -158,6 +202,33 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasIndex("RolId");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Recurrente", b =>
+                {
+                    b.HasBaseType("LogicaNegocio.EntidadesNegocio.Pago");
+
+                    b.Property<DateTime>("FechaDesde")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaHasta")
+                        .HasColumnType("datetime2");
+
+                    b.HasDiscriminator().HasValue("Recurrente");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Unico", b =>
+                {
+                    b.HasBaseType("LogicaNegocio.EntidadesNegocio.Pago");
+
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NroRecibo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Unico");
                 });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Pago", b =>
@@ -181,15 +252,19 @@ namespace LogicaAccesoDatos.Migrations
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Usuario", b =>
                 {
-                    b.HasOne("LogicaNegocio.EntidadesNegocio.Equipo", null)
+                    b.HasOne("LogicaNegocio.EntidadesNegocio.Equipo", "Equipo")
                         .WithMany("Usuarios")
-                        .HasForeignKey("EquipoId");
+                        .HasForeignKey("EquipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LogicaNegocio.EntidadesNegocio.Rol", "Rol")
                         .WithMany()
                         .HasForeignKey("RolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Equipo");
 
                     b.Navigation("Rol");
                 });

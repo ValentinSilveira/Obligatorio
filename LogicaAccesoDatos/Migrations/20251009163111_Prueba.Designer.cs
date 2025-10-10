@@ -13,8 +13,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ObligatorioContexto))]
-    [Migration("20250920002556_init")]
-    partial class init
+    [Migration("20251009163111_Prueba")]
+    partial class Prueba
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,11 +76,22 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Metodo")
+                        .HasColumnType("int");
+
                     b.Property<int>("Monto")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("SaldoPendiente")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("TipoGastoId")
                         .HasColumnType("int");
+
+                    b.Property<string>("TipoPago")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -92,6 +103,10 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Pagos");
+
+                    b.HasDiscriminator<string>("TipoPago").HasValue("Pago");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Rol", b =>
@@ -127,7 +142,7 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EquipoId")
+                    b.Property<int>("EquipoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
@@ -155,6 +170,33 @@ namespace LogicaAccesoDatos.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Recurrente", b =>
+                {
+                    b.HasBaseType("LogicaNegocio.EntidadesNegocio.Pago");
+
+                    b.Property<DateTime>("FechaDesde")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaHasta")
+                        .HasColumnType("datetime2");
+
+                    b.HasDiscriminator().HasValue("Recurrente");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Unico", b =>
+                {
+                    b.HasBaseType("LogicaNegocio.EntidadesNegocio.Pago");
+
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NroRecibo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Unico");
+                });
+
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Pago", b =>
                 {
                     b.HasOne("LogicaNegocio.EntidadesNegocio.Gasto", "TipoGasto")
@@ -176,15 +218,19 @@ namespace LogicaAccesoDatos.Migrations
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Usuario", b =>
                 {
-                    b.HasOne("LogicaNegocio.EntidadesNegocio.Equipo", null)
+                    b.HasOne("LogicaNegocio.EntidadesNegocio.Equipo", "Equipo")
                         .WithMany("Usuarios")
-                        .HasForeignKey("EquipoId");
+                        .HasForeignKey("EquipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LogicaNegocio.EntidadesNegocio.Rol", "Rol")
                         .WithMany()
                         .HasForeignKey("RolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Equipo");
 
                     b.Navigation("Rol");
                 });

@@ -43,6 +43,8 @@ namespace Web
             builder.Services.AddScoped<ICUEditarGasto, CUEditarGasto>();
             builder.Services.AddScoped<ICUListadoEquipo, CUListadoEquipos>();
             builder.Services.AddScoped<IRepositorioEquipo, RepositorioEquipoEF>();
+            builder.Services.AddScoped<ICUListadoPagoPorFecha, CUListadoPagoPorFecha>();
+            builder.Services.AddScoped<IRepositorioAuditoria, RepositorioAuditoriaEF>();
 
 
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");

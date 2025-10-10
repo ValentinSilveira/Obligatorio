@@ -5,8 +5,12 @@ using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaAccesoDatos.Repositorio;
+using LogicaAplicacion.Mappers;
+using LogicaNegocio.interfacesRepositorios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static LogicaAplicacion.CasosUso.CUPago.CUListadoPago;
 
 namespace Web.Controllers
 {
@@ -19,10 +23,13 @@ namespace Web.Controllers
         public ICUListadoGasto CUListadoGasto { get; set; }
         public ICUObtenerMetodoPago CUObtenerMetodoPago { get; set; }
         public ICUListadoPago CUListadoPagos { get; set; }
+        public ICUListadoPagoPorFecha CUFiltrarPagosPorFechas { get; set; }
+
+
 
         public PagoController(ICUAltaPagoUnico CuAltaPagoUnico, ICUAltaPagoRecurrente cUAltaPagoRecurrente,
             ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto, ICUListadoPago cUListadoPago
-            , ICUObtenerMetodoPago cUObtenerMetodoPago, ICUListadoPago cUListadoPagos)
+            , ICUObtenerMetodoPago cUObtenerMetodoPago, ICUListadoPago cUListadoPagos, ICUListadoPagoPorFecha cUFiltrarPagosPorFechas)
         {
             CUAltaPagoUnico = CuAltaPagoUnico;
             CUAltaPagoRecurrente = cUAltaPagoRecurrente;
@@ -31,26 +38,23 @@ namespace Web.Controllers
             CUListadoPago = cUListadoPago;
             CUObtenerMetodoPago = cUObtenerMetodoPago;
             CUListadoPagos = cUListadoPagos;
+            CUFiltrarPagosPorFechas = cUFiltrarPagosPorFechas;
         }
 
         // GET: PagoController
         public ActionResult Index(DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            string rol = HttpContext.Session.GetString("Rol");
-            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
-            {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Rol")) ||
+                HttpContext.Session.GetString("Rol") != "Gerente")
                 return RedirectToAction("AccesoDenegado");
-            }
             try
             {
-                IEnumerable<ListadoPagoDTO> pagos = CUListadoPago.Ejecutar();
+                IEnumerable<ListadoPagoDTO> pagos;
+
                 if (fechaDesde.HasValue && fechaHasta.HasValue)
-                {
-                    pagos = CUListadoPago.Ejecutar()
-                .Where(p =>
-                    p.FechaDesde >= fechaDesde.Value &&
-                    p.FechaDesde <= fechaHasta.Value);
-                }
+                    pagos = CUFiltrarPagosPorFechas.Ejecutar(fechaDesde.Value, fechaHasta.Value);
+                else
+                    pagos = CUListadoPago.Ejecutar();
 
                 ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
                 ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
@@ -63,8 +67,6 @@ namespace Web.Controllers
                 return View(new List<ListadoPagoDTO>());
             }
         }
-
-        // GET: PagoController/Details/5
         public ActionResult Details(int id)
         {
             string rol = HttpContext.Session.GetString("Rol");

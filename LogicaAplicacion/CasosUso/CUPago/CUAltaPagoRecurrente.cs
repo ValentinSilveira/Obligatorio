@@ -33,13 +33,11 @@ namespace LogicaAplicacion.CasosUso.CUPago
 
             if (usuario != null && gasto != null)
             {
-                // Usar el valor del enum directamente desde el DTO
+                // se usa el valor del enum desde el DTO
                 MetodoPago metodoPago = pagoRecurrenteDTO.MetodoPago;
 
-                // Crear el objeto Recurrente usando el mapper
                 Recurrente pagoRecurrente = MapperPago.PagoRecurrenteDTOToPagoRecurrente(pagoRecurrenteDTO, usuario, gasto, metodoPago);
 
-                // Guardar el pago
                 RepoPago.Add(pagoRecurrente);
             }
             else
