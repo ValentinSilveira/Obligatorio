@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.InterfacesCasosUsos.IPagoCU
 {
-    public interface ICUListadoPago
+    public interface ICUListadoPagoPorFecha
     {
-        IEnumerable<ListadoPagoDTO> Ejecutar();        
+        public IEnumerable<ListadoPagoDTO> Ejecutar(DateTime fechaDesde, DateTime fechaHasta);
     }
 }

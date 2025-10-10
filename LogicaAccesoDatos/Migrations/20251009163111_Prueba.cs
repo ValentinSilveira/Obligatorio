@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class addmigrationinit : Migration
+    public partial class Prueba : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,12 +57,12 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RolId = table.Column<int>(type: "int", nullable: false),
+                    EquipoId = table.Column<int>(type: "int", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EquipoId = table.Column<int>(type: "int", nullable: true),
-                    Contrasenia_Valor = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email_Valor = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Password_Valor = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,7 +71,8 @@ namespace LogicaAccesoDatos.Migrations
                         name: "FK_Usuarios_Equipos_EquipoId",
                         column: x => x.EquipoId,
                         principalTable: "Equipos",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Usuarios_Roles_RolId",
                         column: x => x.RolId,
@@ -87,8 +89,15 @@ namespace LogicaAccesoDatos.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TipoGastoId = table.Column<int>(type: "int", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Metodo = table.Column<int>(type: "int", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Monto = table.Column<int>(type: "int", nullable: false)
+                    Monto = table.Column<int>(type: "int", nullable: false),
+                    SaldoPendiente = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TipoPago = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    FechaDesde = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FechaHasta = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FechaPago = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    NroRecibo = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

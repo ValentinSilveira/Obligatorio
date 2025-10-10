@@ -28,5 +28,6 @@ namespace LogicaAplicacion.CasosUso.CUPago
             IEnumerable<Pago> pago = RepoPago.FindAll();
             return MapperPago.PagoToPagoListadoDTO(pago);
         }
+        
     }
 }

@@ -50,7 +50,12 @@ namespace LogicaAccesoDatos.Repositorio
 
         public void Update(Gasto item)
         {
-            Contexto.Gastos.Update(item);
+            var existente = Contexto.Gastos.Find(item.Id);
+            if (existente == null)
+                throw new Exception("El gasto no existe.");
+            existente.Nombre = item.Nombre;
+            existente.Descripcion = item.Descripcion;
+
             Contexto.SaveChanges();
         }
     }

@@ -70,5 +70,36 @@ namespace LogicaAccesoDatos.Repositorio
                 .ToList();
         }
 
+        public IEnumerable<Pago> FindByRangoFechas(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            var pagos = Contexto.Pagos
+                .Include(p => p.TipoGasto)
+                .Include(p => p.Usuario)
+                .ToList();
+            var filtrados = pagos.Where(p =>
+                (p is Unico u && u.FechaPago >= fechaDesde && u.FechaPago <= fechaHasta)
+                || (p is Recurrente r && r.FechaDesde <= fechaHasta && r.FechaHasta >= fechaDesde)
+            );
+            foreach (var pago in filtrados)
+            {
+                if (pago is Recurrente r)
+                {
+                    DateTime fechaReferencia = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+                    int mesesRestantes = ((r.FechaHasta.Year - fechaReferencia.Year) * 12)
+                                       + (r.FechaHasta.Month - fechaReferencia.Month);
+
+                    if (mesesRestantes < 0) mesesRestantes = 0;
+
+                    pago.SaldoPendiente = mesesRestantes * r.Monto;
+                }
+                else
+                {
+                    pago.SaldoPendiente = 0;
+                }
+            }
+            return filtrados;
+        }
+
     }
 }
