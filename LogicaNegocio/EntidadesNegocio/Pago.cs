@@ -1,10 +1,13 @@
 ﻿using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaNegocio.InterfacesNegocio;
+using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LogicaNegocio.EntidadesNegocio
 {
@@ -16,9 +19,10 @@ namespace LogicaNegocio.EntidadesNegocio
         public MetodoPago Metodo {  get; set; } 
         public string Descripcion {  get; set; }
         public int Monto { get; set; }
-        //public DateTime FechaPago { get; set; }
+        //[Precision(18, 2)]
+        public decimal SaldoPendiente { get; set; }
 
-        public Pago(Gasto tipoGasto, Usuario usuario, MetodoPago metodo, string descripcion, int monto /*DateTime fechaPago*/)
+        public Pago(Gasto tipoGasto, Usuario usuario, MetodoPago metodo, string descripcion, int monto)
         {
             TipoGasto = tipoGasto;
             Usuario = usuario;

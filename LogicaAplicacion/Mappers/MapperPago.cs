@@ -49,7 +49,8 @@ namespace LogicaAplicacion.Mappers
                     FechaHasta = pago is Recurrente ? ((Recurrente)pago).FechaHasta : null,
                     UsuarioNombre = pago.Usuario.Nombre,
                     GastoDescripcion = pago.TipoGasto.Descripcion,
-                    MetodoPago = pago.Metodo.ToString()
+                    MetodoPago = pago.Metodo.ToString(),
+                    SaldoPendiente = pago.SaldoPendiente
                 });
             }
             return listadoPagos;

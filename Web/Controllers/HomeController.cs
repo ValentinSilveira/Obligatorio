@@ -50,7 +50,7 @@ namespace Web.Controllers
                 if (usuarioDTO != null)
                 {
                     HttpContext.Session.SetString("Rol", usuarioDTO.NombreRol);
-                    HttpContext.Session.SetString("Email", usuarioDTO.Email);
+                    HttpContext.Session.SetString("UsuarioEmail", usuarioDTO.Email);
                     return RedirectToAction("Index", "Home");
                 }
             }
