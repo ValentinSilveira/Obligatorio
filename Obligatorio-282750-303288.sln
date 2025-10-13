@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicaNegocio", "LogicaNegocio\LogicaNegocio.csproj", "{D0823DBB-6272-49EF-8DEF-180D678F6203}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasosDeUsos", "CasosDeUsos\CasosDeUsos.csproj", "{6A9B0300-BF2A-4931-A700-82DABE7F4118}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{23C8D75C-8B26-4449-ACDE-7B3B08069237}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{7DA4E0D9-B73D-4F31-BBB5-3027B2E64386}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{23C8D75C-8B26-4449-ACDE-7B3B08069237}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23C8D75C-8B26-4449-ACDE-7B3B08069237}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23C8D75C-8B26-4449-ACDE-7B3B08069237}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DA4E0D9-B73D-4F31-BBB5-3027B2E64386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DA4E0D9-B73D-4F31-BBB5-3027B2E64386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DA4E0D9-B73D-4F31-BBB5-3027B2E64386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DA4E0D9-B73D-4F31-BBB5-3027B2E64386}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

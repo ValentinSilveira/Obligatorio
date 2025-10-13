@@ -70,7 +70,7 @@ namespace LogicaAplicacion.Mappers
                 Apellido = usuario.Apellido,
                 DescripcionRol = usuario.Rol.Descripcion,
                 Equipo = usuario.Equipo.Nombre
-            };
+            };            
             
         }
     }
