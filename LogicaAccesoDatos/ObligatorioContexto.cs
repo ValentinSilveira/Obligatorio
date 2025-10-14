@@ -15,6 +15,7 @@ namespace LogicaAccesoDatos
         public DbSet<Pago> Pagos { get; set; }
         public DbSet<Equipo> Equipos { get; set; }
         public DbSet<Gasto> Gastos { get; set; }
+        public DbSet<Auditoria> Auditorias { get; set; }
 
         public ObligatorioContexto(DbContextOptions options) : base(options){}
 
@@ -22,11 +23,26 @@ namespace LogicaAccesoDatos
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuración de herencia TPH para Pago
+            //TPH
             modelBuilder.Entity<Pago>()
                 .HasDiscriminator<string>("TipoPago")
                 .HasValue<Recurrente>("Recurrente")
                 .HasValue<Unico>("Unico");
+
+            modelBuilder.Entity<Auditoria>()
+                .Property(a => a.Usuario)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            modelBuilder.Entity<Auditoria>()
+                .Property(a => a.Entidad)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            modelBuilder.Entity<Auditoria>()
+                .Property(a => a.Operacion)
+                .HasMaxLength(20)
+                .IsRequired();
         }
     }
 }

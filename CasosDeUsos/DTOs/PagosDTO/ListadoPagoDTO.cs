@@ -26,6 +26,8 @@ namespace CasosDeUsos.DTOs.PagosDTO
         [DisplayName("Tipo de gasto")]
         public string GastoDescripcion { get; set; }
         public string TipoPago { get; set; }
+        [DisplayName("Saldo Pendiente")]
+        public decimal SaldoPendiente { get; set; }
     }       
     
 }

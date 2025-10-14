@@ -1,4 +1,4 @@
-﻿using LogicaNegocio.EntidadesNegocio;
+using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;

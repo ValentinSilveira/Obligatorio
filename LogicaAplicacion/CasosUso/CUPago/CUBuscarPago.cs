@@ -16,7 +16,7 @@ namespace LogicaAplicacion.CasosUso.CUPago
     {
         public IRepositorioPago RepoPago { get; set; }
 
-        public CUBuscarPago (IRepositorioPago repoPago)
+        public CUBuscarPago(IRepositorioPago repoPago)
         {
             RepoPago = repoPago;
         }
@@ -25,11 +25,11 @@ namespace LogicaAplicacion.CasosUso.CUPago
         public DetallePagoDTO Ejecutar(int id)
         {
             Pago pago = RepoPago.FindById(id);
-            if(pago != null) 
+            if (pago != null)
             {
                 return MapperPago.PagoToDetallePagoDTO(pago);
             }
-            else 
+            else
             {
                 throw new PagoException("No se encontró un pago con ese id");
             }

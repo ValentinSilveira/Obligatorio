@@ -9,6 +9,6 @@ namespace LogicaNegocio.interfacesRepositorios
 {
     public interface IRepositorioPago : IRepositorio<Pago>
     {
-
+        IEnumerable<Pago> FindByRangoFechas(DateTime fechaDesde, DateTime fechaHasta);
     }
 }
