@@ -18,8 +18,7 @@ namespace LogicaNegocio.EntidadesNegocio
         public Usuario Usuario { get; set; }
         public MetodoPago Metodo {  get; set; }
         public string Descripcion {  get; set; }
-        public int Monto { get; set; }
-        //[Precision(18, 2)]
+        public int Monto { get; set; }        
         public decimal SaldoPendiente { get; set; }
 
         public Pago(Gasto tipoGasto, Usuario usuario, MetodoPago metodo, string descripcion, int monto)
@@ -29,7 +28,6 @@ namespace LogicaNegocio.EntidadesNegocio
             Metodo = metodo;
             Descripcion = descripcion;
             Monto = monto;
-            //FechaPago = fechaPago;
             Validar();
         }
         protected Pago() { }
@@ -40,7 +38,6 @@ namespace LogicaNegocio.EntidadesNegocio
             ValidarGasto();
             ValidarDescripcion();
             ValidarMonto();
-            //ValidarMetodo();
         }
 
         private void ValidarUsuario() 

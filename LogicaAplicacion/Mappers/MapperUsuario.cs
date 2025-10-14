@@ -72,6 +72,6 @@ namespace LogicaAplicacion.Mappers
                 Equipo = usuario.Equipo.Nombre
             };
             
-        }
+        }        
     }
 }

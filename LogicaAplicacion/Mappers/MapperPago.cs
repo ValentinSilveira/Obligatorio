@@ -66,5 +66,22 @@ namespace LogicaAplicacion.Mappers
                            Text = m.ToString()
                        });
         }
+
+        public static DetallePagoDTO PagoToDetallePagoDTO(Pago pago)
+        {
+            if (pago == null)
+            {
+                throw new ArgumentNullException("Datos incorrectos");
+            }
+            return new DetallePagoDTO
+            {
+                Id = pago.Id,
+                TipoGasto = pago.TipoGasto.Nombre,
+                Usuario = pago.Usuario.Nombre,
+                MetodoPago = pago.Metodo.ToString(),
+                Descripcion = pago.Descripcion,
+                Monto = pago.Monto
+            };
+        }
     }
 }

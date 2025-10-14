@@ -143,40 +143,33 @@ namespace Web.Controllers
 
         // GET: GastoController/Edit/5
         public ActionResult Edit(int id)
-        {            
+        {
             string rol = HttpContext.Session.GetString("Rol");
             if (string.IsNullOrEmpty(rol) || !(rol == "Administracion"))
             {
                 return RedirectToAction("AccesoDenegado");
             }
-            DetalleGastoDTO detalleGasto = new DetalleGastoDTO();
             try
             {
-                if (id > 0 && ModelState.IsValid)
+                if (id <= 0)
                 {
-                    CUEditarGasto.Ejecutar(detalleGasto, id);                   
+                    ViewBag.Mensaje = "ID inválido.";
                     return RedirectToAction(nameof(Index));
                 }
+                DetalleGastoDTO detalleGasto = CUBuscarGasto.Ejecutar(id);
 
-                ViewBag.Mensaje = "Los datos no son correctos";
-            }
-            catch (UsuarioException ex)
-            {
-                ViewBag.Mensaje = ex.Message;
-            }
-            catch (ArgumentNullException ex)
-            {
-                ViewBag.Mensaje = ex.Message;
-            }
-            catch (ArgumentException ex)
-            {
-                ViewBag.Mensaje = ex.Message;
+                if (detalleGasto == null)
+                {
+                    ViewBag.Mensaje = "No se encontró el gasto.";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(detalleGasto);
             }
             catch (Exception ex)
             {
-                ViewBag.Mensaje = "Error";
+                ViewBag.Mensaje = $"Error al cargar el gasto: {ex.Message}";
+                return RedirectToAction(nameof(Index));
             }
-            return View(detalleGasto);
         }
 
         // POST: GastoController/Edit/5
