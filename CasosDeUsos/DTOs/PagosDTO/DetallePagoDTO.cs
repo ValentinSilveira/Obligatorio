@@ -1,4 +1,5 @@
-﻿using System;
+using LogicaNegocio.EntidadesNegocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,6 @@ namespace CasosDeUsos.DTOs.PagosDTO
         public string MetodoPago { get; set; }
         public string Descripcion { get; set; }
         public int Monto { get; set; }
-
-    }
+    
+    } 
 }
