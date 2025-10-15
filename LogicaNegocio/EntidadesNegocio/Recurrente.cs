@@ -10,8 +10,6 @@ namespace LogicaNegocio.EntidadesNegocio
 {
     public class Recurrente : Pago, IValidable
     {
-        private Usuario usuario;
-
         public DateTime FechaDesde {  get; set; }
         public DateTime FechaHasta { get; set; }
         public Recurrente(Gasto tipoGasto, Usuario usuario, MetodoPago metodo, string descripcion, int monto, DateTime fechaDesde, DateTime fechaHasta) : base(tipoGasto, usuario,metodo, descripcion, monto)
@@ -47,6 +45,6 @@ namespace LogicaNegocio.EntidadesNegocio
             {
                 throw new PagoException("Debe indicar la fecha de fin");
             }
-        }
+        }        
     }
 }
