@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.EntidadesNegocio
 {
-    public class Usuario:IValidable, IEquatable<Usuario>
+    public class Usuario:IValidable
     {
         public int Id { get; private set; }
         public string Email { get; private set; }
@@ -54,12 +54,6 @@ namespace LogicaNegocio.EntidadesNegocio
             }
 
         }
-
-        public bool Equals(Usuario? other)
-        {
-            throw new NotImplementedException();
-        }
-
         private string GenerarEmail(string nombre, string apellido, string agregado = "")
         {
             string nomb = nombre.Substring(0, Math.Min(3, nombre.Length)).ToLower();
