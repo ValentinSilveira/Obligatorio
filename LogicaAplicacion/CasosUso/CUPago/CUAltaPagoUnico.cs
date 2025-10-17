@@ -1,6 +1,7 @@
 ﻿using CasosDeUsos.DTOs;
 using CasosDeUsos.DTOs.PagosDTO;
 using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
+using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.Mappers;
 using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
@@ -39,11 +40,17 @@ namespace LogicaAplicacion.CasosUso.CUPago
                 {
                     throw new ArgumentException("Método de pago inválido");
                 }
+                if (string.IsNullOrWhiteSpace(pagoUnicoDTO.Recibo))
+                    throw new PagoException("El recibo es obligatorio.");
 
-                // Crear el objeto Unico usando el mapper
+                if (pagoUnicoDTO.Recibo == "0" || pagoUnicoDTO.Recibo == "00")
+                    throw new PagoException("El número de recibo no puede ser 0.");
+
+                if (RepoPago.ExisteRecibo(pagoUnicoDTO.Recibo))
+                    throw new PagoException("El número de recibo ya existe.");
+                                
                 Unico pagoUnico = MapperPago.PagoUnicoDTOToPagoUnico(pagoUnicoDTO, usuario, gasto, metodoPago);
 
-                // Guardar el pago
                 RepoPago.Add(pagoUnico);
             }
             else

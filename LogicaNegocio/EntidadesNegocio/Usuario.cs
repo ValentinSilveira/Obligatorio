@@ -4,6 +4,7 @@ using LogicaNegocio.ValueObjects.Usuario;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,13 +53,40 @@ namespace LogicaNegocio.EntidadesNegocio
             {
                 throw new UsuarioException("El apellido no puede estar vacío.");
             }
-
         }
         private string GenerarEmail(string nombre, string apellido, string agregado = "")
         {
             string nomb = nombre.Substring(0, Math.Min(3, nombre.Length)).ToLower();
             string apel = apellido.Substring(0, Math.Min(3, apellido.Length)).ToLower();
-            return $"{nomb}{apel}@laEmpresa.com".ToLower(); ;
+
+            nomb = RemoverAcentos(nomb);
+            apel = RemoverAcentos(apel);
+
+            string correo = $"{nomb}{apel}{agregado}@laempresa.com".ToLower();
+            return correo;
+        }
+
+        private string RemoverAcentos(string texto)
+        {
+            if (string.IsNullOrWhiteSpace(texto))
+                return texto;
+            string normalizado = texto.Normalize(NormalizationForm.FormD);
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (char c in normalizado)
+            {
+                UnicodeCategory categoria = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (categoria != UnicodeCategory.NonSpacingMark)
+                {
+                    if (c == 'ñ') sb.Append('n');
+                    else if (c == 'Ñ') sb.Append('N');
+                    else if (c == 'ü') sb.Append('u');
+                    else if (c == 'Ü') sb.Append('U');
+                    else sb.Append(c);
+                }
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }

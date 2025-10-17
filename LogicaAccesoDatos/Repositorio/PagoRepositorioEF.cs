@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,34 +56,21 @@ namespace LogicaAccesoDatos.Repositorio
         public void Update(Pago item)
         {
             throw new NotImplementedException();
-        }
-
-        public IEnumerable<Pago> FindByMesAnio(int mes, int anio)
-        {
-            return Contexto.Pagos
-                .Include(p => p.TipoGasto)
-                .Include(p => p.Usuario)
-                .Where(p =>
-                    (p is Unico && ((Unico)p).FechaPago.Month == mes && ((Unico)p).FechaPago.Year == anio)
-                    ||
-                    (p is Recurrente && ((Recurrente)p).FechaDesde.Month == mes && ((Recurrente)p).FechaDesde.Year == anio)
-                )
-                .ToList();
-        }
+        }        
 
         public IEnumerable<Pago> FindByRangoFechas(DateTime fechaDesde, DateTime fechaHasta)
         {
-            var pagos = Contexto.Pagos
+            List<Pago> pagos = Contexto.Pagos
                 .Include(p => p.TipoGasto)
                 .Include(p => p.Usuario)
                 .ToList();
 
-            var filtrados = pagos.Where(p =>
+            IEnumerable<Pago> filtrados = pagos.Where(p =>
                 (p is Unico u && u.FechaPago >= fechaDesde && u.FechaPago <= fechaHasta)
                 || (p is Recurrente r && r.FechaDesde <= fechaHasta && r.FechaHasta >= fechaDesde)
             );
 
-            foreach (var pago in filtrados)
+            foreach (Pago pago in filtrados)
             {
                 if (pago is Recurrente r)
                 {
@@ -111,6 +99,20 @@ namespace LogicaAccesoDatos.Repositorio
 
             return filtrados;
         }
+        public IEnumerable<Pago> FindByRangoPrecio(decimal montoMinimo)
+        {
+            return Contexto.Pagos
+            .Include(p => p.TipoGasto)
+            .Include(p => p.Usuario)
+            .Where(p => p.Monto > montoMinimo)
+            .ToList();
+        }
 
+        public bool ExisteRecibo(string nroRecibo)
+        {
+            return Contexto.Pagos
+                .Any(p => EF.Property<string>(p, "TipoPago") == "Unico"
+                       && ((Unico)p).NroRecibo == nroRecibo);
+        }
     }
 }

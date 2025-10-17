@@ -8,6 +8,5 @@ namespace CasosDeUsos.DTOs.GastosDTO
 {
     public class ActualizarGastoDTO
     {
-
     }
 }

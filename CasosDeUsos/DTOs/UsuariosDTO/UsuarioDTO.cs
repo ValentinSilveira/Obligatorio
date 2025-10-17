@@ -15,6 +15,7 @@ namespace CasosDeUsos.DTOs.UsuariosDTO
         [Required(ErrorMessage = "El apellido es obligatorio")]
         public string Apellido { get; set; }
         [Required(ErrorMessage = "la contraseña es obligatoria")]
+        [MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")]
         public string Contraseña { get; set; }
         [DisplayName("Seleccione un equipo")]
         [Required(ErrorMessage = "El equipo es obligatoria")]

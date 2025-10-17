@@ -40,7 +40,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="Index">Listado Pagos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="FiltrarPorMonto">Listado pagos por montos</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="RangoPrecio">Listado pagos por montos</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Cerrar sesion</a>
@@ -96,5 +96,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <partial name="_ValidationScriptsPartial" />
 </body>
 </html>

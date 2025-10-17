@@ -15,15 +15,16 @@ namespace LogicaNegocio.ValueObjects.Usuario
 
         public Password(string valor)
         {
-            Valor = valor;            
+            Valor = valor;
+            Validar();
         }
 
         private void Validar() 
         {
-            //if (Valor.ToString().Length < 8) 
-            //{
-            //    throw new UsuarioException("La contraseña debe contener al menos 8 caracteres.");
-            //}
+            if (Valor.ToString().Length < 8)
+            {
+                throw new UsuarioException("La contraseña debe contener al menos 8 caracteres.");
+            }
         }
     }
 }
