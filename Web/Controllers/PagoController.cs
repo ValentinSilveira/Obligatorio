@@ -24,12 +24,14 @@ namespace Web.Controllers
         public ICUObtenerMetodoPago CUObtenerMetodoPago { get; set; }
         public ICUListadoPago CUListadoPagos { get; set; }
         public ICUListadoPagoPorFecha CUFiltrarPagosPorFechas { get; set; }
+        public ICUListadoPorPrecio CUListadoPorPrecio { get; set; }
 
 
 
         public PagoController(ICUAltaPagoUnico CuAltaPagoUnico, ICUAltaPagoRecurrente cUAltaPagoRecurrente,
             ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto, ICUListadoPago cUListadoPago
-            , ICUObtenerMetodoPago cUObtenerMetodoPago, ICUListadoPago cUListadoPagos, ICUListadoPagoPorFecha cUFiltrarPagosPorFechas)
+            , ICUObtenerMetodoPago cUObtenerMetodoPago, ICUListadoPago cUListadoPagos, ICUListadoPagoPorFecha cUFiltrarPagosPorFechas
+            , ICUListadoPorPrecio cUListadoPorPrecio)
         {
             CUAltaPagoUnico = CuAltaPagoUnico;
             CUAltaPagoRecurrente = cUAltaPagoRecurrente;
@@ -39,6 +41,7 @@ namespace Web.Controllers
             CUObtenerMetodoPago = cUObtenerMetodoPago;
             CUListadoPagos = cUListadoPagos;
             CUFiltrarPagosPorFechas = cUFiltrarPagosPorFechas;
+            CUListadoPorPrecio = cUListadoPorPrecio;
         }
 
         // GET: PagoController
@@ -67,6 +70,37 @@ namespace Web.Controllers
                 return View(new List<ListadoPagoDTO>());
             }
         }
+
+        public ActionResult RangoPrecio(decimal? montoMinimo)
+        {
+            string rol = HttpContext.Session.GetString("Rol");
+            if (string.IsNullOrEmpty(rol) || rol != "Gerente")
+                return RedirectToAction("AccesoDenegado");
+
+            try
+            {
+                IEnumerable<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
+                bool filtroAplicado = false;
+
+                if (montoMinimo.HasValue && montoMinimo.Value > 0)
+                {
+                    filtroAplicado = true;
+                    pagos = CUListadoPorPrecio.Ejecutar(montoMinimo.Value);
+                }
+
+                ViewBag.MontoMinimo = montoMinimo;
+                ViewBag.FiltroAplicado = filtroAplicado;
+
+                return View(pagos);
+            }
+            catch
+            {
+                ViewBag.Mensaje = "Error al filtrar pagos por monto.";
+                ViewBag.FiltroAplicado = false;
+                return View(new List<ListadoPagoDTO>());
+            }
+        }
+
         public ActionResult Details(int id)
         {
             string rol = HttpContext.Session.GetString("Rol");
@@ -75,10 +109,10 @@ namespace Web.Controllers
                 return RedirectToAction("AccesoDenegado");
             }
             return View();
-        }
+        }       
 
         // GET: PagoController/CreatePagoUnico
-        public ActionResult CreatePagoUnico()        
+        public ActionResult CreatePagoUnico()
         {
             string rol = HttpContext.Session.GetString("Rol");
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
@@ -86,22 +120,50 @@ namespace Web.Controllers
                 return RedirectToAction("AccesoDenegado");
             }
             PagoUnicoDTO UnicoDTO = new PagoUnicoDTO();
-            try 
+            try
             {
                 UnicoDTO.FechaPago = DateTime.Now.Date;
                 UnicoDTO.Usuarios = CUListadoUsuario.Ejecutar();
                 UnicoDTO.Gastos = CUListadoGasto.Ejecutar();
-                UnicoDTO.MetodoPago = string.Join(", ", CUObtenerMetodoPago.Ejecutar());
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 ViewBag.Mensaje = "Error";
             }
             return View(UnicoDTO);
         }
 
+        // POST: PagoController/CreatePagoUnico
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreatePagoUnico(PagoUnicoDTO unicoDTO)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    CUAltaPagoUnico.Ejecutar(unicoDTO);
+                    TempData["Exito"] = "Pago único creado correctamente.";
+                    return RedirectToAction(nameof(CreatePagoUnico));
+                }
+            }
+            catch (PagoException ex)
+            {
+                ViewBag.Mensaje = ex.Message;
+                ModelState.AddModelError(nameof(unicoDTO.Recibo), ex.Message);
+            }
+            catch (Exception)
+            {
+                ViewBag.Mensaje = "Ocurrió un error inesperado al crear el pago.";
+            }
+            unicoDTO.Gastos = CUListadoGasto.Ejecutar();
+            unicoDTO.Usuarios = CUListadoUsuario.Ejecutar();
+            unicoDTO.FechaPago = unicoDTO.FechaPago == default ? DateTime.Now.Date : unicoDTO.FechaPago;
+            return View(unicoDTO);
+        }
+
         // GET: PagoController/CreatePagoRecurrente
-        public ActionResult CreatePagoRecurrente() 
+        public ActionResult CreatePagoRecurrente()
         {
             string rol = HttpContext.Session.GetString("Rol");
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
@@ -123,31 +185,6 @@ namespace Web.Controllers
             return View(recurrenteDTO);
         }
 
-        // POST: PagoController/CreatePagoUnico
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreatePagoUnico(PagoUnicoDTO unicoDTO)
-        {
-            try
-            {
-                if (ModelState.IsValid) 
-                {
-                    CUAltaPagoUnico.Ejecutar(unicoDTO);
-                    TempData["Exito"] = "Pago único creado correctamente.";
-                    return RedirectToAction(nameof(CreatePagoUnico));
-                }
-            }
-            catch(PagoException ex)
-            {
-                ViewBag.Mensaje = ex.Message;
-            }
-            catch(Exception ex) 
-            {
-                ViewBag.Mensaje = "Error";
-            }
-            return View(unicoDTO);
-        }
-
         // POST: PagoController/CreatePagoRecurrente
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -157,9 +194,17 @@ namespace Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    CUAltaPagoRecurrente.Ejecutar(recurrenteDTO);
-                    TempData["Exito"] = "Pago recurrente creado correctamente.";
-                    return RedirectToAction(nameof(CreatePagoRecurrente));
+                    if (recurrenteDTO.FechaDesde.Month == recurrenteDTO.FechaHasta.Month &&
+                        recurrenteDTO.FechaDesde.Year == recurrenteDTO.FechaHasta.Year)
+                    {
+                        ViewBag.Mensaje = "La fecha de inicio y la fecha de fin no pueden estar en el mismo mes.";
+                    }
+                    else
+                    {
+                        CUAltaPagoRecurrente.Ejecutar(recurrenteDTO);
+                        TempData["Exito"] = "Pago recurrente creado correctamente.";
+                        return RedirectToAction(nameof(CreatePagoRecurrente));
+                    }
                 }
             }
             catch (PagoException ex)
@@ -170,6 +215,8 @@ namespace Web.Controllers
             {
                 ViewBag.Mensaje = "Error";
             }
+            recurrenteDTO.Usuarios = CUListadoUsuario.Ejecutar();
+            recurrenteDTO.Gastos = CUListadoGasto.Ejecutar();
             return View(recurrenteDTO);
         }
 
@@ -213,46 +260,6 @@ namespace Web.Controllers
             {
                 return View();
             }
-        }
-        public ActionResult FiltrarPorMonto(decimal? montoMinimo)
-        {
-            string rol = HttpContext.Session.GetString("Rol");
-            if (string.IsNullOrEmpty(rol) || !(rol == "Gerente"))
-            {
-                return RedirectToAction("AccesoDenegado");
-            }
-            try
-            {
-                IEnumerable<ListadoUsuarioDTO> usuarios = new List<ListadoUsuarioDTO>();
-
-                if (montoMinimo.HasValue && montoMinimo.Value > 0)
-                {
-                    var pagos = CUListadoPago.Ejecutar();
-                    var pagosUnicos = pagos
-                        .Where(p => p.TipoPago == "Unico" && p.Monto > montoMinimo.Value);
-
-                    var usuariosConPagosAltos = pagosUnicos
-                        .GroupBy(p => new { p.UsuarioNombre, p.Id })
-                        .Select(g => new ListadoUsuarioDTO
-                        {
-                            Id = g.Key.Id,
-                            Nombre = g.Key.UsuarioNombre,
-                            TotalPagado = g.Sum(x => x.Monto)
-                        })
-                        .OrderByDescending(u => u.TotalPagado);
-
-                    usuarios = usuariosConPagosAltos;
-                }
-
-                ViewBag.MontoMinimo = montoMinimo;
-
-                return View(usuarios);
-            }
-            catch (Exception)
-            {
-                ViewBag.Mensaje = "Error al filtrar usuarios por monto.";
-                return View(new List<ListadoUsuarioDTO>());
-            }
-        }
+        }       
     }
 }

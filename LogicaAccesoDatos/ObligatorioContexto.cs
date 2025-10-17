@@ -17,7 +17,7 @@ namespace LogicaAccesoDatos
         public DbSet<Gasto> Gastos { get; set; }
         public DbSet<Auditoria> Auditorias { get; set; }
 
-        public ObligatorioContexto(DbContextOptions options) : base(options){}
+        public ObligatorioContexto(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,10 @@ namespace LogicaAccesoDatos
                 .Property(a => a.Operacion)
                 .HasMaxLength(20)
                 .IsRequired();
+
+            modelBuilder.Entity<Unico>()
+                .HasIndex(u => u.NroRecibo)
+                .IsUnique();
         }
     }
 }

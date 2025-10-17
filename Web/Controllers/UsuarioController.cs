@@ -102,7 +102,11 @@ namespace Web.Controllers
             UsuarioDTO usuarioDTO = new UsuarioDTO();
             try
             {
-                usuarioDTO.Roles = CUListadoRoles.Ejecutar();
+                var roles = CUListadoRoles.Ejecutar();
+                usuarioDTO.Roles = roles
+                    .Where(r => r.Id == 1 || r.Id == 3)
+                    .ToList();
+
                 usuarioDTO.Equipos = CUListadoEquipo.Ejecutar();
             }
             catch (Exception ex)
@@ -128,6 +132,8 @@ namespace Web.Controllers
                 }
                 else
                 {
+                    usuarioDTO.Roles = CUListadoRoles.Ejecutar();
+                    usuarioDTO.Equipos = CUListadoEquipo.Ejecutar();
                     ViewBag.Mensaje = "Datos incorrectos";
                 }
             }

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<CasosDeUsos.DTOs.PagosDTO.ListadoPagoDTO>
+
+<h2>Filtrar pagos por monto</h2>
+
+<form asp-action="RangoPrecio" method="get" class="d-flex align-items-end gap-2 mb-3">
+    <div>
+        <label for="montoMinimo" class="form-label">Monto mínimo:</label>
+        <input type="number" name="montoMinimo" id="montoMinimo"
+               class="form-control"
+               value="@ViewBag.MontoMinimo"
+               step="0.01" />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a asp-action="RangoPrecio" class="btn btn-secondary">Limpiar</a>
+    </div>
+</form>
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-danger">@ViewBag.Mensaje</div>
+}
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tipo de Gasto</th>
+                <th>Usuario</th>
+                <th>Monto</th>
+                <th>GastoDescripcion</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pago in Model)
+            {
+                <tr>
+                    <td>@pago.Tipo</td>
+                    <td>@pago.UsuarioNombre</td>
+                    <td>@pago.Monto</td>
+                    <td>@pago.GastoDescripcion</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (ViewBag.FiltroAplicado == true)
+{
+    <div class="alert alert-info mt-3">
+        No se encontraron pagos con monto mayor a @ViewBag.MontoMinimo.
+    </div>
+}

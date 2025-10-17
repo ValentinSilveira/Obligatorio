@@ -45,6 +45,7 @@ namespace Web
             builder.Services.AddScoped<IRepositorioEquipo, RepositorioEquipoEF>();
             builder.Services.AddScoped<ICUListadoPagoPorFecha, CUListadoPagoPorFecha>();
             builder.Services.AddScoped<IRepositorioAuditoria, RepositorioAuditoriaEF>();
+            builder.Services.AddScoped<ICUListadoPorPrecio, CUListadoPorPrecio>();
 
 
             string cadenaConexion = builder.Configuration.GetConnectionString("CadenaConexion");
