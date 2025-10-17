@@ -31,6 +31,5 @@ namespace CasosDeUsos.DTOs.PagosDTO
         [Required(ErrorMessage = "El recibo es obligatorio")]
         [RegularExpression(@"^(?!0+$).+", ErrorMessage = "El número de recibo no puede ser 0")]
         public string Recibo { get; set; }
-
     }
 }

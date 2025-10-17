@@ -28,7 +28,9 @@
                 <th>Tipo de Gasto</th>
                 <th>Usuario</th>
                 <th>Monto</th>
-                <th>GastoDescripcion</th>
+                <th>Descripcion de gasto</th>
+                <th>Descripcion de pago</th>
+                <th>Fecha de Pago</th>
             </tr>
         </thead>
         <tbody>
@@ -39,6 +41,8 @@
                     <td>@pago.UsuarioNombre</td>
                     <td>@pago.Monto</td>
                     <td>@pago.GastoDescripcion</td>
+                    <td>@pago.Descripcion</td>
+                    <td>@(pago.FechaPago?.ToString("dd/MM/yyyy") ?? "-")</td>
                 </tr>
             }
         </tbody>

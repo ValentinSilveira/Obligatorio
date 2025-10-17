@@ -50,7 +50,9 @@ namespace LogicaAplicacion.Mappers
                     UsuarioNombre = pago.Usuario.Nombre,
                     GastoDescripcion = pago.TipoGasto.Descripcion,
                     MetodoPago = pago.Metodo.ToString(),
-                    SaldoPendiente = pago.SaldoPendiente
+                    SaldoPendiente = pago.SaldoPendiente,
+                    Descripcion = pago.Descripcion,
+                    FechaPago = pago is Unico u ? u.FechaPago : (DateTime?)null,
                 });
             }
             return listadoPagos;

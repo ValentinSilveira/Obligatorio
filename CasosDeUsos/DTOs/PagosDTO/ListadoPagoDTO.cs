@@ -28,6 +28,10 @@ namespace CasosDeUsos.DTOs.PagosDTO
         public string TipoPago { get; set; }
         [DisplayName("Saldo Pendiente")]
         public decimal SaldoPendiente { get; set; }
+        [DisplayName("Descripción del pago")]
+        public string Descripcion { get; set; }
+        [DisplayName("Fecha del pago")]
+        public DateTime? FechaPago { get; set; }
     }       
     
 }
