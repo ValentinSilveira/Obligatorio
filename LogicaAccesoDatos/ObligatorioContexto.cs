@@ -47,6 +47,10 @@ namespace LogicaAccesoDatos
             modelBuilder.Entity<Unico>()
                 .HasIndex(u => u.NroRecibo)
                 .IsUnique();
+
+            modelBuilder.Entity<Pago>()
+            .Property(p => p.Metodo)
+            .HasConversion<string>();
         }
     }
 }

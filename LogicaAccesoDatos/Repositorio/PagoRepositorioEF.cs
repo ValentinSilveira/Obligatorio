@@ -102,12 +102,12 @@ namespace LogicaAccesoDatos.Repositorio
         public IEnumerable<Pago> FindByRangoPrecio(decimal montoMinimo)
         {
             return Contexto.Pagos
-            .Include(p => p.TipoGasto)
-            .Include(p => p.Usuario)
-            .Where(p => p.Monto > montoMinimo)
-            .ToList();
+                .Include(p => p.TipoGasto)
+                .Include(p => p.Usuario)
+                .Where(p => p is Unico && p.Monto > montoMinimo)
+                .OrderBy(p => ((Unico)p).FechaPago)
+                .ToList();
         }
-
         public bool ExisteRecibo(string nroRecibo)
         {
             return Contexto.Pagos
