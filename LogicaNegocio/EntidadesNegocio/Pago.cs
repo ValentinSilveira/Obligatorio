@@ -71,14 +71,5 @@ namespace LogicaNegocio.EntidadesNegocio
                 throw new PagoException("El monto debe ser mayor que 0");
             }
         }
-
-        private void ValidarMetodo()
-        {
-            if (Metodo.ToString() != "CREDITO" || Metodo.ToString() != "EFECTIVO")
-            {
-                throw new PagoException("Debe seleccionar un método de pago válido");
-            }
-        }
-
     }
 }

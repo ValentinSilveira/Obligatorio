@@ -32,6 +32,7 @@ namespace CasosDeUsos.DTOs.PagosDTO
         public string Descripcion { get; set; }
         [DisplayName("Fecha del pago")]
         public DateTime? FechaPago { get; set; }
+        public string Recibo { get; set; }
     }       
     
 }

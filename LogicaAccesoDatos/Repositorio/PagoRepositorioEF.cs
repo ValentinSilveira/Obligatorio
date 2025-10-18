@@ -1,4 +1,5 @@
-﻿using LogicaNegocio.EntidadesNegocio;
+﻿using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -60,6 +61,10 @@ namespace LogicaAccesoDatos.Repositorio
 
         public IEnumerable<Pago> FindByRangoFechas(DateTime fechaDesde, DateTime fechaHasta)
         {
+            if (fechaDesde > fechaHasta)
+            {
+                throw new PagoException("La fecha de inicio debe ser menor a la fecha de fin");
+            }
             List<Pago> pagos = Contexto.Pagos
                 .Include(p => p.TipoGasto)
                 .Include(p => p.Usuario)
@@ -74,7 +79,6 @@ namespace LogicaAccesoDatos.Repositorio
                 if (pago is Recurrente r)
                 {
                     DateTime fechaReferencia = new DateTime(fechaDesde.Year, fechaDesde.Month, 1);
-
                     if (fechaReferencia < r.FechaHasta)
                     {
                         int mesesRestantes = ((r.FechaHasta.Year - fechaReferencia.Year) * 12)
@@ -82,7 +86,6 @@ namespace LogicaAccesoDatos.Repositorio
 
                         if (mesesRestantes < 0)
                             mesesRestantes = 0;
-
                         pago.SaldoPendiente = mesesRestantes * r.Monto;
                     }
                     else
@@ -95,7 +98,6 @@ namespace LogicaAccesoDatos.Repositorio
                     pago.SaldoPendiente = 0;
                 }
             }
-
             return filtrados;
         }
         public IEnumerable<Pago> FindByRangoPrecio(decimal montoMinimo)
