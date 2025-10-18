@@ -89,9 +89,7 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Home/Index">Back to List</a>
-</div>
+<a asp-controller="Home" asp-action="Index">Volver al inicio</a>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
