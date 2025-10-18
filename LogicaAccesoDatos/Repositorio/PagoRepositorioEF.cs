@@ -69,7 +69,6 @@ namespace LogicaAccesoDatos.Repositorio
                 (p is Unico u && u.FechaPago >= fechaDesde && u.FechaPago <= fechaHasta)
                 || (p is Recurrente r && r.FechaDesde <= fechaHasta && r.FechaHasta >= fechaDesde)
             );
-
             foreach (Pago pago in filtrados)
             {
                 if (pago is Recurrente r)
