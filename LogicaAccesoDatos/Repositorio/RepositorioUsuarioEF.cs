@@ -18,7 +18,6 @@ namespace LogicaAccesoDatos.Repositorio
         {
             Contexto = contexto;
         }
-
         public void Add(Usuario item)
         {
             item.Validar();
@@ -33,20 +32,17 @@ namespace LogicaAccesoDatos.Repositorio
                 throw new UsuarioException("El rut ya existe");
             }
         }
-
         private Usuario FindByEmailAndPassword(string email)
         {
             return Contexto.Usuarios
                 .Where(c => c.Email == email)
                 .SingleOrDefault();
         }
-
         public void Delete(Usuario item)
         {
             Contexto.Usuarios.Remove(item);
             Contexto.SaveChanges();
         }
-
         public IEnumerable<Usuario> FindAll()
         {
             return Contexto.Usuarios
@@ -54,7 +50,6 @@ namespace LogicaAccesoDatos.Repositorio
                 .Include(u => u.Equipo)
                 .ToList();
         }
-
         public Usuario FindById(int id)
         {
             return Contexto.Usuarios
@@ -63,19 +58,16 @@ namespace LogicaAccesoDatos.Repositorio
                 .Where(c => c.Id == id)
                 .SingleOrDefault();
         }
-
         public void Update(Usuario item)
         {
             throw new NotImplementedException();
         }
-
         public Usuario FindByEmailAndPassword(string email, string password)
         {
             return Contexto.Usuarios
                     .Include(u => u.Rol)
                     .FirstOrDefault(u => u.Email == email && u.Password.Valor == password);
         }
-
         public bool ExisteEmail(string email)
         {
             return Contexto.Usuarios.Any(c => c.Email == email);

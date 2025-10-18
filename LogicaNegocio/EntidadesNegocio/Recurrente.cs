@@ -24,11 +24,7 @@ namespace LogicaNegocio.EntidadesNegocio
         public void Validar() 
         {
             ValidarFechaInicio();
-            ValidarFechaFin();
-            if (FechaDesde > FechaHasta)
-            {
-                throw new PagoException("La fecha de inicio debe ser menor a la fecha de fin");
-            }
+            ValidarFechaFin();            
         }
 
         private void ValidarFechaInicio() 

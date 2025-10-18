@@ -64,9 +64,16 @@ namespace Web.Controllers
 
                 return View(pagos);
             }
+            catch (PagoException ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
+                ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
+                return View(new List<ListadoPagoDTO>());
+            }
             catch (Exception)
             {
-                ViewBag.Mensaje = "Error al obtener pagos";
+                ViewBag.Error = "Error al obtener pagos";
                 return View(new List<ListadoPagoDTO>());
             }
         }
@@ -76,21 +83,17 @@ namespace Web.Controllers
             string rol = HttpContext.Session.GetString("Rol");
             if (string.IsNullOrEmpty(rol) || rol != "Gerente")
                 return RedirectToAction("AccesoDenegado");
-
             try
             {
                 IEnumerable<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
                 bool filtroAplicado = false;
-
-                if (montoMinimo.HasValue && montoMinimo.Value > 0)
+                if (montoMinimo.HasValue && montoMinimo.Value >= 0)
                 {
                     filtroAplicado = true;
                     pagos = CUListadoPorPrecio.Ejecutar(montoMinimo.Value);
                 }
-
                 ViewBag.MontoMinimo = montoMinimo;
                 ViewBag.FiltroAplicado = filtroAplicado;
-
                 return View(pagos);
             }
             catch
@@ -219,13 +222,11 @@ namespace Web.Controllers
             recurrenteDTO.Gastos = CUListadoGasto.Ejecutar();
             return View(recurrenteDTO);
         }
-
         // GET: PagoController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
-
         // POST: PagoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -240,13 +241,11 @@ namespace Web.Controllers
                 return View();
             }
         }
-
         // GET: PagoController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
-
         // POST: PagoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -58,22 +58,17 @@ namespace LogicaNegocio.EntidadesNegocio
         {
             string nomb = nombre.Substring(0, Math.Min(3, nombre.Length)).ToLower();
             string apel = apellido.Substring(0, Math.Min(3, apellido.Length)).ToLower();
-
             nomb = RemoverAcentos(nomb);
             apel = RemoverAcentos(apel);
-
             string correo = $"{nomb}{apel}{agregado}@laempresa.com".ToLower();
             return correo;
         }
-
         private string RemoverAcentos(string texto)
         {
             if (string.IsNullOrWhiteSpace(texto))
                 return texto;
             string normalizado = texto.Normalize(NormalizationForm.FormD);
-
             StringBuilder sb = new StringBuilder();
-
             foreach (char c in normalizado)
             {
                 UnicodeCategory categoria = CharUnicodeInfo.GetUnicodeCategory(c);

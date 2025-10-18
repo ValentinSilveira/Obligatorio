@@ -53,6 +53,7 @@ namespace LogicaAplicacion.Mappers
                     SaldoPendiente = pago.SaldoPendiente,
                     Descripcion = pago.Descripcion,
                     FechaPago = pago is Unico u ? u.FechaPago : (DateTime?)null,
+                    Recibo = pago is Unico u2 ? u2.NroRecibo : null,
                 });
             }
             return listadoPagos;
