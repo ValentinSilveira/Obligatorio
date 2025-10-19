@@ -10,6 +10,6 @@ namespace CasosDeUsos.InterfacesCasosUsos.IGastoCU
 {
     public interface ICUAltaGasto
     {
-        void Ejecutar(GastoDTO gastoDTO);
+        void Ejecutar(GastoDTO gastoDTO, string usuario);
     }
 }

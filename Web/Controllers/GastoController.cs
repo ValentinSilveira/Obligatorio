@@ -19,16 +19,16 @@ namespace Web.Controllers
         public ICUBuscarGasto CUBuscarGasto { get; set; }
         public ICUEliminarGasto CUEliminarGasto { get; set; }
         public ICUEditarGasto CUEditarGasto { get; set; }
-        public IRepositorioAuditoria RepoAuditoria { get; set; }
+        public ICUAuditoria CUAuditoria { get; set; }
         public GastoController(ICUAltaGasto cUAltaGasto, ICUListadoGasto cUListadoGasto, ICUBuscarGasto cUBuscarGasto
-                                 , ICUEliminarGasto cUEliminarGasto, ICUEditarGasto cUEditarGasto, IRepositorioAuditoria repoAuditoria)
+                                 , ICUEliminarGasto cUEliminarGasto, ICUEditarGasto cUEditarGasto, ICUAuditoria cUAuditoria)
         {
             CUAltaGasto = cUAltaGasto;
             CUListadoGasto = cUListadoGasto;
             CUBuscarGasto = cUBuscarGasto;
             CUEliminarGasto = cUEliminarGasto;
             CUEditarGasto = cUEditarGasto;
-            RepoAuditoria = repoAuditoria;
+            CUAuditoria = cUAuditoria;
         }
 
 
@@ -114,15 +114,7 @@ namespace Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    CUAltaGasto.Ejecutar(gastoDTO);
-                    RepoAuditoria.Add(new Auditoria
-                    {
-                        Usuario = usuario,
-                        Entidad = "Gasto",
-                        Operacion = "Create",
-                        Fecha = DateTime.Now,
-                        Detalle = $"Se creó el gasto '{gastoDTO.Nombre}'"
-                    });
+                    CUAltaGasto.Ejecutar(gastoDTO, usuario);
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -188,15 +180,7 @@ namespace Web.Controllers
             {
                 if (id > 0 && ModelState.IsValid)
                 {
-                    CUEditarGasto.Ejecutar(detalleGasto, id);
-                    RepoAuditoria.Add(new Auditoria
-                    {
-                        Usuario = usuario,
-                        Entidad = "Gasto",
-                        Operacion = "Update",
-                        Fecha = DateTime.Now,
-                        Detalle = $"Se modificó el gasto '{detalleGasto.Nombre}' (ID: {id})"
-                    });
+                    CUEditarGasto.Ejecutar(detalleGasto, id, usuario);
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -262,16 +246,7 @@ namespace Web.Controllers
             {
                 if (id > 0)
                 {
-                    CUEliminarGasto.Ejecutar(id);
-                    RepoAuditoria.Add(new Auditoria
-                    {
-                        Usuario = usuario,
-                        Entidad = "Gasto",
-                        Operacion = "Delete",
-                        Fecha = DateTime.Now,
-                        Detalle = $"Se eliminó el gasto '{detalleGasto.Nombre}' (ID: {id})"
-                    });
-
+                    CUEliminarGasto.Ejecutar(id, usuario);
                     return RedirectToAction(nameof(Index));
                 }
 

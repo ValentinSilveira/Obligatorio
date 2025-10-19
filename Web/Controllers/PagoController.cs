@@ -202,6 +202,10 @@ namespace Web.Controllers
                     {
                         ViewBag.Mensaje = "La fecha de inicio y la fecha de fin no pueden estar en el mismo mes.";
                     }
+                    else if (recurrenteDTO.FechaDesde > recurrenteDTO.FechaHasta)
+                    {
+                        ViewBag.Mensaje = "La fecha de inicio no puede ser mayor que la fecha de fin.";
+                    }
                     else
                     {
                         CUAltaPagoRecurrente.Ejecutar(recurrenteDTO);

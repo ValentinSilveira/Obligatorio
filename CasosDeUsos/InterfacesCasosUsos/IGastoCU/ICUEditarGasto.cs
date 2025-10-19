@@ -10,6 +10,6 @@ namespace CasosDeUsos.InterfacesCasosUsos.IGastoCU
 {
     public interface ICUEditarGasto
     {
-        void Ejecutar(DetalleGastoDTO detalle, int id);
+        void Ejecutar(DetalleGastoDTO detalleGasto, int id, string usuario);
     }
 }

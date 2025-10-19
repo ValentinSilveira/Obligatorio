@@ -69,7 +69,6 @@ namespace LogicaAccesoDatos.Repositorio
                 .Include(p => p.TipoGasto)
                 .Include(p => p.Usuario)
                 .ToList();
-
             IEnumerable<Pago> filtrados = pagos.Where(p =>
                 (p is Unico u && u.FechaPago >= fechaDesde && u.FechaPago <= fechaHasta)
                 || (p is Recurrente r && r.FechaDesde <= fechaHasta && r.FechaHasta >= fechaDesde)

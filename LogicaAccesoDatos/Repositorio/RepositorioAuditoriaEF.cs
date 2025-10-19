@@ -26,5 +26,20 @@ namespace LogicaAccesoDatos.Repositorio
         {
             return Contexto.Auditorias;
         }
+
+        public void Delete(Auditoria item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(Auditoria item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Auditoria FindById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

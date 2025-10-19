@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.InterfacesCasosUsos.IGastoCU
 {
-    public interface ICUEliminarGasto
+    public interface ICUAuditoria
     {
-        void Ejecutar(int id, string usuario);
+        void RegistrarAuditoria(string usuario, string entidad, string operacion, string detalle);
     }
 }

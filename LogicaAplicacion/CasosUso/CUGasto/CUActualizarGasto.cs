@@ -11,24 +11,32 @@ namespace LogicaAplicacion.CasosUso.CUGasto
 {
     public class CUActualizarGasto : ICUActualizarGasto
     {
-        public IRepositorioAuditoria RepoAuditoria { get; set; }
         public IRepositorioGasto RepoGasto { get; set; }
-        public CUActualizarGasto(IRepositorioAuditoria repositorioAuditoria, IRepositorioGasto repoGasto)
+        public ICUAuditoria CUAuditoria { get; set; }
+
+        public CUActualizarGasto(IRepositorioGasto repoGasto, ICUAuditoria cuAuditoria)
         {
-            RepoAuditoria = repositorioAuditoria;
             RepoGasto = repoGasto;
+            CUAuditoria = cuAuditoria;
         }
+
+        public CUActualizarGasto() { }
+
         public void Ejecutar(Gasto gasto, string usuario)
         {
-            RepoGasto.Update(gasto);
-            var registro = new Auditoria
+            if (gasto == null)
             {
-                Usuario = usuario,
-                Fecha = DateTime.Now,
-                Operacion = "Update",
-                Detalle = $"Se actualizó el gasto '{gasto.Nombre}' con Id {gasto.Id}",
-            };
-            RepoAuditoria.Add(registro);
+                throw new ArgumentNullException("Datos inválidos");
+            }
+
+            RepoGasto.Update(gasto);
+
+            CUAuditoria.RegistrarAuditoria(
+                usuario,
+                "Gasto",
+                "Update",
+                $"Se actualizó el gasto '{gasto.Nombre}' con Id {gasto.Id}"
+            );
         }
     }
 }

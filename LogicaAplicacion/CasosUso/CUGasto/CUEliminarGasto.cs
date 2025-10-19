@@ -13,31 +13,37 @@ namespace LogicaAplicacion.CasosUso.CUGastos
     public class CUEliminarGasto : ICUEliminarGasto
     {
         public IRepositorioGasto RepoGasto { get; set; }
+        public ICUAuditoria CUAuditoria { get; set; }
 
-        public CUEliminarGasto(IRepositorioGasto repoGasto)
+        public CUEliminarGasto(IRepositorioGasto repoGasto, ICUAuditoria cuAuditoria)
         {
             RepoGasto = repoGasto;
+            CUAuditoria = cuAuditoria;
         }
 
-        public void Ejecutar(int id)
+        public CUEliminarGasto() { }
+
+        public void Ejecutar(int id, string usuario)
         {
-            Gasto gasto = RepoGasto.FindById(id);
-            if (id > 0)
-            {
-                if (gasto != null)
-                {
-                    RepoGasto.Delete(gasto);
-                }
-                else
-                {
-                    throw new GastoException("El gasto con ese id no existe");
-                }
-            }
-            else
+            if (id <= 0)
             {
                 throw new ArgumentException("El id es incorrecto");
             }
 
+            Gasto gasto = RepoGasto.FindById(id);
+            if (gasto == null)
+            {
+                throw new GastoException("El gasto con ese id no existe");
+            }
+
+            RepoGasto.Delete(gasto);
+
+            CUAuditoria.RegistrarAuditoria(
+                usuario,
+                "Gasto",
+                "Delete",
+                $"Se eliminó el gasto '{gasto.Nombre}' (ID {gasto.Id})"
+            );
         }
     }
 }
