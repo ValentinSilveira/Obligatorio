@@ -21,6 +21,7 @@ namespace CasosDeUsos.DTOs.PagosDTO
         [DisplayName("Seleccione un Usuario")]
         public int UsuarioId { get; set; }
         public IEnumerable<ListadoUsuarioDTO> Usuarios { get; set; } = new List<ListadoUsuarioDTO>();
+        [Required(ErrorMessage = "Debe incluir una descripción")]
         public string Descripcion { get; set; }
         [Required(ErrorMessage = "El monto no puede ser 0")]
         public int Monto { get; set; }
@@ -29,7 +30,6 @@ namespace CasosDeUsos.DTOs.PagosDTO
         [DataType(DataType.Date)]
         public DateTime FechaPago { get; set; }
         [Required(ErrorMessage = "El recibo es obligatorio")]
-        [RegularExpression(@"^(?!0+$).+", ErrorMessage = "El número de recibo no puede ser 0")]
         public string Recibo { get; set; }
     }
 }

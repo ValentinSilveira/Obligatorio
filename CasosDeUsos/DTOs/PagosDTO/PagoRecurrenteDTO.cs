@@ -20,6 +20,7 @@ namespace CasosDeUsos.DTOs.PagosDTO
         [DisplayName("Seleccione un Usuario")]
         public int UsuarioId { get; set; }
         public IEnumerable<ListadoUsuarioDTO> Usuarios { get; set; } = new List<ListadoUsuarioDTO>();
+        [Required(ErrorMessage = "Debe incluir una descripción")]
         public string Descripcion { get; set; }
         public int Monto { get; set; }
         [DisplayName("Seleccione un Metodo de Pago")]
