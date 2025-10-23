@@ -10,6 +10,7 @@ using LogicaAplicacion.Mappers;
 using LogicaNegocio.interfacesRepositorios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using static LogicaAplicacion.CasosUso.CUPago.CUListadoPago;
 
 namespace Web.Controllers
@@ -47,35 +48,40 @@ namespace Web.Controllers
         // GET: PagoController
         public ActionResult Index(DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Rol")) ||
-                HttpContext.Session.GetString("Rol") != "Gerente")
+            string rol = HttpContext.Session.GetString("Rol");
+            if (string.IsNullOrEmpty(rol) || rol != "Gerente")
                 return RedirectToAction("AccesoDenegado");
-            try
-            {
-                IEnumerable<ListadoPagoDTO> pagos;
 
-                if (fechaDesde.HasValue && fechaHasta.HasValue)
-                    pagos = CUFiltrarPagosPorFechas.Ejecutar(fechaDesde.Value, fechaHasta.Value);
-                else
-                    pagos = CUListadoPago.Ejecutar();
+            bool filtroIntentado = Request.Query.Count > 0;
+
+            if (!fechaDesde.HasValue || !fechaHasta.HasValue)
+            {
+                if (filtroIntentado)
+                    ViewBag.Error = "Debe ingresar ambas fechas para filtrar.";
 
                 ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
                 ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
 
-                return View(pagos);
+                return View(new List<ListadoPagoDTO>());
             }
-            catch (PagoException ex)
+
+            if (fechaDesde > fechaHasta)
             {
-                ViewBag.Error = ex.Message;
+                ViewBag.Error = "La fecha desde no puede ser mayor a la fecha hasta.";
                 ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
                 ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
                 return View(new List<ListadoPagoDTO>());
             }
-            catch (Exception)
-            {
-                ViewBag.Error = "Error al obtener pagos";
-                return View(new List<ListadoPagoDTO>());
-            }
+
+            var pagos = CUFiltrarPagosPorFechas.Ejecutar(fechaDesde.Value, fechaHasta.Value);
+
+            ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
+            ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
+
+            if (!pagos.Any())
+                ViewBag.Mensaje = "No se encontraron pagos en el rango de fechas ingresado.";
+
+            return View(pagos);
         }
 
         public ActionResult RangoPrecio(decimal? montoMinimo)
@@ -83,17 +89,34 @@ namespace Web.Controllers
             string rol = HttpContext.Session.GetString("Rol");
             if (string.IsNullOrEmpty(rol) || rol != "Gerente")
                 return RedirectToAction("AccesoDenegado");
+
+            IEnumerable<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
+            bool filtroAplicado = false;
+
             try
             {
-                IEnumerable<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
-                bool filtroAplicado = false;
-                if (montoMinimo.HasValue && montoMinimo.Value >= 0)
+                bool filtroIntentado = Request.Query.Count > 0;
+                if (!montoMinimo.HasValue)
                 {
-                    filtroAplicado = true;
-                    pagos = CUListadoPorPrecio.Ejecutar(montoMinimo.Value);
+                    if (filtroIntentado)
+                    {
+                        ViewBag.Mensaje = "Debe ingresar un monto mínimo para filtrar.";
+                    }
+
+                    ViewBag.MontoMinimo = montoMinimo;
+                    ViewBag.FiltroAplicado = false;
+                    return View(pagos);
                 }
+                filtroAplicado = true;
+                pagos = CUListadoPorPrecio.Ejecutar(montoMinimo.Value);
+
                 ViewBag.MontoMinimo = montoMinimo;
                 ViewBag.FiltroAplicado = filtroAplicado;
+
+                if (!pagos.Any())
+                {
+                    ViewBag.Mensaje = $"No se encontraron pagos con monto mayor a {montoMinimo.Value}.";
+                }
                 return View(pagos);
             }
             catch
@@ -112,31 +135,28 @@ namespace Web.Controllers
                 return RedirectToAction("AccesoDenegado");
             }
             return View();
-        }       
+        }
 
         // GET: PagoController/CreatePagoUnico
         public ActionResult CreatePagoUnico()
         {
             string rol = HttpContext.Session.GetString("Rol");
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
-            {
                 return RedirectToAction("AccesoDenegado");
-            }
-            PagoUnicoDTO UnicoDTO = new PagoUnicoDTO();
-            try
-            {
-                UnicoDTO.FechaPago = DateTime.Now.Date;
-                UnicoDTO.Usuarios = CUListadoUsuario.Ejecutar();
-                UnicoDTO.Gastos = CUListadoGasto.Ejecutar();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Mensaje = "Error";
-            }
+
+            var UnicoDTO = new PagoUnicoDTO();
+            UnicoDTO.FechaPago = DateTime.Now.Date;
+            UnicoDTO.Usuarios = CUListadoUsuario.Ejecutar();
+            UnicoDTO.Gastos = CUListadoGasto.Ejecutar();
+
+            
+            ViewBag.Usuarios = new SelectList(UnicoDTO.Usuarios, "Id", "Nombre");
+            ViewBag.Gastos = new SelectList(UnicoDTO.Gastos, "Id", "Nombre");
+
             return View(UnicoDTO);
         }
 
-        // POST: PagoController/CreatePagoUnico
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreatePagoUnico(PagoUnicoDTO unicoDTO)
@@ -155,13 +175,17 @@ namespace Web.Controllers
                 ViewBag.Mensaje = ex.Message;
                 ModelState.AddModelError(nameof(unicoDTO.Recibo), ex.Message);
             }
-            catch (Exception)
+            catch
             {
                 ViewBag.Mensaje = "Ocurrió un error inesperado al crear el pago.";
             }
-            unicoDTO.Gastos = CUListadoGasto.Ejecutar();
+
+            // Vuelvo a llenar la lista y marco la opción seleccionada
             unicoDTO.Usuarios = CUListadoUsuario.Ejecutar();
-            unicoDTO.FechaPago = unicoDTO.FechaPago == default ? DateTime.Now.Date : unicoDTO.FechaPago;
+            unicoDTO.Gastos = CUListadoGasto.Ejecutar();
+            ViewBag.Usuarios = new SelectList(unicoDTO.Usuarios, "Id", "Nombre", unicoDTO.UsuarioId);
+            ViewBag.Gastos = new SelectList(unicoDTO.Gastos, "Id", "Nombre", unicoDTO.GastoId);
+
             return View(unicoDTO);
         }
 
@@ -170,25 +194,23 @@ namespace Web.Controllers
         {
             string rol = HttpContext.Session.GetString("Rol");
             if (string.IsNullOrEmpty(rol) || !(rol == "Gerente" || rol == "Administracion" || rol == "Empleado"))
-            {
                 return RedirectToAction("AccesoDenegado");
-            }
-            PagoRecurrenteDTO recurrenteDTO = new PagoRecurrenteDTO();
-            try
+
+            var recurrenteDTO = new PagoRecurrenteDTO
             {
-                recurrenteDTO.FechaDesde = DateTime.Now.Date;
-                recurrenteDTO.FechaHasta = DateTime.Now.Date;
-                recurrenteDTO.Usuarios = CUListadoUsuario.Ejecutar();
-                recurrenteDTO.Gastos = CUListadoGasto.Ejecutar();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Mensaje = "Error";
-            }
+                FechaDesde = DateTime.Now.Date,
+                FechaHasta = DateTime.Now.Date,
+                Usuarios = CUListadoUsuario.Ejecutar(),
+                Gastos = CUListadoGasto.Ejecutar()
+            };
+
+            ViewBag.Usuarios = new SelectList(recurrenteDTO.Usuarios, "Id", "Nombre");
+            ViewBag.Gastos = new SelectList(recurrenteDTO.Gastos, "Id", "Nombre");
+
             return View(recurrenteDTO);
         }
 
-        // POST: PagoController/CreatePagoRecurrente
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreatePagoRecurrente(PagoRecurrenteDTO recurrenteDTO)
@@ -218,12 +240,17 @@ namespace Web.Controllers
             {
                 ViewBag.Mensaje = ex.Message;
             }
-            catch (Exception ex)
+            catch
             {
-                ViewBag.Mensaje = "Error";
+                ViewBag.Mensaje = "Ocurrió un error al crear el pago.";
             }
+
+            // Vuelvo a llenar la lista y marcar la selección
             recurrenteDTO.Usuarios = CUListadoUsuario.Ejecutar();
             recurrenteDTO.Gastos = CUListadoGasto.Ejecutar();
+            ViewBag.Usuarios = new SelectList(recurrenteDTO.Usuarios, "Id", "Nombre", recurrenteDTO.UsuarioId);
+            ViewBag.Gastos = new SelectList(recurrenteDTO.Gastos, "Id", "Nombre", recurrenteDTO.GastoId);
+
             return View(recurrenteDTO);
         }
         // GET: PagoController/Edit/5
@@ -263,6 +290,6 @@ namespace Web.Controllers
             {
                 return View();
             }
-        }       
+        }
     }
 }

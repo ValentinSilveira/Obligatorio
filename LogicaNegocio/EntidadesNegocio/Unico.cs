@@ -40,9 +40,14 @@ namespace LogicaNegocio.EntidadesNegocio
             {
                 throw new PagoException("Debe indicar el número de recibo");
             }
-            if (NroRecibo == "0")
+            if (!int.TryParse(NroRecibo, out int numero))
             {
-                throw new PagoException("El número de recibo no puede ser 0.");
+                throw new PagoException("El número de recibo debe ser un valor numérico.");
+            }
+
+            if (numero <= 0)
+            {
+                throw new PagoException("El número de recibo debe ser mayor a 0.");
             }
         }
     }

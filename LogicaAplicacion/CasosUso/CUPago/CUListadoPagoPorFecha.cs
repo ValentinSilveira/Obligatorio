@@ -23,7 +23,22 @@ namespace LogicaAplicacion.CasosUso.CUPago
 
         public IEnumerable<ListadoPagoDTO> Ejecutar(DateTime fechaDesde, DateTime fechaHasta)
         {
-            IEnumerable<Pago> pagos = RepoPago.FindByRangoFechas(fechaDesde, fechaHasta);
+            var pagos = RepoPago.FindByRangoFechas(fechaDesde, fechaHasta);
+
+            foreach (var pago in pagos)
+            {
+                if (pago is Recurrente r)
+                {
+                    var fechaReferencia = new DateTime(fechaDesde.Year, fechaDesde.Month, 1);
+                    int mesesRestantes = Math.Max(0, ((r.FechaHasta.Year - fechaReferencia.Year) * 12) + (r.FechaHasta.Month - fechaReferencia.Month));
+                    pago.SaldoPendiente = mesesRestantes * r.Monto;
+                }
+                else
+                {
+                    pago.SaldoPendiente = 0;
+                }
+            }
+
             return MapperPago.PagoToPagoListadoDTO(pagos);
         }
     }

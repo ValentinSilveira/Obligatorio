@@ -9,6 +9,6 @@ namespace LogicaNegocio.interfacesRepositorios
 {
     public interface IRepositorioGasto : IRepositorio<Gasto>
     {
-
+        bool TienePagosAsociados(int idGasto);
     }
 }

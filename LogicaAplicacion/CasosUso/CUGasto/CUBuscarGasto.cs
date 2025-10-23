@@ -20,11 +20,6 @@ namespace LogicaAplicacion.CasosUso.CUGastos
         {
             RepoGasto = repoGasto;
         }
-
-        public CUBuscarGasto()
-        {
-        }
-
         public DetalleGastoDTO Ejecutar(int id)
         {
             Gasto gasto = RepoGasto.FindById(id);

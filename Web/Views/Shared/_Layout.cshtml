@@ -49,6 +49,12 @@
                         @if (Context.Session.GetString("Rol") == "Administracion")
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Create">Crear Cliente</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Listado</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Gasto" asp-action="Create">Crear Gasto</a>
                             </li>
                             <li class="nav-item">

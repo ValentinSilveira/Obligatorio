@@ -16,9 +16,6 @@ namespace LogicaAplicacion.CasosUso.CUGasto
         {
             RepoAuditoria = repoAuditoria;
         }
-
-        public CUAuditoria() { }
-
         public void RegistrarAuditoria(string usuario, string entidad, string operacion, string detalle)
         {
             var auditoria = new Auditoria

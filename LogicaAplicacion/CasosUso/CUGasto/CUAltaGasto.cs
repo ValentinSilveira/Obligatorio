@@ -21,9 +21,6 @@ namespace LogicaAplicacion.CasosUso.CUGastos
             RepoGasto = repoGasto;
             CUAuditoria = cuAuditoria;
         }
-
-        public CUAltaGasto() { }
-
         public void Ejecutar(GastoDTO gastoDTO, string usuario)
         {
             if (gastoDTO == null)

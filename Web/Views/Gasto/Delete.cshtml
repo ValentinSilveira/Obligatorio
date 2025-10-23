@@ -3,37 +3,52 @@
 @model DetalleGastoDTO
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Eliminar gasto";
 }
 
 <h1>Eliminar gasto</h1>
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-warning mt-3" role="alert">
+        @ViewBag.Mensaje
+    </div>
+}
+
+@if (TempData["Exito"] != null)
+{
+    <div class="alert alert-success mt-3" role="alert">
+        @TempData["Exito"]
+    </div>
+}
 
 <div>
     <h4>Detalle Gasto</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Id)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Id)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nombre)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Descripcion)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Descripcion)
         </dd>
     </dl>
-    
-    <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
     </form>
 </div>

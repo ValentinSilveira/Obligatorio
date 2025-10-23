@@ -242,29 +242,36 @@ namespace Web.Controllers
         public ActionResult Delete(int id, DetalleGastoDTO detalleGasto)
         {
             string usuario = HttpContext.Session.GetString("UsuarioEmail") ?? "Desconocido";
+
             try
             {
-                if (id > 0)
+                if (id <= 0)
                 {
-                    CUEliminarGasto.Ejecutar(id, usuario);
-                    return RedirectToAction(nameof(Index));
+                    ViewBag.Mensaje = "Id no válido.";
+                    return View(detalleGasto);
                 }
-
-                ViewBag.Mensaje = "Id no válido";
+                CUEliminarGasto.Ejecutar(id, usuario);
+                TempData["Exito"] = "Gasto eliminado correctamente.";
+                return RedirectToAction(nameof(Index));
             }
             catch (GastoException ex)
             {
+                var gasto = CUBuscarGasto.Ejecutar(id);
                 ViewBag.Mensaje = ex.Message;
+                return View(gasto);
             }
             catch (ArgumentException ex)
             {
+                var gasto = CUBuscarGasto.Ejecutar(id);
                 ViewBag.Mensaje = ex.Message;
+                return View(gasto);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ViewBag.Mensaje = "Error";
+                var gasto = CUBuscarGasto.Ejecutar(id);
+                ViewBag.Mensaje = "Error al eliminar el gasto.";
+                return View(gasto);
             }
-            return View(detalleGasto);
         }
     }
 }

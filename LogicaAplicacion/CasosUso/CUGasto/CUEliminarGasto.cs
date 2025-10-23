@@ -20,9 +20,6 @@ namespace LogicaAplicacion.CasosUso.CUGastos
             RepoGasto = repoGasto;
             CUAuditoria = cuAuditoria;
         }
-
-        public CUEliminarGasto() { }
-
         public void Ejecutar(int id, string usuario)
         {
             if (id <= 0)
@@ -36,6 +33,10 @@ namespace LogicaAplicacion.CasosUso.CUGastos
                 throw new GastoException("El gasto con ese id no existe");
             }
 
+            bool tienePagos = RepoGasto.TienePagosAsociados(gasto.Id);
+            if (tienePagos)
+                throw new GastoException("No se puede eliminar el gasto porque tiene pagos asociados.");
+            
             RepoGasto.Delete(gasto);
 
             CUAuditoria.RegistrarAuditoria(

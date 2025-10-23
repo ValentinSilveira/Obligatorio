@@ -21,11 +21,6 @@ namespace LogicaAplicacion.CasosUso.CUUsuarios
         {
             RepoUsuario = repoUsuario;
         }
-
-        public CUBuscarUsuario()
-        {
-        }
-
         public DetalleUsuarioDTO Ejecutar(int id) 
         {
             Usuario usuario = RepoUsuario.FindById(id);

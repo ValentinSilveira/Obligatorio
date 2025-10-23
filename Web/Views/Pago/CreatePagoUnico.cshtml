@@ -31,68 +31,72 @@
 }
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="CreatePagoUnico">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="GastoId" class="control-label"></label>
-                <select name="GastoId">
-                    @foreach(ListadoGastoDTO listadoGasto in Model.Gastos)
-                    {
-                        <option value="@listadoGasto.Id">@listadoGasto.Nombre</option>                        
-                    }
+                <select asp-for="GastoId" class="form-control"
+                        asp-items="@(new SelectList(Model.Gastos, "Id", "Nombre", Model.GastoId))">
+                    <option value="">-- Seleccione un gasto --</option>
                 </select>
                 <span asp-validation-for="GastoId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="UsuarioId" class="control-label"></label>
-                <select name="UsuarioId">
-                    @foreach(ListadoUsuarioDTO listadoUsuario in Model.Usuarios)
-                    {
-                        <option value="@listadoUsuario.Id">@listadoUsuario.Nombre</option>
-                    }
+                <select asp-for="UsuarioId" class="form-control"
+                        asp-items="@(new SelectList(Model.Usuarios, "Id", "Nombre", Model.UsuarioId))">
+                    <option value="">-- Seleccione un usuario --</option>
                 </select>
                 <span asp-validation-for="UsuarioId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Descripcion" class="control-label"></label>
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Monto" class="control-label"></label>
                 <input asp-for="Monto" class="form-control" />
                 <span asp-validation-for="Monto" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="MetodoPago" class="control-label"></label>
-                <select name="MetodoPago" class="form-control">
-                    @foreach (var metodo in Enum.GetValues(typeof(LogicaNegocio.EntidadesNegocio.MetodoPago)))
-                    {
-                        <option value="@metodo">@metodo</option>
-                    }
+                <select asp-for="MetodoPago" class="form-control"
+                        asp-items="@(new SelectList(Enum.GetValues(typeof(LogicaNegocio.EntidadesNegocio.MetodoPago)), Model.MetodoPago))">
+                    <option value="">-- Seleccione un método --</option>
                 </select>
                 <span asp-validation-for="MetodoPago" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="FechaPago" class="control-label"></label>
-                <input asp-for="FechaPago" class="form-control" />
+                <input asp-for="FechaPago" class="form-control" type="date" />
                 <span asp-validation-for="FechaPago" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Recibo" class="control-label"></label>
                 <input asp-for="Recibo" class="form-control" />
                 <span asp-validation-for="Recibo" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Crear Pago Único" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<a asp-controller="Home" asp-action="Index">Volver al inicio</a>
+<a asp-controller="Home" asp-action="Index" class="btn btn-link mt-3">Volver al inicio</a>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

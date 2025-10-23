@@ -57,46 +57,23 @@ namespace LogicaAccesoDatos.Repositorio
         public void Update(Pago item)
         {
             throw new NotImplementedException();
-        }        
+        }
 
         public IEnumerable<Pago> FindByRangoFechas(DateTime fechaDesde, DateTime fechaHasta)
         {
             if (fechaDesde > fechaHasta)
-            {
                 throw new PagoException("La fecha de inicio debe ser menor a la fecha de fin");
-            }
-            List<Pago> pagos = Contexto.Pagos
+
+            var todosLosPagos = Contexto.Pagos
                 .Include(p => p.TipoGasto)
                 .Include(p => p.Usuario)
                 .ToList();
-            IEnumerable<Pago> filtrados = pagos.Where(p =>
+
+            var filtrados = todosLosPagos.Where(p =>
                 (p is Unico u && u.FechaPago >= fechaDesde && u.FechaPago <= fechaHasta)
                 || (p is Recurrente r && r.FechaDesde <= fechaHasta && r.FechaHasta >= fechaDesde)
             );
-            foreach (Pago pago in filtrados)
-            {
-                if (pago is Recurrente r)
-                {
-                    DateTime fechaReferencia = new DateTime(fechaDesde.Year, fechaDesde.Month, 1);
-                    if (fechaReferencia < r.FechaHasta)
-                    {
-                        int mesesRestantes = ((r.FechaHasta.Year - fechaReferencia.Year) * 12)
-                                           + (r.FechaHasta.Month - fechaReferencia.Month);
 
-                        if (mesesRestantes < 0)
-                            mesesRestantes = 0;
-                        pago.SaldoPendiente = mesesRestantes * r.Monto;
-                    }
-                    else
-                    {
-                        pago.SaldoPendiente = 0;
-                    }
-                }
-                else
-                {
-                    pago.SaldoPendiente = 0;
-                }
-            }
             return filtrados;
         }
         public IEnumerable<Pago> FindByRangoPrecio(decimal montoMinimo)

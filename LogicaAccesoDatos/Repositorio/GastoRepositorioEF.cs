@@ -1,5 +1,6 @@
 ﻿using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,11 @@ namespace LogicaAccesoDatos.Repositorio
             existente.Descripcion = item.Descripcion;
 
             Contexto.SaveChanges();
+        }
+
+        public bool TienePagosAsociados(int idGasto)
+        {
+            return Contexto.Pagos.Any(p => p.TipoGasto.Id == idGasto);
         }
     }
 }

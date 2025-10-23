@@ -34,7 +34,10 @@ namespace LogicaAplicacion.CasosUso.CUPago
             if (usuario != null && gasto != null)
             {
                 // se usa el valor del enum desde el DTO
-                MetodoPago metodoPago = pagoRecurrenteDTO.MetodoPago;
+                if (!Enum.TryParse(pagoRecurrenteDTO.MetodoPago, true, out MetodoPago metodoPago))
+                {
+                    throw new ArgumentException("Método de pago inválido");
+                }
 
                 Recurrente pagoRecurrente = MapperPago.PagoRecurrenteDTOToPagoRecurrente(pagoRecurrenteDTO, usuario, gasto, metodoPago);
 

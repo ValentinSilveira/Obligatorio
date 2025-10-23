@@ -24,7 +24,7 @@ namespace CasosDeUsos.DTOs.PagosDTO
         public string Descripcion { get; set; }
         public int Monto { get; set; }
         [DisplayName("Seleccione un Metodo de Pago")]
-        public MetodoPago MetodoPago { get; set; }
+        public string MetodoPago { get; set; }
         [DataType(DataType.Date)]
         public DateTime FechaDesde { get; set; }
 

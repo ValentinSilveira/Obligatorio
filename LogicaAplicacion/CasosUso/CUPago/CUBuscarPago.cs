@@ -20,8 +20,6 @@ namespace LogicaAplicacion.CasosUso.CUPago
         {
             RepoPago = repoPago;
         }
-
-        public CUBuscarPago() { }
         public DetallePagoDTO Ejecutar(int id)
         {
             Pago pago = RepoPago.FindById(id);
