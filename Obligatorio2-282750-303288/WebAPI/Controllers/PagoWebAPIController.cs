@@ -26,11 +26,13 @@ namespace WebAPI.Controllers
         public ICUListadoPago CUListadoPagos { get; set; }
         public ICUListadoPagoPorFecha CUFiltrarPagosPorFechas { get; set; }
         public ICUListadoPorPrecio CUListadoPorPrecio { get; set; }
+        public ICUPagosPorUsuario CUPagosPorUsuario { get; set; }
+        public ICUPagosUnicosConMontoSuperior CUPagosUnicosConMontoSuperior { get; set; }
 
         public PagoWebAPIController(ICUBuscarPago cuBuscarPago, ICUAltaPagoUnico CuAltaPagoUnico, ICUAltaPagoRecurrente cUAltaPagoRecurrente,
             ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto, ICUListadoPago cUListadoPago
             , ICUObtenerMetodoPago cUObtenerMetodoPago, ICUListadoPago cUListadoPagos, ICUListadoPagoPorFecha cUFiltrarPagosPorFechas
-            , ICUListadoPorPrecio cUListadoPorPrecio) 
+            , ICUListadoPorPrecio cUListadoPorPrecio, ICUPagosPorUsuario cUPagosPorUsuario, ICUPagosUnicosConMontoSuperior cUPagosUnicosConMontoSuperior)
         {
             CUBuscarPago = cuBuscarPago;
             CUAltaPagoUnico = CuAltaPagoUnico;
@@ -42,9 +44,11 @@ namespace WebAPI.Controllers
             CUListadoPagos = cUListadoPagos;
             CUFiltrarPagosPorFechas = cUFiltrarPagosPorFechas;
             CUListadoPorPrecio = cUListadoPorPrecio;
+            CUPagosPorUsuario = cUPagosPorUsuario;
+            CUPagosUnicosConMontoSuperior = cUPagosUnicosConMontoSuperior;
         }
 
-        
+
 
         // GET api/<PagoWebAPIController>/5
         /// <summary>
@@ -59,7 +63,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
         [Authorize(Roles = "Gerente")]
-        [HttpGet("{id}")]
+        [HttpGet("pago/id/{id:int}")]
         public IActionResult Get(int id)
         {
             try
@@ -70,11 +74,77 @@ namespace WebAPI.Controllers
                 }
                 return Ok(CUBuscarPago.Ejecutar(id));
             }
-            catch (ArgumentNullException ex)
+            catch (PagoException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error");
+            }
+        }
+
+        // GET api/<PagoWebAPIController>/3
+        /// <summary>
+        /// Permite obtener todos los pagos de un usuario dado.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        [Authorize(Roles = "Gerente")]
+        [HttpGet("usuario/{id}")]
+        public IActionResult GetPagosDeUsuario(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return BadRequest("El id no es correcto");
+                }
+                return Ok(CUPagosPorUsuario.Ejecutar(id));
             }
             catch (PagoException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error");
+            }
+        }
+
+        // GET api/<PagoWebAPIController>/3
+        /// <summary>
+        /// Permite obtener los equipos en los que sus miembros hayan hecho pagos unicos con un monto superior al dado.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        [Authorize(Roles = "Gerente")]
+        [HttpGet("pago/monto/superior/{monto:int}")]
+        public IActionResult GetPagosUnicosConMontoSuperior(int monto)
+        {
+            try
+            {
+                if (monto <= 0)
+                {
+                    return BadRequest("El monto no es correcto");
+                }
+                return Ok(CUPagosUnicosConMontoSuperior.Ejecutar(monto));
+            }
+            catch (ArgumentException ex)
             {
                 return NotFound(ex.Message);
             }

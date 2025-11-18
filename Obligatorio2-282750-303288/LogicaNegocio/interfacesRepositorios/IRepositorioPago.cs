@@ -12,5 +12,7 @@ namespace LogicaNegocio.interfacesRepositorios
         IEnumerable<Pago> FindByRangoFechas(DateTime fechaDesde, DateTime fechaHasta);
         IEnumerable<Pago> FindByRangoPrecio(decimal precioMinimo);
         bool ExisteRecibo(string nroRecibo);
+        IEnumerable<Pago> PagosDeUsuarioDado(int idUsuario);
+        IEnumerable<Equipo> PagosUnicosConMontoSuperior(int monto);
     }
 }

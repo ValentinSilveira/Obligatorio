@@ -11,6 +11,20 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:WebAPI.Controllers.PagoWebAPIController.GetPagosDeUsuario(System.Int32)">
+            <summary>
+            Permite obtener todos los pagos de un usuario dado.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.PagoWebAPIController.GetPagosUnicosConMontoSuperior(System.Int32)">
+            <summary>
+            Permite obtener los equipos en los que sus miembros hayan hecho pagos unicos con un monto superior al dado.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:WebAPI.Controllers.UsuarioWebAPIController.Get">
             <summary>
             Permite obtener detalles de un pago por su id

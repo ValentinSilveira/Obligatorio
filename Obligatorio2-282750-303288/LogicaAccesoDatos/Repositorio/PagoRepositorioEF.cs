@@ -91,5 +91,35 @@ namespace LogicaAccesoDatos.Repositorio
                 .Any(p => EF.Property<string>(p, "TipoPago") == "Unico"
                        && ((Unico)p).NroRecibo == nroRecibo);
         }
+
+        /*
+        Permitirá obtener el detalle de los pagos, incluyendo los tipos de gasto. Deberá controlar que el usuario
+        utilizado para el filtro sea el usuario que envía la solicitud.
+       */
+
+        public IEnumerable<Pago> PagosDeUsuarioDado(int idUsuario)
+        {
+            return Contexto.Pagos
+                .Include(p => p.TipoGasto)
+                .Where(p => p.Usuario.Id == idUsuario)
+                .ToList();
+        }
+
+        /*
+            Dado un monto, permitirá obtener todos los equipos en los que sus empleados hayan realizado pagos únicos
+            por un monto superior al dado. Los equipos no deberán repetirse y deberán estar ordenados por nombre en
+            forma descendente. 
+        */
+
+        public IEnumerable<Equipo> PagosUnicosConMontoSuperior(int monto)
+        {
+            return Contexto.Pagos
+                .Include(p => p.Usuario)
+                .ThenInclude(u => u.Equipo)
+                .Where(p => p is Unico && p.Monto > monto)
+                .Select(p => p.Usuario.Equipo)
+                .Distinct()
+                .OrderByDescending(e => e.Nombre);
+        }
     }
 }

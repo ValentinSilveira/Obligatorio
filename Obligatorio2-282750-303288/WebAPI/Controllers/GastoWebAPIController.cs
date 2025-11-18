@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles = "Administracion")]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class GastoWebAPIController : ControllerBase
@@ -84,6 +84,7 @@ namespace WebAPI.Controllers
             return Ok(dto);
         }
 
+        [Authorize(Roles = "Administracion")]
         [HttpPut("Editar/{id}")]
         public IActionResult Editar(int id, [FromBody] DetalleGastoDTO dto)
         {
@@ -94,6 +95,7 @@ namespace WebAPI.Controllers
             return Ok("Gasto actualizado correctamente");
         }
 
+        [Authorize(Roles = "Administracion")]
         [HttpDelete("Eliminar/{id}")]
         public IActionResult Eliminar(int id)
         {

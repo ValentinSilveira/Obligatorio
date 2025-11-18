@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <returns></returns>
         
-        [Authorize(Roles = "Gerente,Administracion")]
+        
         [HttpGet("Usuarios")]
         public IActionResult Get()
         {
@@ -126,7 +126,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        
         [HttpGet("Roles")]
         public IActionResult GetRoles()
         {
@@ -140,7 +140,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        
         [HttpGet("Equipos")]
         public IActionResult GetEquipos()
         {

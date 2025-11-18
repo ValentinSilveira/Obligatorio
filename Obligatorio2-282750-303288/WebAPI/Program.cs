@@ -28,6 +28,7 @@ namespace WebAPI
             builder.Services.AddScoped<ICUAltaGasto, CUAltaGasto>();
             builder.Services.AddScoped<ICUBuscarUsuario, CUBuscarUsuario>();
             builder.Services.AddScoped<ICUBuscarGasto, CUBuscarGasto>();
+            builder.Services.AddScoped<ICUBuscarPago, CUBuscarPago>();
             builder.Services.AddScoped<ICUListadoUsuario, CUListadoUsuarios>();
             builder.Services.AddScoped<ICUListadoGasto, CUListadoGasto>();
             builder.Services.AddScoped<ICUEliminarUsuario, CUEliminarUsuario>();
@@ -49,6 +50,8 @@ namespace WebAPI
             builder.Services.AddScoped<ICUAuditoria, CUAuditoria>();
             builder.Services.AddScoped<ICUListadoPorPrecio, CUListadoPorPrecio>();
             builder.Services.AddScoped<IRepositorioAuditoria, RepositorioAuditoriaEF>();
+            builder.Services.AddScoped<ICUPagosPorUsuario, CUPagosPorUsuario>();
+            builder.Services.AddScoped<ICUPagosUnicosConMontoSuperior, CUPagosUnicosConMontoSuperior>();
 
             builder.Services.AddDbContext<ObligatorioContexto>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MiConexion"))

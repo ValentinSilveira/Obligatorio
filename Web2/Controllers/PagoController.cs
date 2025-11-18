@@ -128,7 +128,7 @@ namespace Web.Controllers
         }
 
         // GET: PagoController/CreatePagoUnico
-        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        
         public ActionResult CreatePagoUnico()
         {
             if (!Usuario())
@@ -154,8 +154,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        [ValidateAntiForgeryToken]        
         public ActionResult CreatePagoUnico(PagoUnicoDTO dto)
         {
             if (!Usuario())

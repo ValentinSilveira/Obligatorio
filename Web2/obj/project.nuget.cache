@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "epAtbsKUPCo=",
+  "dgSpecHash": "xS+UJjEO6sA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Equipo\\Web\\Web.csproj",
+  "projectFilePath": "C:\\Users\\Equipo\\Desktop\\Obligatorio2\\Web2\\Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Equipo\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\Equipo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

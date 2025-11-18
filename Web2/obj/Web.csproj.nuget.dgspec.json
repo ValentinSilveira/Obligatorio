@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Equipo\\Web\\Web.csproj": {}
+    "C:\\Users\\Equipo\\Desktop\\Obligatorio2\\Web2\\Web.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Equipo\\Web\\Web.csproj": {
+    "C:\\Users\\Equipo\\Desktop\\Obligatorio2\\Web2\\Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Equipo\\Web\\Web.csproj",
+        "projectUniqueName": "C:\\Users\\Equipo\\Desktop\\Obligatorio2\\Web2\\Web.csproj",
         "projectName": "Web",
-        "projectPath": "C:\\Users\\Equipo\\Web\\Web.csproj",
+        "projectPath": "C:\\Users\\Equipo\\Desktop\\Obligatorio2\\Web2\\Web.csproj",
         "packagesPath": "C:\\Users\\Equipo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Equipo\\Web\\obj\\",
+        "outputPath": "C:\\Users\\Equipo\\Desktop\\Obligatorio2\\Web2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
