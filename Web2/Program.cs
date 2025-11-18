@@ -6,12 +6,6 @@
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddAuthentication("Cookies")
-            //    .AddCookie("Cookies", options =>
-            //    {
-            //        options.LoginPath = "/Home/Login";            
-            //        options.AccessDeniedPath = "/Home/AccesoDenegado"; 
-            //    });
 
             builder.Services.AddAuthorization();
             builder.Services.AddDistributedMemoryCache();
@@ -27,6 +21,8 @@
 
             var app = builder.Build();
 
+            app.Environment.EnvironmentName = "Development";
+
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -37,9 +33,7 @@
             app.UseStaticFiles();
 
             app.UseRouting();
-
             
-            app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
 

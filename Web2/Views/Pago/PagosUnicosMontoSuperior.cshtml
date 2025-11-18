@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Web.Models.DTOs.PagosDTO.ListadoPagoDTO>
+
+@{
+    ViewData["Title"] = "Pagos únicos superiores a un monto";
+}
+
+<h2>Pagos únicos superiores a un monto</h2>
+
+<form asp-action="PagosUnicosMontoSuperior" method="get" class="d-flex align-items-end gap-2 mb-3">
+    <div>
+        <label for="monto" class="form-label">Monto mínimo:</label>
+        <input type="number" name="monto" id="monto"
+               class="form-control"
+               value="@ViewBag.Monto"
+               step="0.01" />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a asp-action="PagosUnicosMontoSuperior" class="btn btn-secondary">Limpiar</a>
+    </div>
+</form>
+
+<a asp-controller="Home" asp-action="Index">Volver al inicio</a>
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-danger">@ViewBag.Mensaje</div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tipo</th>
+                <th>Monto</th>
+                <th>Método Pago</th>
+                <th>Fecha Desde</th>
+                <th>Fecha Hasta</th>
+                <th>Usuario</th>
+                <th>Gasto</th>
+                <th>Tipo Pago</th>
+                <th>Saldo Pendiente</th>
+                <th>Descripción</th>
+                <th>Fecha Pago</th>
+                <th>Recibo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Tipo</td>
+                    <td>@item.Monto</td>
+                    <td>@item.MetodoPago</td>
+                    <td>@item.FechaDesde</td>
+                    <td>@item.FechaHasta</td>
+                    <td>@item.UsuarioNombre</td>
+                    <td>@item.GastoDescripcion</td>
+                    <td>@item.TipoPago</td>
+                    <td>@item.SaldoPendiente</td>
+                    <td>@item.Descripcion</td>
+                    <td>@(item.FechaPago?.ToString("dd/MM/yyyy") ?? "-")</td>
+                    <td>@item.Recibo</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (ViewBag.FiltroAplicado == true)
+{
+    <div class="alert alert-info mt-3">
+        No se encontraron pagos con monto mayor a @ViewBag.Monto.
+    </div>
+}

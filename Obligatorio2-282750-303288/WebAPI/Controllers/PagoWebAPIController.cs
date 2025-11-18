@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        [Authorize(Roles = "Gerente")]
+        
         [HttpGet("pago/id/{id:int}")]
         public IActionResult Get(int id)
         {
@@ -98,7 +98,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        [Authorize(Roles = "Gerente")]
+        
         [HttpGet("usuario/{id}")]
         public IActionResult GetPagosDeUsuario(int id)
         {
@@ -132,7 +132,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        [Authorize(Roles = "Gerente")]
+        
         [HttpGet("pago/monto/superior/{monto:int}")]
         public IActionResult GetPagosUnicosConMontoSuperior(int monto)
         {
@@ -154,7 +154,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente")]
+        
         [HttpGet]
         public IActionResult ListarPorFecha([FromQuery] DateTime? desde, [FromQuery] DateTime? hasta)
         {
@@ -172,7 +172,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        
         [HttpPost("CrearUnico")]
         public IActionResult CrearUnico([FromBody] PagoUnicoDTO dto)
         {
@@ -188,7 +188,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        
         [HttpPost("CrearRecurrente")]
         public IActionResult CrearRecurrente([FromBody] PagoRecurrenteDTO dto)
         {
@@ -204,7 +204,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente")]
+        
         [HttpGet("Precio")]
         public IActionResult PorPrecio([FromQuery] decimal minimo)
         {

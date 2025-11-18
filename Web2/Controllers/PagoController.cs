@@ -226,8 +226,7 @@ namespace Web.Controllers
                 ViewBag.Gastos = new SelectList(dto.Gastos, "Id", "Nombre", dto.GastoId);
                 return View(dto);
             }
-
-            // Validaciones propias
+                        
             if (dto.FechaDesde.Month == dto.FechaHasta.Month &&
                 dto.FechaDesde.Year == dto.FechaHasta.Year)
             {
@@ -295,6 +294,83 @@ namespace Web.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult PagosPorUsuario(int? id)
+        {
+            if (!UsuarioEsGer())
+                return RedirectToAction("Login", "Home");
+
+            ViewBag.IdUsuario = id;
+
+            if (!id.HasValue)
+            {
+                ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un ID válido." : null;
+                return View(new List<ListadoPagoDTO>());
+            }
+
+            if (id.Value <= 0)
+            {
+                ViewBag.Mensaje = "Debe ingresar un ID válido.";
+                return View(new List<ListadoPagoDTO>());
+            }
+
+            List<ListadoPagoDTO> pagos = new();
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7101");
+
+                var resp = client.GetAsync($"/api/PagoWebAPI/usuario/{id}").Result;
+
+                if (resp.IsSuccessStatusCode)
+                    pagos = resp.Content.ReadFromJsonAsync<List<ListadoPagoDTO>>().Result;
+                else
+                    ViewBag.Mensaje = resp.Content.ReadAsStringAsync().Result;
+            }
+
+            if (!pagos.Any())
+                ViewBag.Mensaje = "El usuario no tiene pagos registrados.";
+
+            return View(pagos);
+        }
+
+        public ActionResult PagosUnicosMontoSuperior(int? monto)
+        {
+            if (!UsuarioEsGer())
+                return RedirectToAction("Login", "Home");
+
+            ViewBag.Monto = monto;
+
+            if (!monto.HasValue)
+            {
+                ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un monto válido." : null;
+                return View(new List<ListadoPagoDTO>());
+            }
+            if (monto.Value <= 0)
+            {
+                ViewBag.Mensaje = "Debe ingresar un monto valido.";
+                return View(new List<ListadoPagoDTO>());
+            }
+
+            List<ListadoPagoDTO> pagos = new();
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7101");
+
+                var resp = client.GetAsync($"/api/PagoWebAPI/pago/monto/superior/{monto.Value}").Result;
+
+                if (resp.IsSuccessStatusCode)
+                    pagos = resp.Content.ReadFromJsonAsync<List<ListadoPagoDTO>>().Result;
+                else
+                    ViewBag.Mensaje = resp.Content.ReadAsStringAsync().Result;
+            }
+
+            if (!pagos.Any())
+                ViewBag.Mensaje = $"No existen pagos únicos con monto mayor a {monto}.";
+
+            return View(pagos);
         }
     }
 }

@@ -76,6 +76,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnb1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Equipo/Desktop/Obligatorio2/Web2/Views/Pago/PagosPorUsuario.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnb1xQYWdvc1BvclVzdWFyaW8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Equipo/Desktop/Obligatorio2/Web2/Views/Pago/PagosUnicosMontoSuperior.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnb1xQYWdvc1VuaWNvc01vbnRvU3VwZXJpb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Equipo/Desktop/Obligatorio2/Web2/Views/Pago/RangoPrecio.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnb1xSYW5nb1ByZWNpby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
