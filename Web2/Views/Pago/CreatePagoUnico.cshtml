@@ -1,0 +1,104 @@
+﻿@model Web.Models.DTOs.PagosDTO.PagoUnicoDTO
+@using Web.Models.DTOs
+@using Web.Models.DTOs.GastosDTO
+@using Web.Models.DTOs.UsuariosDTO
+
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Crear Pago unico</h1>
+
+<h4>Pago Unico</h4>
+<hr />
+@if (TempData["Exito"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Exito"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Mensaje
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="CreatePagoUnico">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="GastoId" class="control-label"></label>
+                <select asp-for="GastoId" class="form-control"
+                        asp-items="@(new SelectList(Model.Gastos, "Id", "Nombre", Model.GastoId))">
+                    <option value="">-- Seleccione un gasto --</option>
+                </select>
+                <span asp-validation-for="GastoId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UsuarioId" class="control-label"></label>
+                <select asp-for="UsuarioId" class="form-control"
+                        asp-items="@(new SelectList(Model.Usuarios, "Id", "Nombre", Model.UsuarioId))">
+                    <option value="">-- Seleccione un usuario --</option>
+                </select>
+                <span asp-validation-for="UsuarioId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Monto" class="control-label"></label>
+                <input asp-for="Monto" class="form-control" />
+                <span asp-validation-for="Monto" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MetodoPago" class="control-label"></label>
+                <select asp-for="MetodoPago"
+                        class="form-control"
+                        asp-items="@(new SelectList(Enum.GetValues(typeof(MetodoPagoDTO))))">
+                    <option value="">-- Seleccione un método --</option>
+                </select>
+                <span asp-validation-for="MetodoPago" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FechaPago" class="control-label"></label>
+                <input asp-for="FechaPago" class="form-control" type="date" />
+                <span asp-validation-for="FechaPago" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Recibo" class="control-label"></label>
+                <input asp-for="Recibo" class="form-control" />
+                <span asp-validation-for="Recibo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Crear Pago Único" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-link mt-3">Volver al inicio</a>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

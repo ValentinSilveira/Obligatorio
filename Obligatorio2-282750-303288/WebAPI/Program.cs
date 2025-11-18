@@ -1,0 +1,82 @@
+using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
+using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
+using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
+using LogicaAccesoDatos;
+using LogicaAccesoDatos.Repositorio;
+using LogicaAplicacion.CasosUso.CUGasto;
+using LogicaAplicacion.CasosUso.CUGastos;
+using LogicaAplicacion.CasosUso.CUPago;
+using LogicaAplicacion.CasosUso.CUUsuario;
+using LogicaAplicacion.CasosUso.CUUsuarios;
+using LogicaAplicacion.InterfacesCasosUsos;
+using LogicaNegocio.interfacesRepositorios;
+using Microsoft.EntityFrameworkCore;
+
+namespace WebAPI
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+
+            builder.Services.AddControllers();
+
+            builder.Services.AddScoped<ICUAltaUsuario, CUAltaUsuario>();
+            builder.Services.AddScoped<ICUAltaGasto, CUAltaGasto>();
+            builder.Services.AddScoped<ICUBuscarUsuario, CUBuscarUsuario>();
+            builder.Services.AddScoped<ICUBuscarGasto, CUBuscarGasto>();
+            builder.Services.AddScoped<ICUListadoUsuario, CUListadoUsuarios>();
+            builder.Services.AddScoped<ICUListadoGasto, CUListadoGasto>();
+            builder.Services.AddScoped<ICUEliminarUsuario, CUEliminarUsuario>();
+            builder.Services.AddScoped<ICUEliminarGasto, CUEliminarGasto>();
+            builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuarioEF>();
+            builder.Services.AddScoped<IRepositorioGasto, GastoRepositorioEF>();
+            builder.Services.AddScoped<IRepositorioRol, RepositorioRolEF>();
+            builder.Services.AddScoped<ICUListadoRol, CUListadoRoles>();
+            builder.Services.AddScoped<ILogin, CULogin>();
+            builder.Services.AddScoped<ICUAltaPagoUnico, CUAltaPagoUnico>();
+            builder.Services.AddScoped<ICUAltaPagoRecurrente, CUAltaPagoRecurrente>();
+            builder.Services.AddScoped<IRepositorioPago, PagoRepositorioEF>();
+            builder.Services.AddScoped<ICUListadoPago, CUListadoPago>();
+            builder.Services.AddScoped<ICUObtenerMetodoPago, CUObtenerMetodoPago>();
+            builder.Services.AddScoped<ICUEditarGasto, CUEditarGasto>();
+            builder.Services.AddScoped<ICUListadoEquipo, CUListadoEquipos>();
+            builder.Services.AddScoped<IRepositorioEquipo, RepositorioEquipoEF>();
+            builder.Services.AddScoped<ICUListadoPagoPorFecha, CUListadoPagoPorFecha>();
+            builder.Services.AddScoped<ICUAuditoria, CUAuditoria>();
+            builder.Services.AddScoped<ICUListadoPorPrecio, CUListadoPorPrecio>();
+            builder.Services.AddScoped<IRepositorioAuditoria, RepositorioAuditoriaEF>();
+
+            builder.Services.AddDbContext<ObligatorioContexto>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MiConexion"))
+            );
+
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(opt => opt.IncludeXmlComments("WebAPI.xml"));
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
+
+
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
+}
+

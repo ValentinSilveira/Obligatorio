@@ -1,0 +1,75 @@
+﻿using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaNegocio.InterfacesNegocio;
+using MathNet.Numerics;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace LogicaNegocio.EntidadesNegocio
+{
+    public abstract class Pago:IValidable
+    {
+        public int Id { get; set; }
+        public Gasto TipoGasto { get; set; }
+        public Usuario Usuario { get; set; }
+        public MetodoPago Metodo {  get; set; } 
+        public string Descripcion {  get; set; }
+        public int Monto { get; set; }        
+        public decimal SaldoPendiente { get; set; }
+
+        public Pago(Gasto tipoGasto, Usuario usuario, MetodoPago metodo, string descripcion, int monto)
+        {
+            TipoGasto = tipoGasto;
+            Usuario = usuario;
+            Metodo = metodo;
+            Descripcion = descripcion;
+            Monto = monto;
+            Validar();
+        }
+        protected Pago() { }
+
+        public void Validar()
+        {
+            ValidarUsuario();
+            ValidarGasto();
+            ValidarDescripcion();
+            ValidarMonto();
+        }
+
+        private void ValidarUsuario() 
+        {
+            if(Usuario == null)
+            {
+                throw new ArgumentNullException("No hay ningun usuario asignado al pago");
+            }
+        }
+
+        private void ValidarGasto() 
+        {
+            if(TipoGasto == null) 
+            {
+                throw new ArgumentNullException("No hay un gasto asignado");
+            }
+        }
+
+        private void ValidarDescripcion() 
+        {
+            if (string.IsNullOrEmpty(Descripcion)) 
+            {
+                throw new PagoException("Debe incluir una descripción");
+            }
+        }
+
+        private void ValidarMonto() 
+        {
+            if(Monto < 1) 
+            {
+                throw new PagoException("El monto debe ser mayor que 0");
+            }
+        }
+    }
+}

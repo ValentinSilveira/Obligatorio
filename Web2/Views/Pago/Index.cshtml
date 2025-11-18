@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Web.Models.DTOs.PagosDTO.ListadoPagoDTO>
+
+@{
+    ViewData["Title"] = "Listado de Pagos";
+}
+
+<h1>Listado de Pagos</h1>
+
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="fechaDesde">Fecha Desde:</label>
+            <input type="date" id="fechaDesde" name="fechaDesde" class="form-control" value="@ViewBag.FechaDesde" />
+        </div>
+        <div class="col-md-3">
+            <label for="fechaHasta">Fecha Hasta:</label>
+            <input type="date" id="fechaHasta" name="fechaHasta" class="form-control" value="@ViewBag.FechaHasta" />
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </div>
+</form>
+<a asp-controller="Home" asp-action="Index" class="btn btn-link mt-3">Volver al inicio</a>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+}
+else if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-warning mt-3">@ViewBag.Mensaje</div>
+}
+else if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Id)</th>
+                <th>@Html.DisplayNameFor(model => model.Tipo)</th>
+                <th>@Html.DisplayNameFor(model => model.Monto)</th>
+                <th>@Html.DisplayNameFor(model => model.MetodoPago)</th>
+                <th>@Html.DisplayNameFor(model => model.FechaDesde)</th>
+                <th>@Html.DisplayNameFor(model => model.FechaHasta)</th>
+                <th>@Html.DisplayNameFor(model => model.UsuarioNombre)</th>
+                <th>@Html.DisplayNameFor(model => model.GastoDescripcion)</th>
+                <th>@Html.DisplayNameFor(model => model.SaldoPendiente)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Tipo)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Monto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.MetodoPago)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FechaDesde)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FechaHasta)</td>
+                    <td>@Html.DisplayFor(modelItem => item.UsuarioNombre)</td>
+                    <td>@Html.DisplayFor(modelItem => item.GastoDescripcion)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SaldoPendiente)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

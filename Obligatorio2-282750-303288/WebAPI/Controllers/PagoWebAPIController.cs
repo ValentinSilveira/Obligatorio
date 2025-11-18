@@ -1,0 +1,170 @@
+﻿using CasosDeUsos.DTOs.PagosDTO;
+using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
+using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
+using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
+using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaAplicacion.CasosUso.CUPago;
+using LogicaAplicacion.CasosUso.CUUsuario;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PagoWebAPIController : ControllerBase
+    {
+        public ICUBuscarPago CUBuscarPago { get; set; }
+        public ICUAltaPagoUnico CUAltaPagoUnico { get; set; }
+        public ICUAltaPagoRecurrente CUAltaPagoRecurrente { get; set; }
+        public ICUListadoUsuario CUListadoUsuario { get; set; }
+        public ICUListadoPago CUListadoPago { get; set; }
+        public ICUListadoGasto CUListadoGasto { get; set; }
+        public ICUObtenerMetodoPago CUObtenerMetodoPago { get; set; }
+        public ICUListadoPago CUListadoPagos { get; set; }
+        public ICUListadoPagoPorFecha CUFiltrarPagosPorFechas { get; set; }
+        public ICUListadoPorPrecio CUListadoPorPrecio { get; set; }
+
+        public PagoWebAPIController(ICUBuscarPago cuBuscarPago, ICUAltaPagoUnico CuAltaPagoUnico, ICUAltaPagoRecurrente cUAltaPagoRecurrente,
+            ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto, ICUListadoPago cUListadoPago
+            , ICUObtenerMetodoPago cUObtenerMetodoPago, ICUListadoPago cUListadoPagos, ICUListadoPagoPorFecha cUFiltrarPagosPorFechas
+            , ICUListadoPorPrecio cUListadoPorPrecio) 
+        {
+            CUBuscarPago = cuBuscarPago;
+            CUAltaPagoUnico = CuAltaPagoUnico;
+            CUAltaPagoRecurrente = cUAltaPagoRecurrente;
+            CUListadoUsuario = cUListadoUsuario;
+            CUListadoGasto = cUListadoGasto;
+            CUListadoPago = cUListadoPago;
+            CUObtenerMetodoPago = cUObtenerMetodoPago;
+            CUListadoPagos = cUListadoPagos;
+            CUFiltrarPagosPorFechas = cUFiltrarPagosPorFechas;
+            CUListadoPorPrecio = cUListadoPorPrecio;
+        }
+
+        
+
+        // GET api/<PagoWebAPIController>/5
+        /// <summary>
+        /// Permite obtener detalles de un pago por su id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        [Authorize(Roles = "Gerente")]
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return BadRequest("El id no es correcto");
+                }
+                return Ok(CUBuscarPago.Ejecutar(id));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (PagoException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error");
+            }
+        }
+
+        [Authorize(Roles = "Gerente")]
+        [HttpGet]
+        public IActionResult ListarPorFecha([FromQuery] DateTime? desde, [FromQuery] DateTime? hasta)
+        {
+            try
+            {
+                if (!desde.HasValue || !hasta.HasValue)
+                    return BadRequest("Debe ingresar ambas fechas.");
+
+                var pagos = CUFiltrarPagosPorFechas.Ejecutar(desde.Value, hasta.Value);
+                return Ok(pagos);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Error al obtener pagos.");
+            }
+        }
+
+        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        [HttpPost("CrearUnico")]
+        public IActionResult CrearUnico([FromBody] PagoUnicoDTO dto)
+        {
+            try
+            {
+                string usuario = "Sistema";
+                CUAltaPagoUnico.Ejecutar(dto);
+                return Ok("Pago único creado correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        [HttpPost("CrearRecurrente")]
+        public IActionResult CrearRecurrente([FromBody] PagoRecurrenteDTO dto)
+        {
+            try
+            {
+                string usuario = "Sistema";
+                CUAltaPagoRecurrente.Ejecutar(dto);
+                return Ok("Pago recurrente creado correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Gerente")]
+        [HttpGet("Precio")]
+        public IActionResult PorPrecio([FromQuery] decimal minimo)
+        {
+            try
+            {
+                var pagos = CUListadoPorPrecio.Ejecutar(minimo);
+                return Ok(pagos);
+            }
+            catch
+            {
+                return StatusCode(500, "Error al filtrar por precio.");
+            }
+        }
+
+        // POST api/<PagoWebAPIController>
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
+
+        // PUT api/<PagoWebAPIController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/<PagoWebAPIController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
+    }
+}
