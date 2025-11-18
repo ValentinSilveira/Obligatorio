@@ -16,6 +16,7 @@ namespace WebAPI.Controllers
     [ApiController]
     public class PagoWebAPIController : ControllerBase
     {
+        //comentario
         public ICUBuscarPago CUBuscarPago { get; set; }
         public ICUAltaPagoUnico CUAltaPagoUnico { get; set; }
         public ICUAltaPagoRecurrente CUAltaPagoRecurrente { get; set; }
@@ -97,8 +98,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-
-        
+                
         [HttpGet("usuario/{id}")]
         public IActionResult GetPagosDeUsuario(int id)
         {
