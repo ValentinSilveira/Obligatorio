@@ -101,6 +101,7 @@ namespace LogicaAccesoDatos.Repositorio
         {
             return Contexto.Pagos
                 .Include(p => p.TipoGasto)
+                .Include(p => p.Usuario)
                 .Where(p => p.Usuario.Id == idUsuario)
                 .ToList();
         }
@@ -111,7 +112,7 @@ namespace LogicaAccesoDatos.Repositorio
             forma descendente. 
         */
 
-        public IEnumerable<Equipo> PagosUnicosConMontoSuperior(int monto)
+        public IEnumerable<Equipo> PagosUnicosConMontoSuperior(decimal monto)
         {
             return Contexto.Pagos
                 .Include(p => p.Usuario)

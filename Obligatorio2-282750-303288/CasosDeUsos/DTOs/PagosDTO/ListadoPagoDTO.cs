@@ -18,7 +18,7 @@ namespace CasosDeUsos.DTOs.PagosDTO
         public string MetodoPago { get; set; }
 
         [DisplayName("Fecha desde")]
-        public DateTime FechaDesde { get; set; }
+        public DateTime ? FechaDesde { get; set; }
         [DisplayName("Fecha hasta")]
         public DateTime ? FechaHasta { get; set; }
         [DisplayName("Usuario")]
@@ -31,7 +31,7 @@ namespace CasosDeUsos.DTOs.PagosDTO
         [DisplayName("Descripción del pago")]
         public string Descripcion { get; set; }
         [DisplayName("Fecha del pago")]
-        public DateTime? FechaPago { get; set; }
+        public DateTime ? FechaPago { get; set; }
         public string Recibo { get; set; }
     }       
     

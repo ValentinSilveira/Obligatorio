@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
 using Web.Models.DTOs.GastosDTO;
@@ -16,16 +17,19 @@ namespace Web.Controllers
         {
             return HttpContext.Session.GetString("Rol") == "Gerente";
         }
+
         private bool Usuario()
         {
-            return HttpContext.Session.GetString("Rol") == "Administracion" || HttpContext.Session.GetString("Rol") == "Gerente" || HttpContext.Session.GetString("Rol") == "Empleado";
+            return HttpContext.Session.GetString("Rol") == "Administracion" ||
+                   HttpContext.Session.GetString("Rol") == "Gerente" ||
+                   HttpContext.Session.GetString("Rol") == "Empleado";
         }
-        
-        // GET: PagoController
+
         public ActionResult Index(DateTime? fechaDesde, DateTime? fechaHasta)
         {
             if (!UsuarioEsGer())
                 return RedirectToAction("Login", "Home");
+
             bool filtroIntentado = Request.Query.Count > 0;
 
             if (!fechaDesde.HasValue || !fechaHasta.HasValue)
@@ -52,113 +56,164 @@ namespace Web.Controllers
 
             List<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
-
-                string url = "/api/PagoWebAPI?desde=" +
-                             fechaDesde.Value.ToString("yyyy-MM-dd") +
-                             "&hasta=" +
-                             fechaHasta.Value.ToString("yyyy-MM-dd");
-
-                Task<HttpResponseMessage> tarea = client.GetAsync(url);
-                tarea.Wait();
-
-                HttpResponseMessage response = tarea.Result;
-
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    Task<List<ListadoPagoDTO>> tareaLeer =
-                        response.Content.ReadFromJsonAsync<List<ListadoPagoDTO>>();
-                    tareaLeer.Wait();
-                    List<ListadoPagoDTO> resultado = tareaLeer.Result;
-                    pagos = resultado;
+                    client.BaseAddress = new Uri("https://localhost:7101");
+
+                    string url = $"api/PagoWebAPI?desde={fechaDesde:yyyy-MM-dd}&hasta={fechaHasta:yyyy-MM-dd}";
+
+                    Task<HttpResponseMessage> tarea = client.GetAsync(url);
+                    tarea.Wait();
+
+                    HttpResponseMessage resp = tarea.Result;
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        Task<string> tJson = resp.Content.ReadAsStringAsync();
+                        tJson.Wait();
+
+                        pagos = JsonConvert.DeserializeObject<List<ListadoPagoDTO>>(tJson.Result);
+                    }
                 }
             }
-            if (pagos.Count == 0)
+            catch
+            {
+                ViewBag.Mensaje = "Error";
+            }
+
+            if (!pagos.Any())
                 ViewBag.Mensaje = "No se encontraron pagos en el rango de fechas ingresado.";
 
             return View(pagos);
         }
-                
+
         public ActionResult RangoPrecio(decimal? montoMinimo)
         {
             if (!UsuarioEsGer())
                 return RedirectToAction("Login", "Home");
+
             if (!montoMinimo.HasValue)
             {
                 ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un monto." : null;
                 return View(new List<ListadoPagoDTO>());
             }
 
-            List<ListadoPagoDTO> pagos = new();
+            List<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
 
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://localhost:7101");
 
-                var resp = client.GetAsync($"/api/PagoWebAPI/Precio?minimo={montoMinimo}").Result;
+                    Task<HttpResponseMessage> tarea = client.GetAsync($"api/PagoWebAPI/Precio?minimo={montoMinimo}");
+                    tarea.Wait();
 
-                if (resp.IsSuccessStatusCode)
-                    pagos = resp.Content.ReadFromJsonAsync<List<ListadoPagoDTO>>().Result;
+                    HttpResponseMessage resp = tarea.Result;
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        Task<string> tJson = resp.Content.ReadAsStringAsync();
+                        tJson.Wait();
+
+                        pagos = JsonConvert.DeserializeObject<List<ListadoPagoDTO>>(tJson.Result);
+                    }
+                }
+            }
+            catch
+            {
+                ViewBag.Mensaje = "Error";
             }
 
-            if (!pagos.Any()) ViewBag.Mensaje = $"No hay pagos mayores a {montoMinimo}.";
+            if (!pagos.Any())
+                ViewBag.Mensaje = $"No hay pagos mayores a {montoMinimo}.";
+
             return View(pagos);
         }
-        
+
         public ActionResult Details(int id)
         {
             if (!UsuarioEsGer())
                 return RedirectToAction("Login", "Home");
+
             DetallePagoDTO dto = null;
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://localhost:7101");
 
-                var resp = client.GetAsync($"/api/PagoWebAPI/{id}").Result;
+                    Task<HttpResponseMessage> tarea = client.GetAsync($"api/PagoWebAPI/pago/id/{id}");
+                    tarea.Wait();
 
-                if (resp.IsSuccessStatusCode)
-                    dto = resp.Content.ReadFromJsonAsync<DetallePagoDTO>().Result;
+                    HttpResponseMessage resp = tarea.Result;
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        Task<string> tJson = resp.Content.ReadAsStringAsync();
+                        tJson.Wait();
+
+                        dto = JsonConvert.DeserializeObject<DetallePagoDTO>(tJson.Result);
+                    }
+                }
+            }
+            catch
+            {
+                ViewBag.Mensaje = "Error";
             }
 
-            if (dto == null) ViewBag.Mensaje = "No se encontró el pago.";
+            if (dto == null)
+                ViewBag.Mensaje = "No se encontró el pago.";
+
             return View(dto);
         }
 
-        // GET: PagoController/CreatePagoUnico
-        
         public ActionResult CreatePagoUnico()
         {
             if (!Usuario())
                 return RedirectToAction("Login", "Home");
-            PagoUnicoDTO dto = new() { FechaPago = DateTime.Now.Date };
+
+            PagoUnicoDTO dto = new PagoUnicoDTO { FechaPago = DateTime.Now.Date };
 
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
 
-                var respG = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
-                if (respG.IsSuccessStatusCode)
-                    dto.Gastos = respG.Content.ReadFromJsonAsync<List<ListadoGastoDTO>>().Result;
+                Task<HttpResponseMessage> tareaG = client.GetAsync("api/GastoWebAPI/GetGastos");
+                tareaG.Wait();
+                if (tareaG.Result.IsSuccessStatusCode)
+                {
+                    Task<string> tJson = tareaG.Result.Content.ReadAsStringAsync();
+                    tJson.Wait();
+                    dto.Gastos = JsonConvert.DeserializeObject<List<ListadoGastoDTO>>(tJson.Result);
+                }
 
-                var respU = client.GetAsync("api/UsuarioWebAPI/Usuarios").Result;
-                if (respU.IsSuccessStatusCode)
-                    dto.Usuarios = respU.Content.ReadFromJsonAsync<List<ListadoUsuarioDTO>>().Result;
+                Task<HttpResponseMessage> tareaU = client.GetAsync("api/UsuarioWebAPI/Usuarios");
+                tareaU.Wait();
+                if (tareaU.Result.IsSuccessStatusCode)
+                {
+                    Task<string> tJson = tareaU.Result.Content.ReadAsStringAsync();
+                    tJson.Wait();
+                    dto.Usuarios = JsonConvert.DeserializeObject<List<ListadoUsuarioDTO>>(tJson.Result);
+                }
             }
 
             ViewBag.Usuarios = new SelectList(dto.Usuarios, "Id", "Nombre");
             ViewBag.Gastos = new SelectList(dto.Gastos, "Id", "Nombre");
+
             return View(dto);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]        
+        [ValidateAntiForgeryToken]
         public ActionResult CreatePagoUnico(PagoUnicoDTO dto)
         {
             if (!Usuario())
                 return RedirectToAction("Login", "Home");
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Usuarios = new SelectList(dto.Usuarios, "Id", "Nombre", dto.UsuarioId);
@@ -169,7 +224,11 @@ namespace Web.Controllers
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
-                var resp = client.PostAsJsonAsync("/api/PagoWebAPI/CrearUnico", dto).Result;
+
+                Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("api/PagoWebAPI/CrearUnico", dto);
+                tarea.Wait();
+
+                HttpResponseMessage resp = tarea.Result;
 
                 if (resp.IsSuccessStatusCode)
                 {
@@ -177,35 +236,47 @@ namespace Web.Controllers
                     return RedirectToAction(nameof(CreatePagoUnico));
                 }
 
-                ViewBag.Mensaje = resp.Content.ReadAsStringAsync().Result;
+                Task<string> tJson = resp.Content.ReadAsStringAsync();
+                tJson.Wait();
+                ViewBag.Mensaje = tJson.Result;
             }
 
             return View(dto);
         }
 
-        // GET: PagoController/CreatePagoRecurrente
         public ActionResult CreatePagoRecurrente()
         {
             if (!Usuario())
                 return RedirectToAction("Login", "Home");
-            PagoRecurrenteDTO dto = new()
+
+            PagoRecurrenteDTO dto = new PagoRecurrenteDTO
             {
                 FechaDesde = DateTime.Now.Date,
                 FechaHasta = DateTime.Now.Date
             };
+
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
 
-                var respG = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
-                if (respG.IsSuccessStatusCode)
-                    dto.Gastos = respG.Content.ReadFromJsonAsync<List<ListadoGastoDTO>>().Result;
+                Task<HttpResponseMessage> tareaG = client.GetAsync("api/GastoWebAPI/GetGastos");
+                tareaG.Wait();
+                if (tareaG.Result.IsSuccessStatusCode)
+                {
+                    Task<string> tJson = tareaG.Result.Content.ReadAsStringAsync();
+                    tJson.Wait();
+                    dto.Gastos = JsonConvert.DeserializeObject<List<ListadoGastoDTO>>(tJson.Result);
+                }
 
-                var respU = client.GetAsync("api/UsuarioWebAPI/Usuarios").Result;
-                if (respU.IsSuccessStatusCode)
-                    dto.Usuarios = respU.Content.ReadFromJsonAsync<List<ListadoUsuarioDTO>>().Result;
+                Task<HttpResponseMessage> tareaU = client.GetAsync("api/UsuarioWebAPI/Usuarios");
+                tareaU.Wait();
+                if (tareaU.Result.IsSuccessStatusCode)
+                {
+                    Task<string> tJson = tareaU.Result.Content.ReadAsStringAsync();
+                    tJson.Wait();
+                    dto.Usuarios = JsonConvert.DeserializeObject<List<ListadoUsuarioDTO>>(tJson.Result);
+                }
             }
-
 
             ViewBag.Usuarios = new SelectList(dto.Usuarios, "Id", "Nombre");
             ViewBag.Gastos = new SelectList(dto.Gastos, "Id", "Nombre");
@@ -213,20 +284,20 @@ namespace Web.Controllers
             return View(dto);
         }
 
-        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreatePagoRecurrente(PagoRecurrenteDTO dto)
         {
             if (!Usuario())
                 return RedirectToAction("Login", "Home");
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Usuarios = new SelectList(dto.Usuarios, "Id", "Nombre", dto.UsuarioId);
                 ViewBag.Gastos = new SelectList(dto.Gastos, "Id", "Nombre", dto.GastoId);
                 return View(dto);
             }
-                        
+
             if (dto.FechaDesde.Month == dto.FechaHasta.Month &&
                 dto.FechaDesde.Year == dto.FechaHasta.Year)
             {
@@ -243,7 +314,11 @@ namespace Web.Controllers
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
-                var resp = client.PostAsJsonAsync("/api/PagoWebAPI/CrearRecurrente", dto).Result;
+
+                Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("api/PagoWebAPI/CrearRecurrente", dto);
+                tarea.Wait();
+
+                HttpResponseMessage resp = tarea.Result;
 
                 if (resp.IsSuccessStatusCode)
                 {
@@ -251,49 +326,12 @@ namespace Web.Controllers
                     return RedirectToAction(nameof(CreatePagoRecurrente));
                 }
 
-                ViewBag.Mensaje = resp.Content.ReadAsStringAsync().Result;
+                Task<string> tJson = resp.Content.ReadAsStringAsync();
+                tJson.Wait();
+                ViewBag.Mensaje = tJson.Result;
             }
 
             return View(dto);
-        }
-
-        // GET: PagoController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-        // POST: PagoController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        // GET: PagoController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-        // POST: PagoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         public ActionResult PagosPorUsuario(int? id)
@@ -303,30 +341,36 @@ namespace Web.Controllers
 
             ViewBag.IdUsuario = id;
 
-            if (!id.HasValue)
+            if (!id.HasValue || id.Value <= 0)
             {
                 ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un ID válido." : null;
                 return View(new List<ListadoPagoDTO>());
             }
 
-            if (id.Value <= 0)
-            {
-                ViewBag.Mensaje = "Debe ingresar un ID válido.";
-                return View(new List<ListadoPagoDTO>());
-            }
-
-            List<ListadoPagoDTO> pagos = new();
+            List<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
 
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
 
-                var resp = client.GetAsync($"/api/PagoWebAPI/usuario/{id}").Result;
+                Task<HttpResponseMessage> tarea = client.GetAsync($"api/PagoWebAPI/usuario/{id.Value}");
+                tarea.Wait();
+
+                HttpResponseMessage resp = tarea.Result;
 
                 if (resp.IsSuccessStatusCode)
-                    pagos = resp.Content.ReadFromJsonAsync<List<ListadoPagoDTO>>().Result;
+                {
+                    Task<string> tJson = resp.Content.ReadAsStringAsync();
+                    tJson.Wait();
+
+                    pagos = JsonConvert.DeserializeObject<List<ListadoPagoDTO>>(tJson.Result);
+                }
                 else
-                    ViewBag.Mensaje = resp.Content.ReadAsStringAsync().Result;
+                {
+                    Task<string> tJson = resp.Content.ReadAsStringAsync();
+                    tJson.Wait();
+                    ViewBag.Mensaje = tJson.Result;
+                }
             }
 
             if (!pagos.Any())
@@ -335,42 +379,48 @@ namespace Web.Controllers
             return View(pagos);
         }
 
-        public ActionResult PagosUnicosMontoSuperior(int? monto)
+        public ActionResult PagosUnicosMontoSuperior(decimal? monto)
         {
             if (!UsuarioEsGer())
                 return RedirectToAction("Login", "Home");
 
             ViewBag.Monto = monto;
 
-            if (!monto.HasValue)
+            if (!monto.HasValue || monto.Value <= 0)
             {
                 ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un monto válido." : null;
-                return View(new List<ListadoPagoDTO>());
-            }
-            if (monto.Value <= 0)
-            {
-                ViewBag.Mensaje = "Debe ingresar un monto valido.";
-                return View(new List<ListadoPagoDTO>());
+                return View(new List<EquipoDTO>());
             }
 
-            List<ListadoPagoDTO> pagos = new();
+            List<EquipoDTO> equipos = new List<EquipoDTO>();
 
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
 
-                var resp = client.GetAsync($"/api/PagoWebAPI/pago/monto/superior/{monto.Value}").Result;
+                Task<HttpResponseMessage> tarea = client.GetAsync($"api/PagoWebAPI/equipos/monto/superior/{monto.Value}");
+                tarea.Wait();
+
+                HttpResponseMessage resp = tarea.Result;
 
                 if (resp.IsSuccessStatusCode)
-                    pagos = resp.Content.ReadFromJsonAsync<List<ListadoPagoDTO>>().Result;
+                {
+                    Task<string> tJson = resp.Content.ReadAsStringAsync();
+                    tJson.Wait();
+                    equipos = JsonConvert.DeserializeObject<List<EquipoDTO>>(tJson.Result);
+                }
                 else
-                    ViewBag.Mensaje = resp.Content.ReadAsStringAsync().Result;
+                {
+                    Task<string> tJson = resp.Content.ReadAsStringAsync();
+                    tJson.Wait();
+                    ViewBag.Mensaje = tJson.Result;
+                }
             }
 
-            if (!pagos.Any())
-                ViewBag.Mensaje = $"No existen pagos únicos con monto mayor a {monto}.";
+            if (!equipos.Any())
+                ViewBag.Mensaje = $"No existen equipos cuyos empleados hayan realizado pagos únicos mayores a {monto}.";
 
-            return View(pagos);
+            return View(equipos);
         }
     }
 }

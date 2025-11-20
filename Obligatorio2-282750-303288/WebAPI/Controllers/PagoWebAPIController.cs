@@ -3,6 +3,7 @@ using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaAplicacion.Mappers;
 using LogicaAplicacion.CasosUso.CUPago;
 using LogicaAplicacion.CasosUso.CUUsuario;
 using Microsoft.AspNetCore.Authorization;
@@ -49,8 +50,7 @@ namespace WebAPI.Controllers
             CUPagosUnicosConMontoSuperior = cUPagosUnicosConMontoSuperior;
         }
 
-
-
+        
         // GET api/<PagoWebAPIController>/5
         /// <summary>
         /// Permite obtener detalles de un pago por su id
@@ -132,29 +132,28 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        
-        [HttpGet("pago/monto/superior/{monto:int}")]
-        public IActionResult GetPagosUnicosConMontoSuperior(int monto)
+
+        [HttpGet("equipos/monto/superior/{monto}")]
+        public IActionResult GetEquiposConPagosUnicosConMontoSuperior(decimal monto)
         {
             try
             {
                 if (monto <= 0)
-                {
-                    return BadRequest("El monto no es correcto");
-                }
-                return Ok(CUPagosUnicosConMontoSuperior.Ejecutar(monto));
+                    return BadRequest("El monto debe ser mayor a cero.");
+
+                var equipos = CUPagosUnicosConMontoSuperior.Ejecutar(monto);
+
+                var equiposDTO = MapperEquipo.ListEquipoToListEquipoDTO(equipos);
+
+                return Ok(equiposDTO);
             }
-            catch (ArgumentException ex)
+            catch (Exception)
             {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error");
+                return StatusCode(500, "Error interno del servidor");
             }
         }
 
-        
+
         [HttpGet]
         public IActionResult ListarPorFecha([FromQuery] DateTime? desde, [FromQuery] DateTime? hasta)
         {

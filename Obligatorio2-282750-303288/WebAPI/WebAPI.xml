@@ -18,7 +18,7 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:WebAPI.Controllers.PagoWebAPIController.GetPagosUnicosConMontoSuperior(System.Int32)">
+        <member name="M:WebAPI.Controllers.PagoWebAPIController.GetEquiposConPagosUnicosConMontoSuperior(System.Decimal)">
             <summary>
             Permite obtener los equipos en los que sus miembros hayan hecho pagos unicos con un monto superior al dado.
             </summary>
