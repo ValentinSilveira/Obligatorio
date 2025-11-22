@@ -12,24 +12,17 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs.PagosDTO
 {
-    public class PagoUnicoDTO
+    public class PagoUnicoAPIDTO
     {
-        [DisplayName("Seleccione un Gasto")]
         public int GastoId { get; set; }
-        public IEnumerable<ListadoGastoDTO> Gastos { get; set; } = new List<ListadoGastoDTO>();
-
-        [DisplayName("Seleccione un Usuario")]
         public int UsuarioId { get; set; }
-        public IEnumerable<ListadoUsuarioDTO> Usuarios { get; set; } = new List<ListadoUsuarioDTO>();
-        [Required(ErrorMessage = "Debe incluir una descripción")]
+
         public string Descripcion { get; set; }
-        [Required(ErrorMessage = "El monto no puede ser 0")]
         public int Monto { get; set; }
-        [DisplayName("Seleccione un Metodo de Pago")]
+
         public string MetodoPago { get; set; }
-        [DataType(DataType.Date)]
+
         public DateTime FechaPago { get; set; }
-        [Required(ErrorMessage = "El recibo es obligatorio")]
         public string Recibo { get; set; }
     }
 }

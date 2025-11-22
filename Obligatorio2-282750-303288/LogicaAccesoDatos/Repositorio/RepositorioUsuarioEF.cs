@@ -1,6 +1,7 @@
 ﻿using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
+using LogicaNegocio.ValueObjects.Usuario;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace LogicaAccesoDatos.Repositorio
         public void Add(Usuario item)
         {
             item.Validar();
-            Usuario usuario = FindByEmailAndPassword(item.Email);
+            Usuario usuario = FindByEmailAndPassword(item.Email, item.Password.Valor);
             if (usuario == null)
             {
                 Contexto.Usuarios.Add(item);
@@ -29,15 +30,18 @@ namespace LogicaAccesoDatos.Repositorio
             }
             else
             {
-                throw new UsuarioException("El rut ya existe");
+                throw new UsuarioException("El usuario ya existe");
             }
         }
-        private Usuario FindByEmailAndPassword(string email)
+        /*
+        private Usuario FindByEmailAndPassword(string email, string password)
         {
             return Contexto.Usuarios
-                .Where(c => c.Email == email)
+                .Where(c => c.Email == email && c.Password.Equals(password))
                 .SingleOrDefault();
         }
+        */
+
         public void Delete(Usuario item)
         {
             Contexto.Usuarios.Remove(item);

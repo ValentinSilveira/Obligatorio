@@ -127,7 +127,7 @@ namespace Web.Controllers
         }
 
         // GET: GastoController/Edit/5
-        public async Task<ActionResult> Edit(int id)
+        public ActionResult Edit(int id)
         {
             if (!UsuarioEsAdmin())
                 return RedirectToAction("Login", "Home");
@@ -139,15 +139,18 @@ namespace Web.Controllers
                     return RedirectToAction(nameof(Index));
                 }
                 DetalleGastoDTO detalleGasto = null;
-
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
-                    HttpResponseMessage response = client.GetAsync($"/api/GastoWebAPI/{id}").Result;
-
+                    Task<HttpResponseMessage> tarea = client.GetAsync($"/api/GastoWebAPI/{id}");
+                    tarea.Wait();
+                    HttpResponseMessage response = tarea.Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        detalleGasto = response.Content.ReadFromJsonAsync<DetalleGastoDTO>().Result;
+                        Task<DetalleGastoDTO> tareaContenido =
+                            response.Content.ReadFromJsonAsync<DetalleGastoDTO>();
+                        tareaContenido.Wait();
+                        detalleGasto = tareaContenido.Result;
                     }
                 }
                 if (detalleGasto == null)
@@ -172,25 +175,21 @@ namespace Web.Controllers
             if (!UsuarioEsAdmin())
                 return RedirectToAction("Login", "Home");
             string usuario = HttpContext.Session.GetString("UsuarioEmail") ?? "Desconocido";
-
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
-
                 Task<HttpResponseMessage> tarea =
                     client.PutAsJsonAsync($"/api/GastoWebAPI/Editar/{id}", detalleGasto);
-
                 tarea.Wait();
-
-                var resp = tarea.Result;
-
+                HttpResponseMessage resp = tarea.Result;
                 if (resp.IsSuccessStatusCode)
                 {
                     TempData["Exito"] = "Gasto actualizado correctamente";
                     return RedirectToAction("Index");
                 }
-
-                ViewBag.Mensaje = "Error al actualizar el gasto.";
+                Task<string> tareaError = resp.Content.ReadAsStringAsync();
+                tareaError.Wait();
+                ViewBag.Mensaje = tareaError.Result;
                 return View(detalleGasto);
             }
         }
@@ -201,46 +200,47 @@ namespace Web.Controllers
             if (!UsuarioEsAdmin())
                 return RedirectToAction("Login", "Home");
             DetalleGastoDTO dto = new DetalleGastoDTO();
-
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
-
                 Task<HttpResponseMessage> tarea =
                     client.GetAsync($"/api/GastoWebAPI/{id}");
                 tarea.Wait();
-
                 if (tarea.Result.IsSuccessStatusCode)
                     dto = tarea.Result.Content.ReadFromJsonAsync<DetalleGastoDTO>().Result;
             }
-
             return View(dto);
         }
 
         // POST: GastoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, DetalleGastoDTO detalleGasto)
+        public ActionResult Delete(int id, DetalleGastoDTO detalleGasto)
         {
             if (!UsuarioEsAdmin())
                 return RedirectToAction("Login", "Home");
-            string usuario = HttpContext.Session.GetString("UsuarioEmail") ?? "Desconocido";
-
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
-
-                var resp = await client.DeleteAsync($"/api/GastoWebAPI/Eliminar/{id}");
-
-                if (resp.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    TempData["Exito"] = "Gasto eliminado correctamente.";
-                    return RedirectToAction(nameof(Index));
+                    client.BaseAddress = new Uri("https://localhost:7101");
+                    Task<HttpResponseMessage> tarea = client.DeleteAsync($"/api/GastoWebAPI/Eliminar/{id}");
+                    tarea.Wait();
+                    HttpResponseMessage resp = tarea.Result;
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        TempData["Exito"] = "Gasto eliminado correctamente.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    Task<string> tareaError = resp.Content.ReadAsStringAsync();
+                    tareaError.Wait();
+                    ViewBag.Mensaje = tareaError.Result;
+                    return View(detalleGasto);
                 }
-
-                string error = await resp.Content.ReadAsStringAsync();
-                ViewBag.Mensaje = error;
-
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = $"Error al eliminar el gasto: {ex.Message}";
                 return View(detalleGasto);
             }
         }

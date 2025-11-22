@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LogicaAplicacion.Mappers
 {
-    internal class MapperEquipo
+    public class MapperEquipo
     {
         public static IEnumerable<ListadoEquipoDTO> ListEquipoToListEquipoDTO(
              IEnumerable<Equipo> Equipos)

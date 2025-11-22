@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Web.Models.DTOs.PagosDTO.ListadoPagoDTO>
+
+<h2>Filtrar pagos por Usuario</h2>
+
+<form asp-action="PagosPorUsuario" method="get" class="d-flex align-items-end gap-2 mb-3">
+    <div>
+        <label for="id" class="form-label">ID Usuario:</label>
+        <input type="number" name="id" id="id"
+               class="form-control"
+               value="@ViewBag.IdUsuario" />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a asp-action="PagosPorUsuario" class="btn btn-secondary">Limpiar</a>
+    </div>
+</form>
+
+<a asp-controller="Home" asp-action="Index">Volver al inicio</a>
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-danger mt-2">@ViewBag.Mensaje</div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Tipo de Gasto</th>
+                <th>Usuario</th>
+                <th>Monto</th>
+                <th>Metodo de pago</th>
+                <th>Numero recibo</th>
+                <th>Descripcion de gasto</th>
+                <th>Descripcion de pago</th>
+                <th>Fecha de Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pago in Model)
+            {
+                <tr>
+                    <td>@pago.Tipo</td>
+                    <td>@pago.UsuarioNombre</td>
+                    <td>@pago.Monto</td>
+                    <td>@pago.MetodoPago</td>
+                    <td>@pago.Recibo</td>
+                    <td>@pago.GastoDescripcion</td>
+                    <td>@pago.Descripcion</td>
+                    <td>@(pago.FechaPago?.ToString("dd/MM/yyyy") ?? "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    @if (ViewBag.IdUsuario != null)
+    {
+        <div class="alert alert-info mt-3">
+            No se encontraron pagos para el usuario con ID @ViewBag.IdUsuario.
+        </div>
+    }
+}

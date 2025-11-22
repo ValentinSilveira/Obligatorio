@@ -10,7 +10,9 @@ using LogicaAplicacion.CasosUso.CUUsuario;
 using LogicaAplicacion.CasosUso.CUUsuarios;
 using LogicaAplicacion.InterfacesCasosUsos;
 using LogicaNegocio.interfacesRepositorios;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPI
 {
@@ -61,6 +63,28 @@ namespace WebAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(opt => opt.IncludeXmlComments("WebAPI.xml"));
+
+            ////Comienza JWT////
+            var claveSecreta = "ZWRpw6fDo28gZW0gY29tcHV0YWRvcmE=";
+
+            builder.Services.AddAuthentication(aut =>
+            {
+                aut.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                aut.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(aut =>
+            {
+                aut.RequireHttpsMetadata = false;
+                aut.SaveToken = true;
+                aut.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(claveSecreta)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
 
             var app = builder.Build();
 

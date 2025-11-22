@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using Web.Models;
 using Web.Models.DTOs.UsuariosDTO;
@@ -9,9 +10,11 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        public HomeController(ILogger<HomeController> logger)
+        public string urlBase = "";
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            urlBase = configuration.GetValue<string>("urlBase") + "UsuarioWebAPI";
         }
 
         public IActionResult Index()
@@ -30,51 +33,56 @@ namespace Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         [HttpGet]
-        public ActionResult Login()
+        public IActionResult Login()
         {
-            UsuarioLoginViewModel usuarioVM = new UsuarioLoginViewModel();
-            return View(usuarioVM);
+            return View();
         }
 
         [HttpPost]
-        public ActionResult Login(UsuarioLoginViewModel usuarioVM)
+        public IActionResult Login(UsuarioLoginDTO usuarioDTO)
         {
             try
             {
-                using (var client = new HttpClient())
+                if (ModelState.IsValid)
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101/");
-
-                    var tarea = client.PostAsJsonAsync(
-                        "api/UsuarioWebAPI/Login",
-                        new { Email = usuarioVM.Email, Password = usuarioVM.Password }
-                    );
-
-                    tarea.Wait(); 
-                    var response = tarea.Result;
-
-                    if (response.IsSuccessStatusCode)
+                    HttpClient cliente = new HttpClient();
+                    Task<HttpResponseMessage> solicitud = cliente.PostAsJsonAsync(urlBase, usuarioDTO);
+                    solicitud.Wait();
+                    HttpResponseMessage respuesta = solicitud.Result;
+                    if (respuesta.IsSuccessStatusCode)
                     {
-                        var tareaContenido = response.Content.ReadFromJsonAsync<UsuarioLoginDTO>();
-                        tareaContenido.Wait();
+                        HttpContent contenido = respuesta.Content;
+                        Task<string> body = contenido.ReadAsStringAsync();
+                        string datos = body.Result;
+                        UsuarioLogueadoDTO usuarioLogueadoDTO = JsonConvert.DeserializeObject<UsuarioLogueadoDTO>(datos);
+                        if (usuarioLogueadoDTO != null)
+                        {
+                            HttpContext.Session.SetString("Rol", usuarioLogueadoDTO.NombreRol);
+                            HttpContext.Session.SetString("Token", usuarioLogueadoDTO.Token);
+                            return RedirectToAction("Index", "Usuario");
 
-                        var usuarioDTO = tareaContenido.Result;
+                        }
+                        else
+                        {
+                            ViewBag.Mensaje = "Datos incorrectos";
+                        }
 
-                        HttpContext.Session.SetString("Rol", usuarioDTO.NombreRol);
-                        HttpContext.Session.SetString("UsuarioEmail", usuarioDTO.Email);
-
-                        return RedirectToAction("Index", "Home");
                     }
-                }
+                    else
+                    {
+                        HttpContent contenido = respuesta.Content;
+                        Task<string> body = contenido.ReadAsStringAsync();
+                        string datos = body.Result;
+                        ViewBag.Mensaje = datos;
+                    }
 
-                ViewBag.Mensaje = "Credenciales incorrectas.";
+                }
             }
             catch (Exception ex)
             {
-                ViewBag.Mensaje = "Error al conectar con la API: " + ex.Message;
-            }
 
-            return View(usuarioVM);
+            }
+            return View();
         }
         public ActionResult Logout()
         {

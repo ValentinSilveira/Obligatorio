@@ -1,4 +1,6 @@
-﻿using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
+﻿using CasosDeUsos.DTOs.PagosDTO;
+using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
+using LogicaAplicacion.Mappers;
 using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
 using System;
@@ -17,9 +19,11 @@ namespace LogicaAplicacion.CasosUso.CUPago
             RepoPago = repoPago;
         }
 
-        public IEnumerable<Equipo> Ejecutar(int monto)
+        public IEnumerable<Equipo> Ejecutar(decimal monto)
         {
-            if (monto < 0) throw new ArgumentException("El monto no puede ser menor que 0");
+            if (monto < 0)
+                throw new ArgumentException("El monto no puede ser menor que 0");
+
             return RepoPago.PagosUnicosConMontoSuperior(monto);
         }
     }

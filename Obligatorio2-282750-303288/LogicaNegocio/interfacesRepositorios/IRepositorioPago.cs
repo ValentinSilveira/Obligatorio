@@ -13,6 +13,6 @@ namespace LogicaNegocio.interfacesRepositorios
         IEnumerable<Pago> FindByRangoPrecio(decimal precioMinimo);
         bool ExisteRecibo(string nroRecibo);
         IEnumerable<Pago> PagosDeUsuarioDado(int idUsuario);
-        IEnumerable<Equipo> PagosUnicosConMontoSuperior(int monto);
+        IEnumerable<Equipo> PagosUnicosConMontoSuperior(decimal monto);
     }
 }

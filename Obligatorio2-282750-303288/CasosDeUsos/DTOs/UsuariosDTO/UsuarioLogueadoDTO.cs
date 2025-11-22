@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web.Models.DTOs.UsuariosDTO
+namespace CasosDeUsos.DTOs.UsuariosDTO
 {
-    public class UsuarioLoginDTO
+    public class UsuarioLogueadoDTO
     {
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string NombreRol { get; set; }
+        public string Token { get; set; }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using LogicaNegocio.EntidadesNegocio;
+﻿using CasosDeUsos.DTOs.PagosDTO;
+using LogicaNegocio.EntidadesNegocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace CasosDeUsos.InterfacesCasosUsos.IPagoCU
 {
     public interface ICUPagosPorUsuario
     {
-        IEnumerable<Pago> Ejecutar(int id);
+        IEnumerable<ListadoPagoDTO> Ejecutar(int id);
     }
 }

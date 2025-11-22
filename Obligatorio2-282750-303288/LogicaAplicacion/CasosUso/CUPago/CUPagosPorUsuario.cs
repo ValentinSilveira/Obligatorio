@@ -1,5 +1,7 @@
-﻿using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
+﻿using CasosDeUsos.DTOs.PagosDTO;
+using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaAplicacion.Mappers;
 using LogicaNegocio.EntidadesNegocio;
 using LogicaNegocio.interfacesRepositorios;
 using System;
@@ -20,10 +22,13 @@ namespace LogicaAplicacion.CasosUso.CUPago
             RepoPago = repoPago;
             RepoUsuario = repoUsuario;
         }
-        public IEnumerable<Pago> Ejecutar(int id)
+        public IEnumerable<ListadoPagoDTO> Ejecutar(int id)
         {
-            if (id <= 0) throw new PagoException("Id invalido");
-            return RepoPago.PagosDeUsuarioDado(id);
+            if (id <= 0) throw new PagoException("Id inválido");
+
+            IEnumerable<Pago> pagos = RepoPago.PagosDeUsuarioDado(id);
+
+            return MapperPago.PagoToPagoListadoDTO(pagos);
         }
     }
 }

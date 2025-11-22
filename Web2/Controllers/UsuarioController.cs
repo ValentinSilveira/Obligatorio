@@ -38,7 +38,7 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
-                //ViewBag.Mensaje = "Error";
+                ViewBag.Mensaje = "Error";
             }
 
             return View(listadoUsuarios);
@@ -55,29 +55,34 @@ namespace Web.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
-
-                    HttpResponseMessage resp =
-                        client.GetAsync($"api/UsuarioWebAPI/{id}").Result;
-
+                    Task<HttpResponseMessage> tarea = client.GetAsync($"api/UsuarioWebAPI/{id}");
+                    tarea.Wait();
+                    HttpResponseMessage resp = tarea.Result;
                     if (resp.IsSuccessStatusCode)
                     {
-                        detalleUsuario = resp.Content.ReadFromJsonAsync<DetalleUsuarioDTO>().Result;
+                        Task<DetalleUsuarioDTO> tareaContenido =
+                            resp.Content.ReadFromJsonAsync<DetalleUsuarioDTO>();
+                        tareaContenido.Wait();
+                        detalleUsuario = tareaContenido.Result;
                     }
                     else
                     {
-                        ViewBag.Mensaje = "No se encontró el usuario.";
+                        Task<string> tareaError = resp.Content.ReadAsStringAsync();
+                        tareaError.Wait();
+                        ViewBag.Mensaje = tareaError.Result;
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                ViewBag.Mensaje = "Error";
+                ViewBag.Mensaje = "Error inesperado.";
             }
+
             return View(detalleUsuario);
         }
 
         // GET: UsuarioController/Create
-        public async Task<ActionResult> Create()
+        public ActionResult Create()
         {
             if (!UsuarioEsAdminGer())
                 return RedirectToAction("Login", "Home");
@@ -87,34 +92,36 @@ namespace Web.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
-
-                    HttpResponseMessage respRoles =
-                        client.GetAsync("api/UsuarioWebAPI/Roles").Result;
-
+                    Task<HttpResponseMessage> tareaRoles = client.GetAsync("api/UsuarioWebAPI/Roles");
+                    tareaRoles.Wait();
+                    HttpResponseMessage respRoles = tareaRoles.Result;
                     if (respRoles.IsSuccessStatusCode)
                     {
-                        usuarioDTO.Roles = respRoles.Content
-                            .ReadFromJsonAsync<List<ListadoRolDTO>>()
-                            .Result;
+                        Task<List<ListadoRolDTO>> tareaContenidoRoles =
+                            respRoles.Content.ReadFromJsonAsync<List<ListadoRolDTO>>();
+                        tareaContenidoRoles.Wait();
+                        usuarioDTO.Roles = tareaContenidoRoles.Result;
                     }
 
-                    HttpResponseMessage respEquipos =
-                        client.GetAsync("api/UsuarioWebAPI/Equipos").Result;
-
+                    Task<HttpResponseMessage> tareaEquipos = client.GetAsync("api/UsuarioWebAPI/Equipos");
+                    tareaEquipos.Wait();
+                    HttpResponseMessage respEquipos = tareaEquipos.Result;
                     if (respEquipos.IsSuccessStatusCode)
                     {
-                        usuarioDTO.Equipos = respEquipos.Content
-                            .ReadFromJsonAsync<List<ListadoEquipoDTO>>()
-                            .Result;
+                        Task<List<ListadoEquipoDTO>> tareaContenidoEquipos =
+                            respEquipos.Content.ReadFromJsonAsync<List<ListadoEquipoDTO>>();
+                        tareaContenidoEquipos.Wait();
+                        usuarioDTO.Equipos = tareaContenidoEquipos.Result;
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                ViewBag.Mensaje = "Error al cargar los datos";
+                ViewBag.Mensaje = "Error al cargar datos.";
                 usuarioDTO.Roles = new List<ListadoRolDTO>();
                 usuarioDTO.Equipos = new List<ListadoEquipoDTO>();
             }
+
             return View(usuarioDTO);
         }
 
@@ -127,21 +134,20 @@ namespace Web.Controllers
                 return RedirectToAction("Login", "Home");
             if (!ModelState.IsValid)
                 return View(usuarioDTO);
-
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
-
-                    HttpResponseMessage resp =
-                        client.PostAsJsonAsync("api/UsuarioWebAPI/Crear", usuarioDTO)
-                        .Result;
-
+                    Task<HttpResponseMessage> tarea =
+                        client.PostAsJsonAsync("api/UsuarioWebAPI/Crear", usuarioDTO);
+                    tarea.Wait();
+                    HttpResponseMessage resp = tarea.Result;
                     if (resp.IsSuccessStatusCode)
                         return RedirectToAction(nameof(Index));
-
-                    ViewBag.Mensaje = "Error al crear usuario.";
+                    Task<string> tareaError = resp.Content.ReadAsStringAsync();
+                    tareaError.Wait();
+                    ViewBag.Mensaje = tareaError.Result;
                     return View(usuarioDTO);
                 }
             }
@@ -180,18 +186,33 @@ namespace Web.Controllers
                 return RedirectToAction("Login", "Home");
             DetalleUsuarioDTO detalleUsuarioDTO = new DetalleUsuarioDTO();
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
-
-                var resp = client.GetAsync($"api/UsuarioWebAPI/{id}").Result;
-
-                if (resp.IsSuccessStatusCode)
-                    detalleUsuarioDTO = resp.Content.ReadFromJsonAsync<DetalleUsuarioDTO>().Result;
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://localhost:7101");
+                    Task<HttpResponseMessage> tarea =
+                        client.GetAsync($"api/UsuarioWebAPI/{id}");
+                    tarea.Wait();
+                    HttpResponseMessage resp = tarea.Result;
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        detalleUsuarioDTO =
+                            resp.Content.ReadFromJsonAsync<DetalleUsuarioDTO>().Result;
+                    }
+                    else
+                    {
+                        ViewBag.Mensaje = "Usuario no encontrado.";
+                    }
+                }
+            }
+            catch
+            {
+                ViewBag.Mensaje = "Error inesperado.";
             }
 
             return View(detalleUsuarioDTO);
-        }
+        }        
 
         // POST: UsuarioController/Delete/5
         [HttpPost]
@@ -205,33 +226,29 @@ namespace Web.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
-
-                    HttpResponseMessage resp =
-                        client.DeleteAsync($"api/UsuarioWebAPI/Eliminar/{id}").Result;
-
+                    Task<HttpResponseMessage> tarea =
+                        client.DeleteAsync($"api/UsuarioWebAPI/Eliminar/{id}");
+                    tarea.Wait();
+                    HttpResponseMessage resp = tarea.Result;
                     if (resp.IsSuccessStatusCode)
                         return RedirectToAction(nameof(Index));
-
-                    ViewBag.Mensaje = "Error al eliminar usuario.";
+                    Task<string> tareaError = resp.Content.ReadAsStringAsync();
+                    tareaError.Wait();
+                    ViewBag.Mensaje = tareaError.Result;
                     return View(detalleUsuario);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                ViewBag.Mensaje = "Error";
+                ViewBag.Mensaje = "Error inesperado.";
+                return View(detalleUsuario);
             }
-            return View(detalleUsuario);
         }
-
-
 
         public ActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("login");
-        }
-
-        
+        }        
     }
-
 }

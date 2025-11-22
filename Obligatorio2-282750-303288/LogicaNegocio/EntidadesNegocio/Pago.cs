@@ -15,6 +15,7 @@ namespace LogicaNegocio.EntidadesNegocio
     {
         public int Id { get; set; }
         public Gasto TipoGasto { get; set; }
+        public int UsuarioId { get; set; }
         public Usuario Usuario { get; set; }
         public MetodoPago Metodo {  get; set; } 
         public string Descripcion {  get; set; }

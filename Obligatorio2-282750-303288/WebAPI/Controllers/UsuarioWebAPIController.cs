@@ -6,6 +6,7 @@ using LogicaAplicacion.CasosUso.CUPago;
 using LogicaAplicacion.InterfacesCasosUsos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Token;
 
 namespace WebAPI.Controllers
 {
@@ -33,13 +34,6 @@ namespace WebAPI.Controllers
             LoginUsuario = loginUsuario;
         }
 
-        //// GET: api/<UsuarioWebAPIController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
         // GET api/<UsuarioWebAPIController>/5
         /// <summary>
         /// Permite obtener detalles de un pago por su id
@@ -58,8 +52,7 @@ namespace WebAPI.Controllers
         /// Listado de usuarios
         /// </summary>
         /// <returns></returns>
-        
-        
+        //[Authorize(Roles = "Administracion")]        
         [HttpGet("Usuarios")]
         public IActionResult Get()
         {
@@ -73,7 +66,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpGet("{id}")]
         public IActionResult GetUsuarioById(int id)
         {
@@ -93,7 +91,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente,Administracion")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpPost("Crear")]
         public IActionResult CrearUsuario([FromBody] UsuarioDTO dto)
         {
@@ -109,7 +112,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpDelete("Eliminar/{id}")]
         public IActionResult EliminarUsuario(int id)
         {
@@ -126,7 +134,11 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpGet("Roles")]
         public IActionResult GetRoles()
         {
@@ -140,7 +152,11 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpGet("Equipos")]
         public IActionResult GetEquipos()
         {
@@ -154,21 +170,46 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost("Login")]
-        public IActionResult Login([FromBody] LoginDTO dto)
+        // POST api/<UsuarioWebAPIController>/5
+        /// <summary>
+        /// Login Usuario con Token
+        /// </summary>
+        /// <returns></returns>
+        /// 
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        [HttpPost]
+        public IActionResult Login([FromBody] UsuarioLoginDTO usuarioLoginDTO)
         {
             try
             {
-                var usuario = LoginUsuario.Ejecutar(dto.Email, dto.Password);
+                if (usuarioLoginDTO == null)
+                {
+                    return BadRequest("Datos incorrectos");
+                }
+                UsuarioLogueadoDTO usuarioLogueadoDTO = LoginUsuario.Ejecutar(usuarioLoginDTO);
+                if (usuarioLogueadoDTO != null)
+                {
+                    usuarioLogueadoDTO.Token = ManejadorToken.CrearToken(usuarioLogueadoDTO);
+                    return Ok(usuarioLogueadoDTO);
+                }
+                else return BadRequest("Datos incorrectos");
 
-                if (usuario == null)
-                    return Unauthorized("Email o contraseña incorrectos.");
-
-                return Ok(usuario);
+            }
+            catch (UsuarioException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return Unauthorized(ex.Message);
+                return StatusCode(55, "Error");
             }
         }
     }

@@ -14,7 +14,7 @@ namespace LogicaAplicacion.Mappers
     {
 
 
-        public static Unico PagoUnicoDTOToPagoUnico(PagoUnicoDTO pagoUnicoDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
+        public static Unico PagoUnicoDTOToPagoUnico(PagoUnicoAPIDTO pagoUnicoDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
         {
             if (pagoUnicoDTO == null)
             {
@@ -25,7 +25,7 @@ namespace LogicaAplicacion.Mappers
         }
 
 
-        public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteDTO pagoRecurrenteDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
+        public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteAPIDTO pagoRecurrenteDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
         {
             if (pagoRecurrenteDTO == null)
             {
@@ -37,25 +37,36 @@ namespace LogicaAplicacion.Mappers
         public static IEnumerable<ListadoPagoDTO> PagoToPagoListadoDTO(IEnumerable<Pago> pagos)
         {
             List<ListadoPagoDTO> listadoPagos = new List<ListadoPagoDTO>();
+
             foreach (Pago pago in pagos)
             {
+                var unico = pago as Unico;
+                var recurrente = pago as Recurrente;
+
                 listadoPagos.Add(new ListadoPagoDTO()
                 {
                     Id = pago.Id,
-                    TipoPago = pago is Unico ? "Unico" : "Recurrente",
-                    Tipo = pago.TipoGasto.Nombre,
+                    TipoPago = unico != null ? "Unico" : "Recurrente",
+
+                    Tipo = pago.TipoGasto?.Nombre,
                     Monto = pago.Monto,
-                    FechaDesde = pago is Unico ? ((Unico)pago).FechaPago : ((Recurrente)pago).FechaDesde,
-                    FechaHasta = pago is Recurrente ? ((Recurrente)pago).FechaHasta : null,
-                    UsuarioNombre = pago.Usuario.Nombre,
-                    GastoDescripcion = pago.TipoGasto.Descripcion,
+
+                    FechaDesde = unico != null ? unico.FechaPago : recurrente?.FechaDesde,
+                    FechaHasta = recurrente?.FechaHasta,
+
+                    UsuarioNombre = pago.Usuario?.Nombre,
+                    GastoDescripcion = pago.TipoGasto?.Descripcion,
+
                     MetodoPago = pago.Metodo.ToString(),
+
                     SaldoPendiente = pago.SaldoPendiente,
                     Descripcion = pago.Descripcion,
-                    FechaPago = pago is Unico u ? u.FechaPago : (DateTime?)null,
-                    Recibo = pago is Unico u2 ? u2.NroRecibo : null,
+
+                    FechaPago = unico?.FechaPago,
+                    Recibo = unico?.NroRecibo
                 });
             }
+
             return listadoPagos;
         }
 

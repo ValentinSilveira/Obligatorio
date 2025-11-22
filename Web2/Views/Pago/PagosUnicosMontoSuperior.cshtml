@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Web.Models.DTOs.UsuariosDTO.EquipoDTO>
+
+@{
+    ViewData["Title"] = "Equipos con pagos únicos superiores a un monto";
+}
+
+<h2>Equipos con pagos únicos superiores al monto ingresado</h2>
+
+<form asp-action="PagosUnicosMontoSuperior" method="get" class="d-flex align-items-end gap-2 mb-3">
+    <div>
+        <label for="monto" class="form-label">Monto mínimo:</label>
+        <input type="number"
+               name="monto"
+               id="monto"
+               step="0.01"
+               value="@ViewBag.Monto"
+               class="form-control" />
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a asp-action="PagosUnicosMontoSuperior" class="btn btn-secondary">Limpiar</a>
+    </div>
+</form>
+
+<a asp-controller="Home" asp-action="Index">Volver al inicio</a>
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-danger mt-3">@ViewBag.Mensaje</div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Nombre del Equipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var equipo in Model)
+            {
+                <tr>
+                    <td>@equipo.Nombre</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (ViewBag.FiltroAplicado == true)
+{
+    <div class="alert alert-info mt-3">
+        No se encontraron equipos cuyos empleados hayan realizado pagos únicos con un monto mayor a @ViewBag.Monto.
+    </div>
+}

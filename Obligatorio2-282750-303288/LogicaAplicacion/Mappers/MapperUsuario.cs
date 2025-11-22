@@ -12,9 +12,9 @@ namespace LogicaAplicacion.Mappers
 {
     internal class MapperUsuario
     {
-        public static Usuario UsuarioDTOToUsuario(UsuarioDTO usuarioDTO) 
+        public static Usuario UsuarioDTOToUsuario(UsuarioDTO usuarioDTO)
         {
-            if(usuarioDTO == null) 
+            if (usuarioDTO == null)
             {
                 throw new ArgumentNullException("Datos incorrectos");
             }
@@ -42,14 +42,14 @@ namespace LogicaAplicacion.Mappers
             }
             return listadoClientes;
         }
-        public static UsuarioLoginDTO UsuarioToUsuarioListadoDTO(Usuario usuario)
+        public static UsuarioLogueadoDTO UsuarioToUsuarioLogueadoDTO(Usuario usuario)
         {
             if (usuario == null)
             {
-                throw new UsuarioException("El usuario y/o la password es incorrecta");
+                throw new ArgumentNullException("El usuario y/o la password es incorrecta");
 
             }
-            return new UsuarioLoginDTO()
+            return new UsuarioLogueadoDTO()
             {
                 Email = usuario.Email,
                 NombreRol = usuario.Rol?.Descripcion ?? "Sin rol"
@@ -70,8 +70,8 @@ namespace LogicaAplicacion.Mappers
                 Apellido = usuario.Apellido,
                 DescripcionRol = usuario.Rol.Descripcion,
                 Equipo = usuario.Equipo.Nombre
-            };            
-            
-        }        
+            };
+
+        }
     }
 }
