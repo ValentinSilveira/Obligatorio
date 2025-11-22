@@ -28,7 +28,7 @@ namespace LogicaAplicacion.CasosUso.CUPago
         }
 
 
-        public void Ejecutar(PagoUnicoDTO pagoUnicoDTO)
+        public void Ejecutar(PagoUnicoAPIDTO pagoUnicoDTO)
         {
             Usuario usuario = RepoUsuario.FindById(pagoUnicoDTO.UsuarioId);
             Gasto gasto = RepoGasto.FindById(pagoUnicoDTO.GastoId);

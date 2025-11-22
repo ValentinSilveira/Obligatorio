@@ -38,7 +38,7 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
-                //ViewBag.Mensaje = "Error";
+                ViewBag.Mensaje = "Error";
             }
 
             return View(listadoUsuarios);

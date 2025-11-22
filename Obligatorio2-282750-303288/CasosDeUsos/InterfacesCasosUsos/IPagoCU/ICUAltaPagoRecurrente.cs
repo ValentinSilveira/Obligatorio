@@ -9,6 +9,6 @@ namespace CasosDeUsos.InterfacesCasosUsos.IPagoCU
 {
     public interface ICUAltaPagoRecurrente
     {
-        void Ejecutar(PagoRecurrenteDTO pagoRecurrenteDTO);
+        void Ejecutar(PagoRecurrenteAPIDTO pagoRecurrenteDTO);
     }
 }

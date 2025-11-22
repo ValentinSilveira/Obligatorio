@@ -4,6 +4,35 @@
         <name>WebAPI</name>
     </assembly>
     <members>
+        <member name="M:WebAPI.Controllers.GastoWebAPIController.Crear(CasosDeUsos.DTOs.GastosDTO.GastoDTO)">
+            <summary>
+            
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.GastoWebAPIController.GetGasto(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.GastoWebAPIController.Editar(System.Int32,CasosDeUsos.DTOs.GastoDTO.GastoDTO.DetalleGastoDTO)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.GastoWebAPIController.Eliminar(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:WebAPI.Controllers.PagoWebAPIController.Get(System.Int32)">
             <summary>
             Permite obtener detalles de un pago por su id
@@ -25,11 +54,82 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:WebAPI.Controllers.PagoWebAPIController.ListarPorFecha(System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            
+            </summary>
+            <param name="desde"></param>
+            <param name="hasta"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.PagoWebAPIController.CrearUnico(CasosDeUsos.DTOs.PagosDTO.PagoUnicoAPIDTO)">
+            <summary>
+            
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+            //[Authorize(Roles = "Administracion")]
+        </member>
+        <member name="M:WebAPI.Controllers.PagoWebAPIController.CrearRecurrente(CasosDeUsos.DTOs.PagosDTO.PagoRecurrenteAPIDTO)">
+            <summary>
+            
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+            
+        </member>
+        <member name="M:WebAPI.Controllers.PagoWebAPIController.PorPrecio(System.Decimal)">
+            <summary>
+            
+            </summary>
+            <param name="minimo"></param>
+            <returns></returns>
+        </member>
         <member name="M:WebAPI.Controllers.UsuarioWebAPIController.Get">
             <summary>
             Permite obtener detalles de un pago por su id
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.GetUsuarioById(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.CrearUsuario(CasosDeUsos.DTOs.UsuariosDTO.UsuarioDTO)">
+            <summary>
+            
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.EliminarUsuario(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.GetRoles">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.GetEquipos">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.Login(CasosDeUsos.DTOs.UsuariosDTO.LoginDTO)">
+            <summary>
+            
+            </summary>
+            <param name="dto"></param>
             <returns></returns>
         </member>
     </members>

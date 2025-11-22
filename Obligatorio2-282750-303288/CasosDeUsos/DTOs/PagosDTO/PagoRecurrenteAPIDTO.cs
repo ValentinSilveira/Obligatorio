@@ -11,24 +11,17 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.DTOs.PagosDTO
 {
-    public class PagoRecurrenteDTO
+    public class PagoRecurrenteAPIDTO
     {
-        [DisplayName("Seleccione un Gasto")]
         public int GastoId { get; set; }
-        public IEnumerable<ListadoGastoDTO> Gastos { get; set; } = new List<ListadoGastoDTO>();
-
-        [DisplayName("Seleccione un Usuario")]
         public int UsuarioId { get; set; }
-        public IEnumerable<ListadoUsuarioDTO> Usuarios { get; set; } = new List<ListadoUsuarioDTO>();
-        [Required(ErrorMessage = "Debe incluir una descripción")]
+
         public string Descripcion { get; set; }
         public int Monto { get; set; }
-        [DisplayName("Seleccione un Metodo de Pago")]
-        public string MetodoPago { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime FechaDesde { get; set; }
 
-        [DataType(DataType.Date)]
+        public string MetodoPago { get; set; }
+
+        public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
     }
 }

@@ -33,13 +33,6 @@ namespace WebAPI.Controllers
             LoginUsuario = loginUsuario;
         }
 
-        //// GET: api/<UsuarioWebAPIController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
         // GET api/<UsuarioWebAPIController>/5
         /// <summary>
         /// Permite obtener detalles de un pago por su id
@@ -58,8 +51,7 @@ namespace WebAPI.Controllers
         /// Listado de usuarios
         /// </summary>
         /// <returns></returns>
-        
-        
+        //[Authorize(Roles = "Administracion")]        
         [HttpGet("Usuarios")]
         public IActionResult Get()
         {
@@ -73,7 +65,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpGet("{id}")]
         public IActionResult GetUsuarioById(int id)
         {
@@ -93,7 +90,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente,Administracion")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpPost("Crear")]
         public IActionResult CrearUsuario([FromBody] UsuarioDTO dto)
         {
@@ -109,7 +111,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Gerente,Administracion,Empleado")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpDelete("Eliminar/{id}")]
         public IActionResult EliminarUsuario(int id)
         {
@@ -126,7 +133,11 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpGet("Roles")]
         public IActionResult GetRoles()
         {
@@ -140,7 +151,11 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpGet("Equipos")]
         public IActionResult GetEquipos()
         {
@@ -154,6 +169,11 @@ namespace WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginDTO dto)
         {

@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         public ICUListadoPago CUListadoPago { get; set; }
         public ICUListadoGasto CUListadoGasto { get; set; }
         public ICUObtenerMetodoPago CUObtenerMetodoPago { get; set; }
-        public ICUListadoPago CUListadoPagos { get; set; }
+        //public ICUListadoPago CUListadoPagos { get; set; }
         public ICUListadoPagoPorFecha CUFiltrarPagosPorFechas { get; set; }
         public ICUListadoPorPrecio CUListadoPorPrecio { get; set; }
         public ICUPagosPorUsuario CUPagosPorUsuario { get; set; }
@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
 
         public PagoWebAPIController(ICUBuscarPago cuBuscarPago, ICUAltaPagoUnico CuAltaPagoUnico, ICUAltaPagoRecurrente cUAltaPagoRecurrente,
             ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto, ICUListadoPago cUListadoPago
-            , ICUObtenerMetodoPago cUObtenerMetodoPago, ICUListadoPago cUListadoPagos, ICUListadoPagoPorFecha cUFiltrarPagosPorFechas
+            , ICUObtenerMetodoPago cUObtenerMetodoPago, /*ICUListadoPago cUListadoPagos,*/ ICUListadoPagoPorFecha cUFiltrarPagosPorFechas
             , ICUListadoPorPrecio cUListadoPorPrecio, ICUPagosPorUsuario cUPagosPorUsuario, ICUPagosUnicosConMontoSuperior cUPagosUnicosConMontoSuperior)
         {
             CUBuscarPago = cuBuscarPago;
@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
             CUListadoGasto = cUListadoGasto;
             CUListadoPago = cUListadoPago;
             CUObtenerMetodoPago = cUObtenerMetodoPago;
-            CUListadoPagos = cUListadoPagos;
+            //CUListadoPagos = cUListadoPagos;
             CUFiltrarPagosPorFechas = cUFiltrarPagosPorFechas;
             CUListadoPorPrecio = cUListadoPorPrecio;
             CUPagosPorUsuario = cUPagosPorUsuario;
@@ -62,8 +62,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-
-        
+        //[Authorize(Roles = "Administracion")]
         [HttpGet("pago/id/{id:int}")]
         public IActionResult Get(int id)
         {
@@ -98,7 +97,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-                
+        //[Authorize(Roles = "Administracion")]       
         [HttpGet("usuario/{id}")]
         public IActionResult GetPagosDeUsuario(int id)
         {
@@ -126,7 +125,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-
+        //[Authorize(Roles = "Administracion")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -153,7 +152,13 @@ namespace WebAPI.Controllers
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="desde"></param>
+        /// <param name="hasta"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpGet]
         public IActionResult ListarPorFecha([FromQuery] DateTime? desde, [FromQuery] DateTime? hasta)
         {
@@ -171,13 +176,17 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// //[Authorize(Roles = "Administracion")]
         [HttpPost("CrearUnico")]
-        public IActionResult CrearUnico([FromBody] PagoUnicoDTO dto)
+        public IActionResult CrearUnico([FromBody] PagoUnicoAPIDTO dto)
         {
             try
             {
-                string usuario = "Sistema";
                 CUAltaPagoUnico.Ejecutar(dto);
                 return Ok("Pago único creado correctamente.");
             }
@@ -187,9 +196,15 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// 
+        //[Authorize(Roles = "Administracion")]
         [HttpPost("CrearRecurrente")]
-        public IActionResult CrearRecurrente([FromBody] PagoRecurrenteDTO dto)
+        public IActionResult CrearRecurrente([FromBody] PagoRecurrenteAPIDTO dto)
         {
             try
             {
@@ -203,7 +218,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="minimo"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administracion")]
         [HttpGet("Precio")]
         public IActionResult PorPrecio([FromQuery] decimal minimo)
         {

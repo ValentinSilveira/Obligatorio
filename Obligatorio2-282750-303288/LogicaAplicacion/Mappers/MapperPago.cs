@@ -14,7 +14,7 @@ namespace LogicaAplicacion.Mappers
     {
 
 
-        public static Unico PagoUnicoDTOToPagoUnico(PagoUnicoDTO pagoUnicoDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
+        public static Unico PagoUnicoDTOToPagoUnico(PagoUnicoAPIDTO pagoUnicoDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
         {
             if (pagoUnicoDTO == null)
             {
@@ -25,7 +25,7 @@ namespace LogicaAplicacion.Mappers
         }
 
 
-        public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteDTO pagoRecurrenteDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
+        public static Recurrente PagoRecurrenteDTOToPagoRecurrente(PagoRecurrenteAPIDTO pagoRecurrenteDTO, Usuario usuario, Gasto gasto, MetodoPago metodoPago)
         {
             if (pagoRecurrenteDTO == null)
             {

@@ -216,16 +216,26 @@ namespace Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Usuarios = new SelectList(dto.Usuarios, "Id", "Nombre", dto.UsuarioId);
-                ViewBag.Gastos = new SelectList(dto.Gastos, "Id", "Nombre", dto.GastoId);
+                CargarListasParaFormulario(dto);
                 return View(dto);
             }
+
+            PagoUnicoDTO apiDto = new PagoUnicoDTO
+            {
+                GastoId = dto.GastoId,
+                UsuarioId = dto.UsuarioId,
+                Descripcion = dto.Descripcion,
+                Monto = dto.Monto,
+                MetodoPago = dto.MetodoPago,
+                FechaPago = dto.FechaPago,
+                Recibo = dto.Recibo
+            };
 
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
 
-                Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("api/PagoWebAPI/CrearUnico", dto);
+                Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("api/PagoWebAPI/CrearUnico", apiDto);
                 tarea.Wait();
 
                 HttpResponseMessage resp = tarea.Result;
@@ -235,6 +245,9 @@ namespace Web.Controllers
                     TempData["Exito"] = "Pago único creado correctamente.";
                     return RedirectToAction(nameof(CreatePagoUnico));
                 }
+
+                // Recargo listas cuando hay errores
+                CargarListasParaFormulario(dto);
 
                 Task<string> tJson = resp.Content.ReadAsStringAsync();
                 tJson.Wait();
@@ -293,21 +306,22 @@ namespace Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Usuarios = new SelectList(dto.Usuarios, "Id", "Nombre", dto.UsuarioId);
-                ViewBag.Gastos = new SelectList(dto.Gastos, "Id", "Nombre", dto.GastoId);
+                CargarListasParaFormulario(dto);
                 return View(dto);
-            }
+            }            
 
             if (dto.FechaDesde.Month == dto.FechaHasta.Month &&
                 dto.FechaDesde.Year == dto.FechaHasta.Year)
             {
                 ViewBag.Mensaje = "Los meses no pueden ser iguales.";
+                CargarListasParaFormulario(dto);
                 return View(dto);
             }
 
             if (dto.FechaDesde > dto.FechaHasta)
             {
                 ViewBag.Mensaje = "Fecha inicio no puede ser mayor.";
+                CargarListasParaFormulario(dto);
                 return View(dto);
             }
 
@@ -325,6 +339,9 @@ namespace Web.Controllers
                     TempData["Exito"] = "Pago recurrente creado correctamente.";
                     return RedirectToAction(nameof(CreatePagoRecurrente));
                 }
+
+                
+                CargarListasParaFormulario(dto);
 
                 Task<string> tJson = resp.Content.ReadAsStringAsync();
                 tJson.Wait();
@@ -422,5 +439,56 @@ namespace Web.Controllers
 
             return View(equipos);
         }
+
+        private void CargarListasParaFormulario(PagoRecurrenteDTO dto)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7101");
+
+                var gastosResp = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
+                if (gastosResp.IsSuccessStatusCode)
+                {
+                    var json = gastosResp.Content.ReadAsStringAsync().Result;
+                    dto.Gastos = JsonConvert.DeserializeObject<List<ListadoGastoDTO>>(json);
+                }
+
+                var usuariosResp = client.GetAsync("api/UsuarioWebAPI/Usuarios").Result;
+                if (usuariosResp.IsSuccessStatusCode)
+                {
+                    var json = usuariosResp.Content.ReadAsStringAsync().Result;
+                    dto.Usuarios = JsonConvert.DeserializeObject<List<ListadoUsuarioDTO>>(json);
+                }
+            }
+
+            ViewBag.Usuarios = new SelectList(dto.Usuarios, "Id", "Nombre", dto.UsuarioId);
+            ViewBag.Gastos = new SelectList(dto.Gastos, "Id", "Nombre", dto.GastoId);
+        }
+
+        private void CargarListasParaFormulario(PagoUnicoDTO dto)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7101");
+
+                var gastosResp = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
+                if (gastosResp.IsSuccessStatusCode)
+                {
+                    var json = gastosResp.Content.ReadAsStringAsync().Result;
+                    dto.Gastos = JsonConvert.DeserializeObject<List<ListadoGastoDTO>>(json);
+                }
+
+                var usuariosResp = client.GetAsync("api/UsuarioWebAPI/Usuarios").Result;
+                if (usuariosResp.IsSuccessStatusCode)
+                {
+                    var json = usuariosResp.Content.ReadAsStringAsync().Result;
+                    dto.Usuarios = JsonConvert.DeserializeObject<List<ListadoUsuarioDTO>>(json);
+                }
+            }
+
+            ViewBag.Usuarios = new SelectList(dto.Usuarios, "Id", "Nombre", dto.UsuarioId);
+            ViewBag.Gastos = new SelectList(dto.Gastos, "Id", "Nombre", dto.GastoId);
+        }
     }
+
 }

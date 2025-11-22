@@ -10,6 +10,6 @@ namespace CasosDeUsos.InterfacesCasosUsos.IPagoCU
 {
     public interface ICUAltaPagoUnico
     {
-        void Ejecutar(PagoUnicoDTO pagoUnicoDTO);
+        void Ejecutar(PagoUnicoAPIDTO pagoUnicoDTO);
     }
 }
