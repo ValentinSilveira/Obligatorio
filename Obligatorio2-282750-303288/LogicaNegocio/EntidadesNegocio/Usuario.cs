@@ -20,12 +20,12 @@ namespace LogicaNegocio.EntidadesNegocio
         public Rol Rol { get; set; }
         public int EquipoId { get; set; }
         public Equipo Equipo { get; set; }
-        public string Nombre { get; private set; }
+        public string NombreUsuario { get; private set; }
         public string Apellido { get; private set; }
         private Usuario() { }
         public Usuario(string password, string apellido, string nombre) 
         {
-            Nombre = nombre;
+            NombreUsuario = nombre;
             Apellido = apellido;
             Password = new Password(password);
             Email = GenerarEmail(nombre, apellido);
@@ -40,7 +40,7 @@ namespace LogicaNegocio.EntidadesNegocio
 
         private void ValidarNombre()
         {
-            if (string.IsNullOrEmpty(Nombre))
+            if (string.IsNullOrEmpty(NombreUsuario))
             {
                 throw new UsuarioException("El nombre no puede estar vacío.");
             }
@@ -49,7 +49,7 @@ namespace LogicaNegocio.EntidadesNegocio
 
         private void ValidarApellido()
         {
-            if (string.IsNullOrEmpty(Nombre))
+            if (string.IsNullOrEmpty(NombreUsuario))
             {
                 throw new UsuarioException("El apellido no puede estar vacío.");
             }

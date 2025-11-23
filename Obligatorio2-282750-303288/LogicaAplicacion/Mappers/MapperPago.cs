@@ -54,7 +54,7 @@ namespace LogicaAplicacion.Mappers
                     FechaDesde = unico != null ? unico.FechaPago : recurrente?.FechaDesde,
                     FechaHasta = recurrente?.FechaHasta,
 
-                    UsuarioNombre = pago.Usuario?.Nombre,
+                    UsuarioNombre = pago.Usuario?.NombreUsuario,
                     GastoDescripcion = pago.TipoGasto?.Descripcion,
 
                     MetodoPago = pago.Metodo.ToString(),
@@ -91,7 +91,7 @@ namespace LogicaAplicacion.Mappers
             {
                 Id = pago.Id,
                 TipoGasto = pago.TipoGasto.Nombre,
-                Usuario = pago.Usuario.Nombre,
+                Usuario = pago.Usuario.NombreUsuario,
                 MetodoPago = pago.Metodo.ToString(),
                 Descripcion = pago.Descripcion,
                 Monto = pago.Monto

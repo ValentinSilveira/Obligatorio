@@ -45,7 +45,8 @@ namespace WebAPI.Controllers
             var dto = gastos.Select(g => new ListadoGastoDTO
             {
                 Id = g.Id,
-                Nombre = g.Nombre
+                Nombre = g.Nombre,
+                Descripcion = g.Descripcion
             });
 
             return Ok(dto);

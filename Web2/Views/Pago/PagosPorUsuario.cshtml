@@ -2,19 +2,6 @@
 
 <h2>Filtrar pagos por Usuario</h2>
 
-<form asp-action="PagosPorUsuario" method="get" class="d-flex align-items-end gap-2 mb-3">
-    <div>
-        <label for="id" class="form-label">ID Usuario:</label>
-        <input type="number" name="id" id="id"
-               class="form-control"
-               value="@ViewBag.IdUsuario" />
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a asp-action="PagosPorUsuario" class="btn btn-secondary">Limpiar</a>
-    </div>
-</form>
-
 <a asp-controller="Home" asp-action="Index">Volver al inicio</a>
 
 @if (ViewBag.Mensaje != null)

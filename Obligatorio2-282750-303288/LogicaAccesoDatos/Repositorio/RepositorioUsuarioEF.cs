@@ -46,27 +46,29 @@ namespace LogicaAccesoDatos.Repositorio
         public IEnumerable<Usuario> FindAll()
         {
             return Contexto.Usuarios
-                .Include(u => u.Rol)
                 .Include(u => u.Equipo)
                 .ToList();
         }
         public Usuario FindById(int id)
         {
             return Contexto.Usuarios
-                .Include(u => u.Rol)
                 .Include(u => u.Equipo)
+                .Include(u => u.Rol)
                 .Where(c => c.Id == id)
                 .SingleOrDefault();
         }
         public void Update(Usuario item)
         {
-            throw new NotImplementedException();
+            item.Validar();
+            Contexto.Usuarios.Update(item);
+            Contexto.SaveChanges();
         }
         public Usuario FindByEmailAndPassword(string email, string password)
         {
             return Contexto.Usuarios
-                    .Include(u => u.Rol)
-                    .FirstOrDefault(u => u.Email == email && u.Password.Valor == password);
+                .Include(u => u.Rol)
+                .Include(u => u.Equipo)
+                .SingleOrDefault(u => u.Email == email && u.Password.Valor == password);
         }
         public bool ExisteEmail(string email)
         {

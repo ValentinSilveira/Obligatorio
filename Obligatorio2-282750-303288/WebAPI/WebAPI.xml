@@ -99,7 +99,7 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.CrearUsuario(CasosDeUsos.DTOs.UsuariosDTO.UsuarioDTO)">
+        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.CrearUsuario(CasosDeUsos.DTOs.UsuariosDTO.UsuarioApiDTO)">
             <summary>
             
             </summary>
@@ -125,11 +125,11 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.Login(CasosDeUsos.DTOs.UsuariosDTO.LoginDTO)">
+        <member name="M:WebAPI.Controllers.UsuarioWebAPIController.Post(CasosDeUsos.DTOs.UsuariosDTO.UsuarioLoginDTO)">
             <summary>
             
             </summary>
-            <param name="dto"></param>
+            <param name="usuarioLoginDTO"></param>
             <returns></returns>
         </member>
     </members>

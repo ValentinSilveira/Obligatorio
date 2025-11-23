@@ -1,4 +1,5 @@
 ﻿using LogicaNegocio.EntidadesNegocio;
+using LogicaNegocio.ValueObjects.Usuario;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,15 @@ namespace LogicaAccesoDatos
             modelBuilder.Entity<Pago>()
             .Property(p => p.Metodo)
             .HasConversion<string>();
+
+            modelBuilder.Entity<Usuario>()
+            .OwnsOne(u => u.Password, pass =>
+                {
+                    pass.Property(p => p.Valor)
+                    .HasColumnName("Password")
+                    .HasMaxLength(200)
+                    .IsRequired();
+            });
         }
     }
 }

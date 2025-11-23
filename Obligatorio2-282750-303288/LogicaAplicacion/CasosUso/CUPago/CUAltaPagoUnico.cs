@@ -28,35 +28,24 @@ namespace LogicaAplicacion.CasosUso.CUPago
         }
 
 
-        public void Ejecutar(PagoUnicoAPIDTO pagoUnicoDTO)
+        public void Ejecutar(PagoUnicoAPIDTO dto)
         {
-            Usuario usuario = RepoUsuario.FindById(pagoUnicoDTO.UsuarioId);
-            Gasto gasto = RepoGasto.FindById(pagoUnicoDTO.GastoId);
-
-            if (usuario != null && gasto != null)
-            {
-                // Convertir el string del DTO a enum MetodoPago
-                if (!Enum.TryParse(pagoUnicoDTO.MetodoPago, true, out MetodoPago metodoPago))
-                {
-                    throw new ArgumentException("Método de pago inválido");
-                }
-                if (string.IsNullOrWhiteSpace(pagoUnicoDTO.Recibo))
-                    throw new PagoException("El recibo es obligatorio.");
-
-                if (pagoUnicoDTO.Recibo == "0" || pagoUnicoDTO.Recibo == "00")
-                    throw new PagoException("El número de recibo no puede ser 0.");
-
-                if (RepoPago.ExisteRecibo(pagoUnicoDTO.Recibo))
-                    throw new PagoException("El número de recibo ya existe.");
-                                
-                Unico pagoUnico = MapperPago.PagoUnicoDTOToPagoUnico(pagoUnicoDTO, usuario, gasto, metodoPago);
-
-                RepoPago.Add(pagoUnico);
-            }
-            else
-            {
-                throw new ArgumentNullException("El usuario o el gasto no son válidos");
-            }
-        }        
+            Usuario usuario = RepoUsuario.FindById(dto.UsuarioId);
+            if (usuario == null)
+                throw new ArgumentException("El usuario no existe.");                        
+            Gasto gasto = RepoGasto.FindById(dto.GastoId);
+            if (gasto == null)
+                throw new ArgumentException("El gasto no existe.");
+            if (!Enum.TryParse(dto.MetodoPago, true, out MetodoPago metodoPago))
+                throw new ArgumentException("Método de pago inválido.");
+            if (string.IsNullOrWhiteSpace(dto.Recibo))
+                throw new PagoException("El recibo es obligatorio.");
+            if (dto.Recibo == "0" || dto.Recibo == "00")
+                throw new PagoException("El número de recibo no puede ser 0.");
+            if (RepoPago.ExisteRecibo(dto.Recibo))
+                throw new PagoException("El número de recibo ya existe.");
+            Unico pagoUnico = MapperPago.PagoUnicoDTOToPagoUnico(dto, usuario, gasto, metodoPago);
+            RepoPago.Add(pagoUnico);
+        }
     }
 }

@@ -1,23 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Web.Models.DTOs.GastosDTO;
 
 namespace Web.Controllers
 {    
     public class GastoController : Controller
     {
-
-        private bool UsuarioEsAdmin()
-        {
-            return HttpContext.Session.GetString("Rol") == "Administracion";
-        }
-
         // GET: GastoController
         public ActionResult Index()
         {
-            if (!UsuarioEsAdmin())
-                return RedirectToAction("Login", "Home");
             IEnumerable<ListadoGastoDTO> listadoGastos = new List<ListadoGastoDTO>();
             try
             {
@@ -52,8 +45,6 @@ namespace Web.Controllers
         // GET: GastoController/Details/5
         public ActionResult Details(int id)
         {
-            if (!UsuarioEsAdmin())
-                return RedirectToAction("Login", "Home");
             DetalleGastoDTO dto = new DetalleGastoDTO();
 
             using (HttpClient client = new HttpClient())
@@ -86,8 +77,6 @@ namespace Web.Controllers
         // GET: GastoController/Create
         public ActionResult Create()
         {
-            if (!UsuarioEsAdmin())
-                return RedirectToAction("Login", "Home");
             return View();
         }
 
@@ -95,8 +84,6 @@ namespace Web.Controllers
         [HttpPost]
         public ActionResult Create(GastoDTO dto)
         {
-            if (!UsuarioEsAdmin())
-                return RedirectToAction("Login", "Home");
             if (!ModelState.IsValid)
             {
                 return View(dto);
@@ -129,8 +116,6 @@ namespace Web.Controllers
         // GET: GastoController/Edit/5
         public ActionResult Edit(int id)
         {
-            if (!UsuarioEsAdmin())
-                return RedirectToAction("Login", "Home");
             try
             {
                 if (id <= 0)
@@ -172,8 +157,6 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, DetalleGastoDTO detalleGasto)
         {
-            if (!UsuarioEsAdmin())
-                return RedirectToAction("Login", "Home");
             string usuario = HttpContext.Session.GetString("UsuarioEmail") ?? "Desconocido";
             using (HttpClient client = new HttpClient())
             {
@@ -197,8 +180,6 @@ namespace Web.Controllers
         // GET: GastoController/Delete/5
         public ActionResult Delete(int id)
         {
-            if (!UsuarioEsAdmin())
-                return RedirectToAction("Login", "Home");
             DetalleGastoDTO dto = new DetalleGastoDTO();
             using (HttpClient client = new HttpClient())
             {
@@ -217,8 +198,6 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, DetalleGastoDTO detalleGasto)
         {
-            if (!UsuarioEsAdmin())
-                return RedirectToAction("Login", "Home");
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -243,6 +222,12 @@ namespace Web.Controllers
                 ViewBag.Mensaje = $"Error al eliminar el gasto: {ex.Message}";
                 return View(detalleGasto);
             }
+        }
+
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction(nameof(Login));
         }
     }
 }

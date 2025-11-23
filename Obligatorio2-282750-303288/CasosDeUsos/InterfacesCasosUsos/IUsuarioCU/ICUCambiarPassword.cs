@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace CasosDeUsos.InterfacesCasosUsos.IUsuarioCU
 {
-    public interface ICUAltaUsuario
+    public interface ICUCambiarPassword
     {
-        void Ejecutar(UsuarioApiDTO usuarioDTO);
+        void Ejecutar(UsuarioCambiarPasswordDTO dto);
     }
 }

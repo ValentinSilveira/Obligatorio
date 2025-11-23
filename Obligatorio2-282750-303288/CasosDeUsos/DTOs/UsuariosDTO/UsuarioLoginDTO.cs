@@ -9,6 +9,6 @@ namespace CasosDeUsos.DTOs.UsuariosDTO
     public class UsuarioLoginDTO
     {
         public string Email { get; set; }
-        public string NombreRol { get; set; }
+        public string Password { get; set; }
     }
 }
