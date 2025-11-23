@@ -12,13 +12,13 @@ namespace LogicaAplicacion.Mappers
 {
     internal class MapperUsuario
     {
-        public static Usuario UsuarioDTOToUsuario(UsuarioDTO usuarioDTO) 
+        public static Usuario UsuarioDTOToUsuario(UsuarioApiDTO usuarioDTO) 
         {
             if(usuarioDTO == null) 
             {
                 throw new ArgumentNullException("Datos incorrectos");
             }
-            Usuario usuario = new Usuario(usuarioDTO.Contraseña, usuarioDTO.Apellido, usuarioDTO.Nombre)
+            Usuario usuario = new Usuario(usuarioDTO.Password, usuarioDTO.Apellido, usuarioDTO.Nombre)
             {
                 RolId = usuarioDTO.RolId,
                 EquipoId = usuarioDTO.EquipoId
@@ -36,23 +36,25 @@ namespace LogicaAplicacion.Mappers
                 {
                     Id = usuario.Id,
                     Email = usuario.Email,
-                    Nombre = usuario.Nombre,
+                    Nombre = usuario.NombreUsuario,
                 });
 
             }
             return listadoClientes;
         }
-        public static UsuarioLoginDTO UsuarioToUsuarioListadoDTO(Usuario usuario)
+        public static UsuarioLogueadoDTO UsuarioToUsuarioLogueadoDTO(Usuario usuario)
         {
             if (usuario == null)
             {
                 throw new UsuarioException("El usuario y/o la password es incorrecta");
 
             }
-            return new UsuarioLoginDTO()
+            return new UsuarioLogueadoDTO()
             {
+                Id = usuario.Id,
                 Email = usuario.Email,
-                NombreRol = usuario.Rol?.Descripcion ?? "Sin rol"
+                NombreUsuario = usuario.NombreUsuario,
+                Rol = usuario?.Rol?.Descripcion,
             };
 
         }
@@ -66,9 +68,9 @@ namespace LogicaAplicacion.Mappers
             {
                 Id = usuario.Id,
                 Email = usuario.Email,
-                Nombre = usuario.Nombre,
+                Nombre = usuario.NombreUsuario,
                 Apellido = usuario.Apellido,
-                DescripcionRol = usuario.Rol.Descripcion,
+                Rol = usuario?.Rol?.Descripcion,
                 Equipo = usuario.Equipo.Nombre
             };            
             

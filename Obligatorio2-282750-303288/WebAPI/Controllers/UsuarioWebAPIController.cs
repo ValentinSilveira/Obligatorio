@@ -3,9 +3,12 @@ using CasosDeUsos.InterfacesCasosUsos.IPagoCU;
 using CasosDeUsos.InterfacesCasosUsos.IUsuarioCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.CasosUso.CUPago;
+using LogicaAplicacion.CasosUso.CUUsuario;
+using LogicaAplicacion.CasosUso.CUUsuarios;
 using LogicaAplicacion.InterfacesCasosUsos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Token;
 
 namespace WebAPI.Controllers
 {
@@ -19,10 +22,11 @@ namespace WebAPI.Controllers
         public ICUBuscarUsuario CUBuscarUsuario { get; set; }
         public ICUEliminarUsuario CUEliminarUsuario { get; set; }
         public ICUListadoEquipo CUListadoEquipo { get; set; }
-        public ILogin LoginUsuario { get; set; }
+        public ILogin CULogin { get; set; }
+        public ICUCambiarPassword CUCambiarPassword { get; set; }
 
         public UsuarioWebAPIController(ICUListadoRol listadoRoles, ICUAltaUsuario cUAltaUsuario, ICUListadoUsuario cUListadoUsuario, ICUBuscarUsuario cUBuscarUsuario,
-                                ICUEliminarUsuario cUEliminarUsuario, ICUListadoEquipo cUListadoEquipo, ILogin loginUsuario)
+                                ICUEliminarUsuario cUEliminarUsuario, ICUListadoEquipo cUListadoEquipo, ILogin loginUsuario, ICUCambiarPassword cUCambiarPassword)
         {
             CUListadoRoles = listadoRoles;
             CUAltaUsuario = cUAltaUsuario;
@@ -30,7 +34,8 @@ namespace WebAPI.Controllers
             CUBuscarUsuario = cUBuscarUsuario;
             CUEliminarUsuario = cUEliminarUsuario;
             CUListadoEquipo = cUListadoEquipo;
-            LoginUsuario = loginUsuario;
+            CULogin = loginUsuario;
+            CUCambiarPassword = cUCambiarPassword;
         }
 
         // GET api/<UsuarioWebAPIController>/5
@@ -50,8 +55,7 @@ namespace WebAPI.Controllers
         /// <summary>
         /// Listado de usuarios
         /// </summary>
-        /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]        
+        /// <returns></returns>    
         [HttpGet("Usuarios")]
         public IActionResult Get()
         {
@@ -70,7 +74,6 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]
         [HttpGet("{id}")]
         public IActionResult GetUsuarioById(int id)
         {
@@ -95,13 +98,11 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]
         [HttpPost("Crear")]
-        public IActionResult CrearUsuario([FromBody] UsuarioDTO dto)
+        public IActionResult CrearUsuario([FromBody] UsuarioApiDTO dto)
         {
             try
             {
-                string usuario = "Sistema";
                 CUAltaUsuario.Ejecutar(dto);
                 return Ok("Usuario creado correctamente");
             }
@@ -172,23 +173,58 @@ namespace WebAPI.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dto"></param>
+        /// <param name="usuarioLoginDTO"></param>
         /// <returns></returns>
-        [HttpPost("Login")]
-        public IActionResult Login([FromBody] LoginDTO dto)
+        [HttpPost]
+        public IActionResult Post([FromBody] UsuarioLoginDTO usuarioLoginDTO)
         {
             try
             {
-                var usuario = LoginUsuario.Ejecutar(dto.Email, dto.Password);
+                if (usuarioLoginDTO == null)
+                {
+                    return BadRequest("Datos incorrectos");
+                }
+                UsuarioLogueadoDTO usuarioLogueadoDTO = CULogin.Ejecutar(usuarioLoginDTO);
+                if (usuarioLoginDTO != null)
+                {
+                    usuarioLogueadoDTO.Token = ManejadorToken.CrearToken(usuarioLogueadoDTO);
+                    return Ok(usuarioLogueadoDTO);
+                }
+                else
+                {
+                    return NotFound("Credenciales incorrectas");
+                }
+            }
 
-                if (usuario == null)
-                    return Unauthorized("Email o contraseña incorrectos.");
-
-                return Ok(usuario);
+            catch (UsuarioException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return Unauthorized(ex.Message);
+                return StatusCode(500, "Error");
+            }
+        }
+
+        [HttpPut("CambiarPassword")]
+        public IActionResult CambiarPassword([FromBody] UsuarioCambiarPasswordDTO dto)
+        {
+            try
+            {
+                CUCambiarPassword.Ejecutar(dto);
+                return Ok("Contraseña actualizada correctamente");
+            }
+            catch (UsuarioException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Error inesperado");
             }
         }
     }

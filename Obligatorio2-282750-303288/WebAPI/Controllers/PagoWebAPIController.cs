@@ -25,7 +25,6 @@ namespace WebAPI.Controllers
         public ICUListadoPago CUListadoPago { get; set; }
         public ICUListadoGasto CUListadoGasto { get; set; }
         public ICUObtenerMetodoPago CUObtenerMetodoPago { get; set; }
-        //public ICUListadoPago CUListadoPagos { get; set; }
         public ICUListadoPagoPorFecha CUFiltrarPagosPorFechas { get; set; }
         public ICUListadoPorPrecio CUListadoPorPrecio { get; set; }
         public ICUPagosPorUsuario CUPagosPorUsuario { get; set; }
@@ -33,7 +32,7 @@ namespace WebAPI.Controllers
 
         public PagoWebAPIController(ICUBuscarPago cuBuscarPago, ICUAltaPagoUnico CuAltaPagoUnico, ICUAltaPagoRecurrente cUAltaPagoRecurrente,
             ICUListadoUsuario cUListadoUsuario, ICUListadoGasto cUListadoGasto, ICUListadoPago cUListadoPago
-            , ICUObtenerMetodoPago cUObtenerMetodoPago, /*ICUListadoPago cUListadoPagos,*/ ICUListadoPagoPorFecha cUFiltrarPagosPorFechas
+            , ICUObtenerMetodoPago cUObtenerMetodoPago, ICUListadoPagoPorFecha cUFiltrarPagosPorFechas
             , ICUListadoPorPrecio cUListadoPorPrecio, ICUPagosPorUsuario cUPagosPorUsuario, ICUPagosUnicosConMontoSuperior cUPagosUnicosConMontoSuperior)
         {
             CUBuscarPago = cuBuscarPago;
@@ -43,7 +42,6 @@ namespace WebAPI.Controllers
             CUListadoGasto = cUListadoGasto;
             CUListadoPago = cUListadoPago;
             CUObtenerMetodoPago = cUObtenerMetodoPago;
-            //CUListadoPagos = cUListadoPagos;
             CUFiltrarPagosPorFechas = cUFiltrarPagosPorFechas;
             CUListadoPorPrecio = cUListadoPorPrecio;
             CUPagosPorUsuario = cUPagosPorUsuario;

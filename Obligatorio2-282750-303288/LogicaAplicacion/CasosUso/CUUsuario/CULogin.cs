@@ -1,4 +1,5 @@
 ﻿using CasosDeUsos.DTOs.UsuariosDTO;
+using ExcepcionesPropias.ExcepcionesEntidades;
 using LogicaAplicacion.InterfacesCasosUsos;
 using LogicaAplicacion.Mappers;
 using LogicaNegocio.EntidadesNegocio;
@@ -20,10 +21,14 @@ namespace LogicaAplicacion.CasosUso.CUUsuarios
             RepoUsuarios = repoUsuarios;
         }
 
-        public UsuarioLoginDTO Ejecutar(string name, string password)
+        public UsuarioLogueadoDTO Ejecutar(UsuarioLoginDTO usuarioLoginDTO)
         {
-            Usuario usuario = RepoUsuarios.FindByEmailAndPassword(name, password);
-            return MapperUsuario.UsuarioToUsuarioListadoDTO(usuario);
+            Usuario usuario = RepoUsuarios.FindByEmailAndPassword(usuarioLoginDTO.Email, usuarioLoginDTO.Password);
+            if(usuario == null)
+            {
+                throw new UsuarioException("Usuario o contraseña incorrectos.");
+            }
+            return MapperUsuario.UsuarioToUsuarioLogueadoDTO(usuario);
         }
     }
 }

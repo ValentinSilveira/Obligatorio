@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using Web.Models;
 using Web.Models.DTOs.UsuariosDTO;
@@ -9,9 +11,11 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        public HomeController(ILogger<HomeController> logger)
+        public string urlBase = "";
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuracion)
         {
             _logger = logger;
+            urlBase = configuracion.GetValue<string>("UrlBase") + "UsuarioWebAPI";
         }
 
         public IActionResult Index()
@@ -32,54 +36,58 @@ namespace Web.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            UsuarioLoginViewModel usuarioVM = new UsuarioLoginViewModel();
-            return View(usuarioVM);
+            return View();
         }
 
         [HttpPost]
-        public ActionResult Login(UsuarioLoginViewModel usuarioVM)
+        public ActionResult Login(UsuarioLoginDTO usuarioDTO)
         {
             try
             {
-                using (var client = new HttpClient())
+                if (ModelState.IsValid)
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101/");
-
-                    var tarea = client.PostAsJsonAsync(
-                        "api/UsuarioWebAPI/Login",
-                        new { Email = usuarioVM.Email, Password = usuarioVM.Password }
-                    );
-
-                    tarea.Wait(); 
-                    var response = tarea.Result;
-
-                    if (response.IsSuccessStatusCode)
+                    HttpClient cliente = new HttpClient();
+                    Task<HttpResponseMessage> solicitud = cliente.PostAsJsonAsync(urlBase, usuarioDTO);
+                    solicitud.Wait();
+                    HttpResponseMessage respuesta = solicitud.Result;
+                    if (respuesta.IsSuccessStatusCode)
                     {
-                        var tareaContenido = response.Content.ReadFromJsonAsync<UsuarioLoginDTO>();
-                        tareaContenido.Wait();
-
-                        var usuarioDTO = tareaContenido.Result;
-
-                        HttpContext.Session.SetString("Rol", usuarioDTO.NombreRol);
-                        HttpContext.Session.SetString("UsuarioEmail", usuarioDTO.Email);
-
-                        return RedirectToAction("Index", "Home");
+                        HttpContent contenido = respuesta.Content;
+                        Task<string> body = contenido.ReadAsStringAsync();
+                        string datos = body.Result;
+                        UsuarioLogueadoDTO usuarioLogueadoDTO = JsonConvert.DeserializeObject<UsuarioLogueadoDTO>(datos);
+                        if (usuarioLogueadoDTO != null)
+                        {
+                            HttpContext.Session.SetString("Rol", usuarioLogueadoDTO.Rol);
+                            HttpContext.Session.SetString("Token", usuarioLogueadoDTO.Token);
+                            HttpContext.Session.SetInt32("Usuario", usuarioLogueadoDTO.Id);
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            ViewBag.Mensaje = "Datos incorrectos.";
+                        }
                     }
-                }
-
-                ViewBag.Mensaje = "Credenciales incorrectas.";
+                    else
+                    {
+                        HttpContent contenido = respuesta.Content;
+                        Task<string> body = contenido.ReadAsStringAsync();
+                        string datos = body.Result;
+                        ViewBag.Mensaje = datos;
+                    }
+                }                    
             }
             catch (Exception ex)
             {
-                ViewBag.Mensaje = "Error al conectar con la API: " + ex.Message;
+                ViewBag.Mensaje = ex.Message;
             }
-
-            return View(usuarioVM);
+            return View();
         }
+
         public ActionResult Logout()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("login");
+            return RedirectToAction(nameof(Login));
         }
     }
 }

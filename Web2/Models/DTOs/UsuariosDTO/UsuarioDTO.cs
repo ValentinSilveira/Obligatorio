@@ -16,7 +16,7 @@ namespace Web.Models.DTOs.UsuariosDTO
         public string Apellido { get; set; }
         [Required(ErrorMessage = "la contraseña es obligatoria")]
         [MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")]
-        public string Contraseña { get; set; }
+        public string Password { get; set; }
         [DisplayName("Seleccione un equipo")]
         [Required(ErrorMessage = "El equipo es obligatoria")]
         public int EquipoId { get; set; }

@@ -17,10 +17,7 @@ namespace Web.Models.DTOs.PagosDTO
         public int GastoId { get; set; }
         public IEnumerable<ListadoGastoDTO> Gastos { get; set; } = new List<ListadoGastoDTO>();
 
-        [Required(ErrorMessage = "Debe seleccionar un usuario")]
-        [DisplayName("Seleccione un Usuario")]
         public int UsuarioId { get; set; }
-        public IEnumerable<ListadoUsuarioDTO> Usuarios { get; set; } = new List<ListadoUsuarioDTO>();
 
         [Required(ErrorMessage = "Debe ingresar una descripción")]
         public string Descripcion { get; set; }

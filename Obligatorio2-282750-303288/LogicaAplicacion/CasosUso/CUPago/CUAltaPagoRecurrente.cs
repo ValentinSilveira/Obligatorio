@@ -29,24 +29,24 @@ namespace LogicaAplicacion.CasosUso.CUPago
         public void Ejecutar(PagoRecurrenteAPIDTO pagoRecurrenteDTO)
         {
             Usuario usuario = RepoUsuario.FindById(pagoRecurrenteDTO.UsuarioId);
+            if (usuario == null)
+                throw new ArgumentException("El usuario no existe.");
+
+            
             Gasto gasto = RepoGasto.FindById(pagoRecurrenteDTO.GastoId);
+            if (gasto == null)
+                throw new ArgumentException("El gasto no existe.");
 
-            if (usuario != null && gasto != null)
-            {
-                // se usa el valor del enum desde el DTO
-                if (!Enum.TryParse(pagoRecurrenteDTO.MetodoPago, true, out MetodoPago metodoPago))
-                {
-                    throw new ArgumentException("Método de pago inválido");
-                }
+            
+            if (!Enum.TryParse(pagoRecurrenteDTO.MetodoPago, true, out MetodoPago metodoPago))
+                throw new ArgumentException("Método de pago inválido.");
 
-                Recurrente pagoRecurrente = MapperPago.PagoRecurrenteDTOToPagoRecurrente(pagoRecurrenteDTO, usuario, gasto, metodoPago);
+            
+            Recurrente pagoRecurrente = MapperPago.PagoRecurrenteDTOToPagoRecurrente(
+                pagoRecurrenteDTO, usuario, gasto, metodoPago);
 
-                RepoPago.Add(pagoRecurrente);
-            }
-            else
-            {
-                throw new ArgumentNullException("El usuario o el gasto no son válidos");
-            }
+            
+            RepoPago.Add(pagoRecurrente);
         }     
     }
 }

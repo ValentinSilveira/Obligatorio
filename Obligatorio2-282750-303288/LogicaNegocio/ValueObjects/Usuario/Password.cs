@@ -8,10 +8,9 @@ using ExcepcionesPropias.ExcepcionesEntidades;
 
 namespace LogicaNegocio.ValueObjects.Usuario
 {
-    [ComplexType]
     public record Password
     {
-        public string Valor {  get; init; }
+        public string Valor { get; init; }
 
         public Password(string valor)
         {
@@ -19,12 +18,10 @@ namespace LogicaNegocio.ValueObjects.Usuario
             Validar();
         }
 
-        private void Validar() 
+        private void Validar()
         {
-            if (Valor.ToString().Length < 8)
-            {
+            if (Valor.Length < 8)
                 throw new UsuarioException("La contraseña debe contener al menos 8 caracteres.");
-            }
         }
     }
 }

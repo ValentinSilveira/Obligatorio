@@ -1,6 +1,7 @@
 ﻿using Humanizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
 using Web.Models.DTOs.UsuariosDTO;
 using Web.Models.Usuarios;
@@ -9,17 +10,14 @@ namespace Web.Controllers
 {
     public class UsuarioController : Controller
     {
-        private bool UsuarioEsAdminGer()
+        public string urlBase = "";
+        public UsuarioController(IConfiguration configuracion)
         {
-            return HttpContext.Session.GetString("Rol") == "Administracion" || HttpContext.Session.GetString("Rol") == "Gerente";
+            urlBase = configuracion.GetValue<string>("UrlBase") + "UsuarioWebAPI";
         }
-
-        // GET: UsuarioController
-        
+        // GET: UsuarioController        
         public ActionResult Index()
         {
-            if (!UsuarioEsAdminGer())
-                return RedirectToAction("Login", "Home");
             IEnumerable<ListadoUsuarioDTO> listadoUsuarios = new List<ListadoUsuarioDTO>();
             try
             {
@@ -47,8 +45,6 @@ namespace Web.Controllers
         // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
-            if (!UsuarioEsAdminGer())
-                return RedirectToAction("Login", "Home");
             DetalleUsuarioDTO detalleUsuario = new DetalleUsuarioDTO();
             try
             {
@@ -61,7 +57,7 @@ namespace Web.Controllers
                     if (resp.IsSuccessStatusCode)
                     {
                         Task<DetalleUsuarioDTO> tareaContenido =
-                            resp.Content.ReadFromJsonAsync<DetalleUsuarioDTO>();
+                        resp.Content.ReadFromJsonAsync<DetalleUsuarioDTO>();
                         tareaContenido.Wait();
                         detalleUsuario = tareaContenido.Result;
                     }
@@ -84,8 +80,6 @@ namespace Web.Controllers
         // GET: UsuarioController/Create
         public ActionResult Create()
         {
-            if (!UsuarioEsAdminGer())
-                return RedirectToAction("Login", "Home");
             UsuarioDTO usuarioDTO = new UsuarioDTO();
             try
             {
@@ -98,7 +92,7 @@ namespace Web.Controllers
                     if (respRoles.IsSuccessStatusCode)
                     {
                         Task<List<ListadoRolDTO>> tareaContenidoRoles =
-                            respRoles.Content.ReadFromJsonAsync<List<ListadoRolDTO>>();
+                        respRoles.Content.ReadFromJsonAsync<List<ListadoRolDTO>>();
                         tareaContenidoRoles.Wait();
                         usuarioDTO.Roles = tareaContenidoRoles.Result;
                     }
@@ -109,7 +103,7 @@ namespace Web.Controllers
                     if (respEquipos.IsSuccessStatusCode)
                     {
                         Task<List<ListadoEquipoDTO>> tareaContenidoEquipos =
-                            respEquipos.Content.ReadFromJsonAsync<List<ListadoEquipoDTO>>();
+                        respEquipos.Content.ReadFromJsonAsync<List<ListadoEquipoDTO>>();
                         tareaContenidoEquipos.Wait();
                         usuarioDTO.Equipos = tareaContenidoEquipos.Result;
                     }
@@ -121,7 +115,6 @@ namespace Web.Controllers
                 usuarioDTO.Roles = new List<ListadoRolDTO>();
                 usuarioDTO.Equipos = new List<ListadoEquipoDTO>();
             }
-
             return View(usuarioDTO);
         }
 
@@ -130,32 +123,42 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(UsuarioDTO usuarioDTO)
         {
-            if (!UsuarioEsAdminGer())
-                return RedirectToAction("Login", "Home");
             if (!ModelState.IsValid)
                 return View(usuarioDTO);
+
             try
             {
-                using (HttpClient client = new HttpClient())
+                HttpClient cliente = new HttpClient();
+
+                string url = urlBase + "/Crear";
+
+                Task<HttpResponseMessage> solicitud = cliente.PostAsJsonAsync(url, usuarioDTO);
+                solicitud.Wait();
+
+                HttpResponseMessage respuesta = solicitud.Result;
+
+                if (respuesta.IsSuccessStatusCode)
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101");
-                    Task<HttpResponseMessage> tarea =
-                        client.PostAsJsonAsync("api/UsuarioWebAPI/Crear", usuarioDTO);
-                    tarea.Wait();
-                    HttpResponseMessage resp = tarea.Result;
-                    if (resp.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    Task<string> tareaError = resp.Content.ReadAsStringAsync();
-                    tareaError.Wait();
-                    ViewBag.Mensaje = tareaError.Result;
-                    return View(usuarioDTO);
+                    TempData["Exito"] = "Usuario creado correctamente.";
+                    CargarCombos(usuarioDTO);
+                    return RedirectToAction(nameof(Create));
+                }
+                else
+                {
+                    Task<string> body = respuesta.Content.ReadAsStringAsync();
+                    body.Wait();
+
+                    ViewBag.Mensaje = body.Result;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                ViewBag.Mensaje = "Error inesperado al crear usuario.";
-                return View(usuarioDTO);
+                ViewBag.Mensaje = ex.Message;
             }
+
+            CargarCombos(usuarioDTO);
+
+            return View(usuarioDTO);
         }
 
         // GET: UsuarioController/Edit/5
@@ -182,10 +185,7 @@ namespace Web.Controllers
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            if (!UsuarioEsAdminGer())
-                return RedirectToAction("Login", "Home");
             DetalleUsuarioDTO detalleUsuarioDTO = new DetalleUsuarioDTO();
-
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -219,8 +219,6 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, DetalleUsuarioDTO detalleUsuario)
         {
-            if (!UsuarioEsAdminGer())
-                return RedirectToAction("Login", "Home");
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -245,10 +243,90 @@ namespace Web.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult CambiarPassword(int id)
+        {
+            var dto = new CambiarPasswordDTO { UsuarioId = id };
+            return View(dto);
+        }
+
+        [HttpPost]
+        public ActionResult CambiarPassword(CambiarPasswordDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {                    
+                    client.BaseAddress = new Uri("https://localhost:7101");
+
+                    Task<HttpResponseMessage> solicitud =
+                    client.PutAsJsonAsync("api/UsuarioWebAPI/CambiarPassword", dto);
+                    solicitud.Wait();
+                    HttpResponseMessage resp = solicitud.Result;
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        TempData["Exito"] = "Contraseña actualizada correctamente.";
+                        return View(new CambiarPasswordDTO
+                        {
+                            UsuarioId = dto.UsuarioId
+                        });
+                    }
+
+                    Task<string> error = resp.Content.ReadAsStringAsync();
+                    error.Wait();
+                    ViewBag.Mensaje = error.Result;
+
+                    return View(dto);
+                }
+            }
+            catch
+            {
+                ViewBag.Mensaje = "Error inesperado.";
+                return View(dto);
+            }
+        }
+
+        private void CargarCombos(UsuarioDTO usuarioDTO)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(urlBase.Replace("UsuarioWebAPI", ""));
+
+                    Task<HttpResponseMessage> tareaRoles = client.GetAsync("UsuarioWebAPI/Roles");
+                    tareaRoles.Wait();
+                    if (tareaRoles.Result.IsSuccessStatusCode)
+                    {
+                        var contenido = tareaRoles.Result.Content.ReadFromJsonAsync<List<ListadoRolDTO>>();
+                        contenido.Wait();
+                        usuarioDTO.Roles = contenido.Result;
+                    }
+
+                    Task<HttpResponseMessage> tareaEquipos = client.GetAsync("UsuarioWebAPI/Equipos");
+                    tareaEquipos.Wait();
+                    if (tareaEquipos.Result.IsSuccessStatusCode)
+                    {
+                        var contenido = tareaEquipos.Result.Content.ReadFromJsonAsync<List<ListadoEquipoDTO>>();
+                        contenido.Wait();
+                        usuarioDTO.Equipos = contenido.Result;
+                    }
+                }
+            }
+            catch
+            {
+                usuarioDTO.Roles = new List<ListadoRolDTO>();
+                usuarioDTO.Equipos = new List<ListadoEquipoDTO>();
+            }
+        }
+
         public ActionResult Logout()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("login");
+            return RedirectToAction(nameof(Login));
         }        
     }
 }
