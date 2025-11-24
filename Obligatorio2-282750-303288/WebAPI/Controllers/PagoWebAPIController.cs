@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[Authorize(Roles = "Administracion")]
+        [Authorize]
         [HttpGet("pago/id/{id:int}")]
         public IActionResult Get(int id)
         {
@@ -95,7 +95,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[Authorize(Roles = "Administracion")]       
+        [Authorize]
         [HttpGet("usuario/{id}")]
         public IActionResult GetPagosDeUsuario(int id)
         {
@@ -123,13 +123,13 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]
+        
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-
+        [Authorize]
         [HttpGet("equipos/monto/superior/{monto}")]
         public IActionResult GetEquiposConPagosUnicosConMontoSuperior(decimal monto)
         {
@@ -156,7 +156,7 @@ namespace WebAPI.Controllers
         /// <param name="desde"></param>
         /// <param name="hasta"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]
+        [Authorize]
         [HttpGet]
         public IActionResult ListarPorFecha([FromQuery] DateTime? desde, [FromQuery] DateTime? hasta)
         {
@@ -179,7 +179,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        /// //[Authorize(Roles = "Administracion")]
+        [Authorize]
         [HttpPost("CrearUnico")]
         public IActionResult CrearUnico([FromBody] PagoUnicoAPIDTO dto)
         {
@@ -200,7 +200,7 @@ namespace WebAPI.Controllers
         /// <param name="dto"></param>
         /// <returns></returns>
         /// 
-        //[Authorize(Roles = "Administracion")]
+        [Authorize]
         [HttpPost("CrearRecurrente")]
         public IActionResult CrearRecurrente([FromBody] PagoRecurrenteAPIDTO dto)
         {
@@ -221,7 +221,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="minimo"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]
+        [Authorize]
         [HttpGet("Precio")]
         public IActionResult PorPrecio([FromQuery] decimal minimo)
         {

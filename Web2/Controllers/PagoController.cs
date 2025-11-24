@@ -16,6 +16,7 @@ namespace Web.Controllers
     {
         public ActionResult Index(DateTime? fechaDesde, DateTime? fechaHasta)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             bool filtroIntentado = Request.Query.Count > 0;
             if (!fechaDesde.HasValue || !fechaHasta.HasValue)
             {
@@ -76,6 +77,7 @@ namespace Web.Controllers
 
         public ActionResult RangoPrecio(decimal? montoMinimo)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             if (!montoMinimo.HasValue)
             {
                 ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un monto." : null;
@@ -117,6 +119,7 @@ namespace Web.Controllers
 
         public ActionResult Details(int id)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             DetallePagoDTO dto = null;
 
             try
@@ -152,6 +155,7 @@ namespace Web.Controllers
 
         public ActionResult CreatePagoUnico()
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             PagoUnicoDTO dto = new PagoUnicoDTO { FechaPago = DateTime.Now.Date };
 
             using (HttpClient client = new HttpClient())
@@ -227,6 +231,7 @@ namespace Web.Controllers
 
         public ActionResult CreatePagoRecurrente()
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             PagoRecurrenteDTO dto = new PagoRecurrenteDTO
             {
                 FechaDesde = DateTime.Now.Date,
@@ -254,11 +259,12 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreatePagoRecurrente(PagoRecurrenteDTO dto)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             if (!ModelState.IsValid)
             {
                 CargarListasParaFormulario(dto);
                 return View(dto);
-            }            
+            }
 
             if (dto.FechaDesde.Month == dto.FechaHasta.Month &&
                 dto.FechaDesde.Year == dto.FechaHasta.Year)
@@ -275,19 +281,30 @@ namespace Web.Controllers
                 return View(dto);
             }
 
-            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             if (usuarioId == null)
             {
                 TempData["Error"] = "Debe iniciar sesión nuevamente.";
                 return RedirectToAction("Login", "Home");
             }
-            dto.UsuarioId = usuarioId.Value;
 
+            PagoRecurrenteDTO apiDto = new PagoRecurrenteDTO
+            {
+                UsuarioId = usuarioId.Value,
+                GastoId = dto.GastoId,
+                Descripcion = dto.Descripcion,
+                Monto = dto.Monto,
+                MetodoPago = dto.MetodoPago,
+                FechaDesde = dto.FechaDesde,
+                FechaHasta = dto.FechaHasta
+            };
+                        
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
 
-                Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("api/PagoWebAPI/CrearRecurrente", dto);
+                Task<HttpResponseMessage> tarea =
+                client.PostAsJsonAsync("api/PagoWebAPI/CrearRecurrente", apiDto);
+
                 tarea.Wait();
                 HttpResponseMessage resp = tarea.Result;
 
@@ -295,8 +312,10 @@ namespace Web.Controllers
                 {
                     TempData["Exito"] = "Pago recurrente creado correctamente.";
                     return RedirectToAction(nameof(CreatePagoRecurrente));
-                }                
+                }
+
                 CargarListasParaFormulario(dto);
+
                 Task<string> tJson = resp.Content.ReadAsStringAsync();
                 tJson.Wait();
                 ViewBag.Mensaje = tJson.Result;
@@ -322,7 +341,7 @@ namespace Web.Controllers
                 client.BaseAddress = new Uri("https://localhost:7101");
 
                 Task<HttpResponseMessage> tarea =
-                    client.GetAsync($"api/PagoWebAPI/usuario/{usuarioId.Value}");
+                client.GetAsync($"api/PagoWebAPI/usuario/{usuarioId.Value}");
                 tarea.Wait();
 
                 HttpResponseMessage resp = tarea.Result;

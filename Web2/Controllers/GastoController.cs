@@ -20,7 +20,6 @@ namespace Web.Controllers
 
                     Task<HttpResponseMessage> tarea = client.GetAsync("api/GastoWebAPI/GetGastos");
                     tarea.Wait();
-
                     HttpResponseMessage respuesta = tarea.Result;
 
                     if (respuesta.IsSuccessStatusCode)
@@ -162,7 +161,7 @@ namespace Web.Controllers
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
                 Task<HttpResponseMessage> tarea =
-                    client.PutAsJsonAsync($"/api/GastoWebAPI/Editar/{id}", detalleGasto);
+                client.PutAsJsonAsync($"/api/GastoWebAPI/Editar/{id}", detalleGasto);
                 tarea.Wait();
                 HttpResponseMessage resp = tarea.Result;
                 if (resp.IsSuccessStatusCode)
@@ -185,7 +184,7 @@ namespace Web.Controllers
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
                 Task<HttpResponseMessage> tarea =
-                    client.GetAsync($"/api/GastoWebAPI/{id}");
+                client.GetAsync($"/api/GastoWebAPI/{id}");
                 tarea.Wait();
                 if (tarea.Result.IsSuccessStatusCode)
                     dto = tarea.Result.Content.ReadFromJsonAsync<DetalleGastoDTO>().Result;
