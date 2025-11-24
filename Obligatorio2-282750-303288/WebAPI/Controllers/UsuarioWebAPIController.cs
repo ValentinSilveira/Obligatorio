@@ -56,6 +56,7 @@ namespace WebAPI.Controllers
         /// Listado de usuarios
         /// </summary>
         /// <returns></returns>    
+        [Authorize]
         [HttpGet("Usuarios")]
         public IActionResult Get()
         {
@@ -74,6 +75,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetUsuarioById(int id)
         {
@@ -98,6 +100,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("Crear")]
         public IActionResult CrearUsuario([FromBody] UsuarioApiDTO dto)
         {
@@ -118,6 +121,7 @@ namespace WebAPI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         //[Authorize(Roles = "Administracion")]
+        [Authorize]
         [HttpDelete("Eliminar/{id}")]
         public IActionResult EliminarUsuario(int id)
         {
@@ -139,6 +143,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <returns></returns>
         //[Authorize(Roles = "Administracion")]
+        [Authorize]
         [HttpGet("Roles")]
         public IActionResult GetRoles()
         {
@@ -157,6 +162,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <returns></returns>
         //[Authorize(Roles = "Administracion")]
+        [Authorize]
         [HttpGet("Equipos")]
         public IActionResult GetEquipos()
         {
@@ -175,6 +181,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="usuarioLoginDTO"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public IActionResult Post([FromBody] UsuarioLoginDTO usuarioLoginDTO)
         {
@@ -210,6 +217,7 @@ namespace WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("CambiarPassword")]
         public IActionResult CambiarPassword([FromBody] UsuarioCambiarPasswordDTO dto)
         {

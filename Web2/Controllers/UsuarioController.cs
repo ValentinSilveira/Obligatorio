@@ -9,7 +9,7 @@ using Web.Models.Usuarios;
 namespace Web.Controllers
 {
     public class UsuarioController : Controller
-    {
+    {        
         public string urlBase = "";
         public UsuarioController(IConfiguration configuracion)
         {
@@ -18,6 +18,7 @@ namespace Web.Controllers
         // GET: UsuarioController        
         public ActionResult Index()
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             IEnumerable<ListadoUsuarioDTO> listadoUsuarios = new List<ListadoUsuarioDTO>();
             try
             {
@@ -45,6 +46,7 @@ namespace Web.Controllers
         // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             DetalleUsuarioDTO detalleUsuario = new DetalleUsuarioDTO();
             try
             {
@@ -80,6 +82,7 @@ namespace Web.Controllers
         // GET: UsuarioController/Create
         public ActionResult Create()
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             UsuarioDTO usuarioDTO = new UsuarioDTO();
             try
             {
@@ -123,6 +126,7 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(UsuarioDTO usuarioDTO)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             if (!ModelState.IsValid)
                 return View(usuarioDTO);
 
@@ -134,7 +138,6 @@ namespace Web.Controllers
 
                 Task<HttpResponseMessage> solicitud = cliente.PostAsJsonAsync(url, usuarioDTO);
                 solicitud.Wait();
-
                 HttpResponseMessage respuesta = solicitud.Result;
 
                 if (respuesta.IsSuccessStatusCode)
@@ -164,6 +167,7 @@ namespace Web.Controllers
         // GET: UsuarioController/Edit/5
         public ActionResult Edit(int id)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             return View();
         }
 
@@ -172,6 +176,7 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             try
             {
                 return RedirectToAction(nameof(Index));
@@ -185,6 +190,7 @@ namespace Web.Controllers
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             DetalleUsuarioDTO detalleUsuarioDTO = new DetalleUsuarioDTO();
             try
             {
@@ -192,7 +198,7 @@ namespace Web.Controllers
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
                     Task<HttpResponseMessage> tarea =
-                        client.GetAsync($"api/UsuarioWebAPI/{id}");
+                    client.GetAsync($"api/UsuarioWebAPI/{id}");
                     tarea.Wait();
                     HttpResponseMessage resp = tarea.Result;
                     if (resp.IsSuccessStatusCode)
@@ -219,6 +225,7 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, DetalleUsuarioDTO detalleUsuario)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -246,6 +253,7 @@ namespace Web.Controllers
         [HttpGet]
         public ActionResult CambiarPassword(int id)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             var dto = new CambiarPasswordDTO { UsuarioId = id };
             return View(dto);
         }
@@ -253,6 +261,7 @@ namespace Web.Controllers
         [HttpPost]
         public ActionResult CambiarPassword(CambiarPasswordDTO dto)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             if (!ModelState.IsValid)
                 return View(dto);
             try
@@ -291,6 +300,7 @@ namespace Web.Controllers
 
         private void CargarCombos(UsuarioDTO usuarioDTO)
         {
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
             try
             {
                 using (HttpClient client = new HttpClient())

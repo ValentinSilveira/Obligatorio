@@ -68,7 +68,6 @@
             </summary>
             <param name="dto"></param>
             <returns></returns>
-            //[Authorize(Roles = "Administracion")]
         </member>
         <member name="M:WebAPI.Controllers.PagoWebAPIController.CrearRecurrente(CasosDeUsos.DTOs.PagosDTO.PagoRecurrenteAPIDTO)">
             <summary>
