@@ -20,7 +20,11 @@ namespace Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (HttpContext.Session.GetString("Token") != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Login", "Home");
         }
 
         public IActionResult Privacy()

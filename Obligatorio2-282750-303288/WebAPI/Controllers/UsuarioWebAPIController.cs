@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
         /// Listado de usuarios
         /// </summary>
         /// <returns></returns>    
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("Usuarios")]
         public IActionResult Get()
         {
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("{id}")]
         public IActionResult GetUsuarioById(int id)
         {
@@ -100,7 +100,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpPost("Crear")]
         public IActionResult CrearUsuario([FromBody] UsuarioApiDTO dto)
         {
@@ -120,16 +120,13 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpDelete("Eliminar/{id}")]
         public IActionResult EliminarUsuario(int id)
         {
             try
             {
-                string usuario = "Sistema";
                 CUEliminarUsuario.Ejecutar(id);
-
                 return Ok("Usuario eliminado correctamente");
             }
             catch (Exception ex)
@@ -142,8 +139,7 @@ namespace WebAPI.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("Roles")]
         public IActionResult GetRoles()
         {
@@ -161,8 +157,7 @@ namespace WebAPI.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        //[Authorize(Roles = "Administracion")]
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("Equipos")]
         public IActionResult GetEquipos()
         {
@@ -181,7 +176,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="usuarioLoginDTO"></param>
         /// <returns></returns>
-        [Authorize]
+        
         [HttpPost]
         public IActionResult Post([FromBody] UsuarioLoginDTO usuarioLoginDTO)
         {
@@ -217,7 +212,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Gerente")]
         [HttpPut("CambiarPassword")]
         public IActionResult CambiarPassword([FromBody] UsuarioCambiarPasswordDTO dto)
         {
