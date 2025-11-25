@@ -5,6 +5,13 @@
     ViewData["Title"] = "Index";
 }
 
+@if (TempData["Exito"] != null)
+{
+    <div class="alert alert-success mt-3" role="alert">
+        @TempData["Exito"]
+    </div>
+} 
+
 <h1>Listado de Gastos</h1>
 
 <p>

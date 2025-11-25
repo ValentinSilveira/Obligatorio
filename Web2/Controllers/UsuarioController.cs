@@ -340,21 +340,23 @@ namespace Web.Controllers
                     {
                         client.BaseAddress = new Uri("https://localhost:7101");
                         client.DefaultRequestHeaders.Authorization =
-                            new AuthenticationHeaderValue("Bearer", token);
-
+                        new AuthenticationHeaderValue("Bearer", token);
+                        string emailBorrado = detalleUsuario.Email;
                         Task<HttpResponseMessage> tarea =
-                            client.DeleteAsync($"api/UsuarioWebAPI/Eliminar/{id}");
+                        client.DeleteAsync($"api/UsuarioWebAPI/Eliminar/{id}");
                         tarea.Wait();
 
                         HttpResponseMessage resp = tarea.Result;
 
                         if (resp.IsSuccessStatusCode)
+                        {
+                            TempData["Exito"] = $"Usuario '{emailBorrado}' eliminado correctamente.";
                             return RedirectToAction(nameof(Index));
+                        }
 
                         Task<string> tareaError = resp.Content.ReadAsStringAsync();
                         tareaError.Wait();
                         ViewBag.Mensaje = tareaError.Result;
-
                         return View(detalleUsuario);
                     }
                 }

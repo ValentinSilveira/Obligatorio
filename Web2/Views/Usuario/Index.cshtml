@@ -1,13 +1,14 @@
 ﻿@using Web.Models.DTOs.UsuariosDTO
 @model IEnumerable<ListadoUsuarioDTO>
-
 @{
     ViewData["Title"] = "Index";
 }
 
+<h1>Listado de Gastos</h1>
+
 @if (TempData["Exito"] != null)
 {
-    <div class="alert alert-success">
+    <div class="alert alert-success mt-3" role="alert">
         @TempData["Exito"]
     </div>
 }
