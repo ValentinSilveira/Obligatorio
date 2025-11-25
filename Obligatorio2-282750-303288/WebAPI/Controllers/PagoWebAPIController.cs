@@ -48,19 +48,18 @@ namespace WebAPI.Controllers
             CUPagosUnicosConMontoSuperior = cUPagosUnicosConMontoSuperior;
         }
 
-        
+
         // GET api/<PagoWebAPIController>/5
         /// <summary>
         /// Permite obtener detalles de un pago por su id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("pago/id/{id:int}")]
         public IActionResult Get(int id)
         {
@@ -95,17 +94,21 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[Authorize]
-        [HttpGet("usuario/{id}")]
+        [Authorize(Roles = "Gerente")]
+        [HttpGet("mis-pagos")]
         public IActionResult GetPagosDeUsuario(int id)
         {
             try
             {
-                if (id <= 0)
-                {
-                    return BadRequest("El id no es correcto");
-                }
-                return Ok(CUPagosPorUsuario.Ejecutar(id));
+                var claimId = User.FindFirst("id");
+                if (claimId == null)
+                    return Unauthorized("El token no contiene el id de usuario.");
+
+                if (!int.TryParse(claimId.Value, out int usuarioId))
+                    return Unauthorized("El id de usuario del token no es válido.");
+
+                var pagos = CUPagosPorUsuario.Ejecutar(usuarioId);
+                return Ok(pagos);
             }
             catch (PagoException ex)
             {
@@ -123,13 +126,12 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-
-        //[Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("equipos/monto/superior/{monto}")]
         public IActionResult GetEquiposConPagosUnicosConMontoSuperior(decimal monto)
         {
@@ -156,7 +158,8 @@ namespace WebAPI.Controllers
         /// <param name="desde"></param>
         /// <param name="hasta"></param>
         /// <returns></returns>
-        //[Authorize]
+
+        [Authorize(Roles = "Gerente")]
         [HttpGet]
         public IActionResult ListarPorFecha([FromQuery] DateTime? desde, [FromQuery] DateTime? hasta)
         {
@@ -179,7 +182,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        //[Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpPost("CrearUnico")]
         public IActionResult CrearUnico([FromBody] PagoUnicoAPIDTO dto)
         {
@@ -200,7 +203,7 @@ namespace WebAPI.Controllers
         /// <param name="dto"></param>
         /// <returns></returns>
         /// 
-        //[Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpPost("CrearRecurrente")]
         public IActionResult CrearRecurrente([FromBody] PagoRecurrenteAPIDTO dto)
         {
@@ -221,37 +224,18 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="minimo"></param>
         /// <returns></returns>
-        //[Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("Precio")]
         public IActionResult PorPrecio([FromQuery] decimal minimo)
         {
             try
             {
-                var pagos = CUListadoPorPrecio.Ejecutar(minimo);
-                return Ok(pagos);
+                return Ok(CUListadoPorPrecio.Ejecutar(minimo));
             }
             catch
             {
                 return StatusCode(500, "Error al filtrar por precio.");
             }
-        }
-
-        // POST api/<PagoWebAPIController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<PagoWebAPIController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<PagoWebAPIController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

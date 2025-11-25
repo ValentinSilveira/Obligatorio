@@ -2,22 +2,28 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Net.Http.Headers;
 using Web.Models.DTOs.GastosDTO;
 
 namespace Web.Controllers
-{    
+{
     public class GastoController : Controller
     {
         // GET: GastoController
         public ActionResult Index()
         {
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+
             IEnumerable<ListadoGastoDTO> listadoGastos = new List<ListadoGastoDTO>();
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
-
+                    string token = HttpContext.Session.GetString("Token");
+                    client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
                     Task<HttpResponseMessage> tarea = client.GetAsync("api/GastoWebAPI/GetGastos");
                     tarea.Wait();
                     HttpResponseMessage respuesta = tarea.Result;
@@ -44,14 +50,20 @@ namespace Web.Controllers
         // GET: GastoController/Details/5
         public ActionResult Details(int id)
         {
+
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+
             DetalleGastoDTO dto = new DetalleGastoDTO();
 
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
-
+                string token = HttpContext.Session.GetString("Token");
+                client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
-                    client.GetAsync($"/api/GastoWebAPI/{id}");
+                client.GetAsync($"/api/GastoWebAPI/{id}");
                 tarea.Wait();
 
                 var resp = tarea.Result;
@@ -83,6 +95,9 @@ namespace Web.Controllers
         [HttpPost]
         public ActionResult Create(GastoDTO dto)
         {
+
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
             if (!ModelState.IsValid)
             {
                 return View(dto);
@@ -91,7 +106,9 @@ namespace Web.Controllers
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
-
+                string token = HttpContext.Session.GetString("Token");
+                client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
                     client.PostAsJsonAsync("/api/GastoWebAPI/Crear", dto);
 
@@ -156,10 +173,16 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, DetalleGastoDTO detalleGasto)
         {
-            string usuario = HttpContext.Session.GetString("UsuarioEmail") ?? "Desconocido";
+
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+            //string usuario = HttpContext.Session.GetString("UsuarioEmail") ?? "Desconocido";
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
+                string token = HttpContext.Session.GetString("Token");
+                client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
                 client.PutAsJsonAsync($"/api/GastoWebAPI/Editar/{id}", detalleGasto);
                 tarea.Wait();
@@ -179,10 +202,16 @@ namespace Web.Controllers
         // GET: GastoController/Delete/5
         public ActionResult Delete(int id)
         {
+
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
             DetalleGastoDTO dto = new DetalleGastoDTO();
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
+                string token = HttpContext.Session.GetString("Token");
+                client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
                 client.GetAsync($"/api/GastoWebAPI/{id}");
                 tarea.Wait();
@@ -197,11 +226,17 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, DetalleGastoDTO detalleGasto)
         {
+
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
+                    string token = HttpContext.Session.GetString("Token");
+                    client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
                     Task<HttpResponseMessage> tarea = client.DeleteAsync($"/api/GastoWebAPI/Eliminar/{id}");
                     tarea.Wait();
                     HttpResponseMessage resp = tarea.Result;
