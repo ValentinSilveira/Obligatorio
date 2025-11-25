@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion,Empleado")]
         [HttpGet("pago/id/{id:int}")]
         public IActionResult Get(int id)
         {
@@ -94,7 +94,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Empleado")]
         [HttpGet("mis-pagos")]
         public IActionResult GetPagosDeUsuario(int id)
         {
@@ -159,7 +159,7 @@ namespace WebAPI.Controllers
         /// <param name="hasta"></param>
         /// <returns></returns>
 
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion")]
         [HttpGet]
         public IActionResult ListarPorFecha([FromQuery] DateTime? desde, [FromQuery] DateTime? hasta)
         {
@@ -182,7 +182,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize]
         [HttpPost("CrearUnico")]
         public IActionResult CrearUnico([FromBody] PagoUnicoAPIDTO dto)
         {
@@ -203,7 +203,7 @@ namespace WebAPI.Controllers
         /// <param name="dto"></param>
         /// <returns></returns>
         /// 
-        [Authorize(Roles = "Gerente")]
+        [Authorize]
         [HttpPost("CrearRecurrente")]
         public IActionResult CrearRecurrente([FromBody] PagoRecurrenteAPIDTO dto)
         {
@@ -224,7 +224,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="minimo"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion")]
         [HttpGet("Precio")]
         public IActionResult PorPrecio([FromQuery] decimal minimo)
         {

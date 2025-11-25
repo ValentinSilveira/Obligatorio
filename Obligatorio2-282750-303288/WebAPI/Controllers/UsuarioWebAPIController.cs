@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
         /// Listado de usuarios
         /// </summary>
         /// <returns></returns>    
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Administracion")]
         [HttpGet("Usuarios")]
         public IActionResult Get()
         {
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Administracion")]
         [HttpGet("{id}")]
         public IActionResult GetUsuarioById(int id)
         {
@@ -100,7 +100,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion")]
         [HttpPost("Crear")]
         public IActionResult CrearUsuario([FromBody] UsuarioApiDTO dto)
         {
@@ -139,7 +139,7 @@ namespace WebAPI.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion")]
         [HttpGet("Roles")]
         public IActionResult GetRoles()
         {
@@ -157,7 +157,7 @@ namespace WebAPI.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion")]
         [HttpGet("Equipos")]
         public IActionResult GetEquipos()
         {
@@ -217,7 +217,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Administracion")]
         [HttpPut("CambiarPassword")]
         public IActionResult CambiarPassword([FromBody] UsuarioCambiarPasswordDTO dto)
         {
