@@ -154,7 +154,7 @@ namespace Web.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         Task<DetalleGastoDTO> tareaContenido =
-                            response.Content.ReadFromJsonAsync<DetalleGastoDTO>();
+                        response.Content.ReadFromJsonAsync<DetalleGastoDTO>();
                         tareaContenido.Wait();
                         detalleGasto = tareaContenido.Result;
                     }
