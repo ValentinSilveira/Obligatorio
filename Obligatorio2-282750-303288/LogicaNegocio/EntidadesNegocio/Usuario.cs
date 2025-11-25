@@ -19,8 +19,7 @@ namespace LogicaNegocio.EntidadesNegocio
         public int RolId { get; set; }
         public Rol Rol { get; set; }
         public int EquipoId { get; set; }
-        public Equipo Equipo { get; set; }
-        //dfsgdfsgsdf 
+        public Equipo Equipo { get; set; }        
         public string NombreUsuario { get; private set; }
         public string Apellido { get; private set; }
         private Usuario() { }

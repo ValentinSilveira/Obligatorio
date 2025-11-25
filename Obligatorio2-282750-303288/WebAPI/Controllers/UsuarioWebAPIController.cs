@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id}")]
         public IActionResult GetUsuarioById(int id)
         {
@@ -181,7 +181,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="usuarioLoginDTO"></param>
         /// <returns></returns>
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public IActionResult Post([FromBody] UsuarioLoginDTO usuarioLoginDTO)
         {

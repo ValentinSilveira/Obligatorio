@@ -36,13 +36,15 @@
         <thead>
             <tr>
                 <th>Nombre del Equipo</th>
+                <th>Id de equipo</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var equipo in Model)
-            {
+            {                
                 <tr>
                     <td>@equipo.Nombre</td>
+                    <td>@equipo.Id</td>
                 </tr>
             }
         </tbody>

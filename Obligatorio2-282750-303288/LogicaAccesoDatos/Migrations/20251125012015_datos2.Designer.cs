@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ObligatorioContexto))]
-    [Migration("20251123023155_ajustarRol")]
-    partial class ajustarRol
+    [Migration("20251125012015_datos2")]
+    partial class datos2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
