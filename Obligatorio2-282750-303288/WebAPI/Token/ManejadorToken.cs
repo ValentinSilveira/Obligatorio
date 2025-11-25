@@ -25,6 +25,7 @@ namespace WebAPI.Token
                 {
                     new Claim(ClaimTypes.Email, dtoUsuario.NombreUsuario),
                     new Claim(ClaimTypes.Role, dtoUsuario.Rol),
+                    new Claim("id", dtoUsuario.Id.ToString()),
 
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),

@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
         public ICUEditarGasto CUEditarGasto { get; set; }
         public ICUAuditoria CUAuditoria { get; set; }
         public GastoWebAPIController(ICUAltaGasto cUAltaGasto, ICUListadoGasto cUListadoGasto, ICUBuscarGasto cUBuscarGasto
-                                 , ICUEliminarGasto cUEliminarGasto, ICUEditarGasto cUEditarGasto, ICUAuditoria cUAuditoria)
+                                  , ICUEliminarGasto cUEliminarGasto, ICUEditarGasto cUEditarGasto, ICUAuditoria cUAuditoria)
         {
             CUAltaGasto = cUAltaGasto;
             CUListadoGasto = cUListadoGasto;
@@ -31,13 +31,12 @@ namespace WebAPI.Controllers
             CUAuditoria = cUAuditoria;
         }
 
-        
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("GetGastos")]
         public IActionResult GetGastos()
         {
@@ -57,14 +56,13 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [Authorize]
-
+        [Authorize(Roles = "Gerente")]
         [HttpPost("Crear")]
         public IActionResult Crear([FromBody] GastoDTO dto)
         {
             try
             {
-                string usuario = "UsuarioEjemplo"; 
+                string usuario = "UsuarioEjemplo";
                 CUAltaGasto.Ejecutar(dto, usuario);
 
                 return Ok("Gasto creado correctamente");
@@ -80,8 +78,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpGet("{id}")]
         public IActionResult GetGasto(int id)
         {
@@ -106,14 +103,13 @@ namespace WebAPI.Controllers
         /// <param name="id"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpPut("Editar/{id}")]
         public IActionResult Editar(int id, [FromBody] DetalleGastoDTO dto)
         {
             string usuario = "Sistema";
 
-            CUEditarGasto.Ejecutar(dto,id ,usuario);
+            CUEditarGasto.Ejecutar(dto, id, usuario);
 
             return Ok("Gasto actualizado correctamente");
         }
@@ -123,8 +119,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-       
-        [Authorize]
+        [Authorize(Roles = "Gerente")]
         [HttpDelete("Eliminar/{id}")]
         public IActionResult Eliminar(int id)
         {
