@@ -130,6 +130,14 @@ namespace WebAPI.Controllers
 
                 return Ok("Gasto eliminado correctamente");
             }
+            catch (GastoException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "Error interno");
