@@ -9,6 +9,8 @@ namespace Web.Controllers
 {
     public class GastoController : Controller
     {
+
+        //Probando algo para merge 
         // GET: GastoController
         public ActionResult Index()
         {
