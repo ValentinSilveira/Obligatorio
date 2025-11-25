@@ -5,6 +5,12 @@
     ViewData["Title"] = "Index";
 }
 
+@if (TempData["Exito"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Exito"]
+    </div>
+}
 <h1>Listado de usuarios</h1>
 
 <p>
