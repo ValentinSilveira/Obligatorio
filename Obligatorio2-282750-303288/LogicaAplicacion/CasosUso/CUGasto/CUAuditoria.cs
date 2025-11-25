@@ -16,7 +16,7 @@ namespace LogicaAplicacion.CasosUso.CUGasto
         {
             RepoAuditoria = repoAuditoria;
         }
-        public void RegistrarAuditoria(string usuario, string entidad, string operacion, string detalle)
+        public void RegistrarAuditoria(string usuario, string entidad, string operacion, string detalle, int? entidadId)
         {
             var auditoria = new Auditoria
             {
@@ -24,7 +24,8 @@ namespace LogicaAplicacion.CasosUso.CUGasto
                 Entidad = entidad,
                 Operacion = operacion,
                 Fecha = DateTime.Now,
-                Detalle = detalle
+                Detalle = detalle,
+                EntidadId = entidadId
             };
 
             RepoAuditoria.Add(auditoria);
@@ -33,6 +34,14 @@ namespace LogicaAplicacion.CasosUso.CUGasto
         public IEnumerable<Auditoria> ListarAuditorias()
         {
             return RepoAuditoria.FindAll();
+        }
+
+        public IEnumerable<Auditoria> AuditoriasPorGasto(int idGasto)
+        {
+            return RepoAuditoria
+                .FindAll()
+                .Where(a => a.Entidad == "Gasto" && a.EntidadId == idGasto)
+                .OrderByDescending(a => a.Fecha);
         }
     }
 }

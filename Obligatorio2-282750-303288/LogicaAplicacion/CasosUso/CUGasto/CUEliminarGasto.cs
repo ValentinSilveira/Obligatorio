@@ -43,7 +43,8 @@ namespace LogicaAplicacion.CasosUso.CUGastos
                 usuario,
                 "Gasto",
                 "Delete",
-                $"Se eliminó el gasto '{gasto.Nombre}' (ID {gasto.Id})"
+                $"Se eliminó el gasto '{gasto.Nombre}' (ID {gasto.Id})",
+                gasto.Id
             );
         }
     }

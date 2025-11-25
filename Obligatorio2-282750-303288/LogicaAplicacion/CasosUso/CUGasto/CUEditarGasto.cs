@@ -51,7 +51,8 @@ namespace LogicaAplicacion.CasosUso.CUGasto
                 usuario,
                 "Gasto",
                 "Edit",
-                $"Se editó el gasto '{gasto.Nombre}' (ID {gasto.Id})"
+                $"Se editó el gasto '{gasto.Nombre}' (ID {gasto.Id})",
+                gasto.Id
             );
         }
     }

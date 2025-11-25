@@ -1,0 +1,32 @@
+﻿@using Web.Models.DTOs.GastosDTO
+@model IEnumerable<AuditoriaDTO>
+
+@{
+    ViewData["Title"] = "Auditoria del Gasto";
+}
+
+<h2>Auditoría del gasto</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Operación</th>
+            <th>Fecha</th>
+            <th>Detalle</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.Usuario</td>
+                <td>@a.Operacion</td>
+                <td>@a.Fecha</td>
+                <td>@a.Detalle</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" asp-controller="Gasto" class="btn btn-secondary">Volver</a>

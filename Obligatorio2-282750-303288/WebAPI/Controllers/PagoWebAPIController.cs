@@ -159,7 +159,7 @@ namespace WebAPI.Controllers
         /// <param name="hasta"></param>
         /// <returns></returns>
 
-        [Authorize(Roles = "Gerente,Administracion")]
+        [Authorize(Roles = "Administracion,Gerente")]
         [HttpGet]
         public IActionResult ListarPorFecha([FromQuery] DateTime? desde, [FromQuery] DateTime? hasta)
         {

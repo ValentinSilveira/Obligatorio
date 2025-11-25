@@ -32,7 +32,8 @@ namespace LogicaAplicacion.CasosUso.CUGasto
                 usuario,
                 "Gasto",
                 "Update",
-                $"Se actualizó el gasto '{gasto.Nombre}' con Id {gasto.Id}"
+                $"Se actualizó el gasto '{gasto.Nombre}' con Id {gasto.Id}", 
+                gasto.Id
             );
         }
     }

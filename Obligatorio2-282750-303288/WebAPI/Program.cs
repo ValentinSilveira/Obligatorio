@@ -56,6 +56,7 @@ namespace WebAPI
             builder.Services.AddScoped<ICUPagosUnicosConMontoSuperior, CUPagosUnicosConMontoSuperior>();
             builder.Services.AddScoped<ICUCambiarPassword, CUCambiarPassword>();
 
+
             builder.Services.AddDbContext<ObligatorioContexto>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MiConexion"))
             );

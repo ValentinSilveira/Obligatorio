@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ObligatorioContexto))]
-    [Migration("20251125005820_init")]
+    [Migration("20251125210914_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -40,6 +40,9 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("EntidadId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");

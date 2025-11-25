@@ -41,5 +41,13 @@ namespace LogicaAccesoDatos.Repositorio
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<Auditoria> FindByEntidadId(int idGasto)
+        {
+            return Contexto.Auditorias
+                           .Where(a => a.Entidad == "Gasto" && a.EntidadId == idGasto)
+                           .OrderByDescending(a => a.Fecha)
+                           .ToList();
+        }
     }
 }

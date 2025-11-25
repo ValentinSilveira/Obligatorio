@@ -21,7 +21,8 @@ namespace LogicaAccesoDatos.Migrations
                     Entidad = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Operacion = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Detalle = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Detalle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EntidadId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

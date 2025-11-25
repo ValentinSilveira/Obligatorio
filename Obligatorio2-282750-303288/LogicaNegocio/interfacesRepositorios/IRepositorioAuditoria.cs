@@ -9,6 +9,6 @@ namespace LogicaNegocio.interfacesRepositorios
 {
     public interface IRepositorioAuditoria : IRepositorio<Auditoria>
     {
-        
+        IEnumerable<Auditoria> FindByEntidadId(int idGasto);
     }
 }

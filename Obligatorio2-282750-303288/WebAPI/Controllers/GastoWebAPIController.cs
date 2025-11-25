@@ -2,8 +2,10 @@
 using CasosDeUsos.DTOs.GastosDTO;
 using CasosDeUsos.InterfacesCasosUsos.IGastoCU;
 using ExcepcionesPropias.ExcepcionesEntidades;
+using LogicaAplicacion.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -107,11 +109,25 @@ namespace WebAPI.Controllers
         [HttpPut("Editar/{id}")]
         public IActionResult Editar(int id, [FromBody] DetalleGastoDTO dto)
         {
-            string usuario = "Sistema";
+            try
+            {
+                string usuario = User.FindFirst(ClaimTypes.Email)?.Value ?? "Desconocido";
+                CUEditarGasto.Ejecutar(dto, id, usuario);
 
-            CUEditarGasto.Ejecutar(dto, id, usuario);
-
-            return Ok("Gasto actualizado correctamente");
+                return Ok("Gasto actualizado correctamente");
+            }
+            catch (GastoException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
 
         /// <summary>
@@ -125,9 +141,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                string usuario = "Sistema";
+                string usuario = User.FindFirst(ClaimTypes.Email)?.Value ?? "Desconocido";
                 CUEliminarGasto.Ejecutar(id, usuario);
-
                 return Ok("Gasto eliminado correctamente");
             }
             catch (GastoException ex)
@@ -144,5 +159,20 @@ namespace WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Administracion")]
+        [HttpGet("gasto/{idGasto}")]
+        public IActionResult GetPorGasto(int idGasto)
+        {
+            var auditorias = CUAuditoria.AuditoriasPorGasto(idGasto);
+            var dto = auditorias.Select(a => new AuditoriaDTO
+            {
+                Usuario = a.Usuario,
+                Operacion = a.Operacion,
+                Fecha = a.Fecha,
+                Detalle = a.Detalle
+            });
+
+            return Ok(dto);
+        }
     }
 }
