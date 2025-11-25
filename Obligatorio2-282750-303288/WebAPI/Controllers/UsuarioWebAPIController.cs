@@ -120,7 +120,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Administracion")]
         [HttpDelete("Eliminar/{id}")]
         public IActionResult EliminarUsuario(int id)
         {
