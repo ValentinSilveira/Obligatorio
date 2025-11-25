@@ -100,7 +100,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente,Administracion")]
+        [Authorize(Roles = "Administracion,Gerente")]
         [HttpPost("Crear")]
         public IActionResult CrearUsuario([FromBody] UsuarioApiDTO dto)
         {

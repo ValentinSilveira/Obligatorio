@@ -40,7 +40,8 @@ namespace LogicaAplicacion.CasosUso.CUGastos
                 usuario,
                 "Gasto",
                 "Create",
-                $"Se creó el gasto '{gasto.Nombre}' con ID {gasto.Id}"
+                $"Se creó el gasto '{gasto.Nombre}' con ID {gasto.Id}",
+                gasto.Id
             );
         }
     }

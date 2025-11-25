@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http.Headers;
 using Web.Models.DTOs.GastosDTO;
 
@@ -125,7 +127,7 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    ViewBag.Mensaje = "Error al crear el gasto";
+                    ViewBag.Mensaje = "El Gasto con ese nombre ya existe";
                     return View(dto);
                 }
             }
@@ -156,7 +158,7 @@ namespace Web.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         Task<DetalleGastoDTO> tareaContenido =
-                            response.Content.ReadFromJsonAsync<DetalleGastoDTO>();
+                        response.Content.ReadFromJsonAsync<DetalleGastoDTO>();
                         tareaContenido.Wait();
                         detalleGasto = tareaContenido.Result;
                     }
@@ -184,7 +186,7 @@ namespace Web.Controllers
 
             if (HttpContext.Session.GetString("Token") == null)
                 return RedirectToAction("Login", "Home");
-            //string usuario = HttpContext.Session.GetString("UsuarioEmail") ?? "Desconocido";
+
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
@@ -276,6 +278,37 @@ namespace Web.Controllers
                 ViewBag.Mensaje = $"Error al eliminar el gasto: {ex.Message}";
                 return View(detalleGasto);
             }
+        }
+
+        public ActionResult AuditoriaGasto(int id)
+        {
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+
+            List<AuditoriaDTO> auditoria = new();
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7101");
+                string token = HttpContext.Session.GetString("Token");
+
+                client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+                var resp = client.GetAsync($"api/GastoWebAPI/gasto/{id}").Result;
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    string json = resp.Content.ReadAsStringAsync().Result;
+                    auditoria = JsonConvert.DeserializeObject<List<AuditoriaDTO>>(json);
+                }
+                else if (resp.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+            }
+
+            return View(auditoria);
         }
 
         public ActionResult Logout()

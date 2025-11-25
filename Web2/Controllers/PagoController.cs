@@ -17,127 +17,129 @@ namespace Web.Controllers
     {
         public ActionResult Index(DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            if (HttpContext.Session.GetString("Token") != null)
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+
+            bool filtroIntentado = Request.Query.Count > 0;
+
+            if (!fechaDesde.HasValue || !fechaHasta.HasValue)
             {
-                int? usuarioId = HttpContext.Session.GetInt32("Usuario");
-                bool filtroIntentado = Request.Query.Count > 0;
-                if (!fechaDesde.HasValue || !fechaHasta.HasValue)
-                {
-                    if (filtroIntentado)
-                        ViewBag.Error = "Debe ingresar ambas fechas para filtrar.";
+                if (filtroIntentado)
+                    ViewBag.Error = "Debe ingresar ambas fechas para filtrar.";
 
-                    ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
-                    ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
-
-                    return View(new List<ListadoPagoDTO>());
-                }
-                if (fechaDesde > fechaHasta)
-                {
-                    ViewBag.Error = "La fecha desde no puede ser mayor a la fecha hasta.";
-                    ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
-                    ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
-                    return View(new List<ListadoPagoDTO>());
-                }
                 ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
                 ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
 
-                List<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
+                return View(new List<ListadoPagoDTO>());
+            }
 
-                try
+            if (fechaDesde > fechaHasta)
+            {
+                ViewBag.Error = "La fecha desde no puede ser mayor a la fecha hasta.";
+
+                ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
+                ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
+
+                return View(new List<ListadoPagoDTO>());
+            }
+
+            ViewBag.FechaDesde = fechaDesde?.ToString("yyyy-MM-dd");
+            ViewBag.FechaHasta = fechaHasta?.ToString("yyyy-MM-dd");
+
+            List<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
                 {
-                    using (HttpClient client = new HttpClient())
-                    {
-                        client.BaseAddress = new Uri("https://localhost:7101");
-                        string token = HttpContext.Session.GetString("Token");
-                        client.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", token);
-                        string url = $"api/PagoWebAPI?desde={fechaDesde:yyyy-MM-dd}&hasta={fechaHasta:yyyy-MM-dd}";
-                        Task<HttpResponseMessage> tarea = client.GetAsync(url);
-                        tarea.Wait();
-                        HttpResponseMessage respuesta = tarea.Result;
-                        if (respuesta.IsSuccessStatusCode)
-                        {
-                            Task<string> tJson = respuesta.Content.ReadAsStringAsync();
-                            tJson.Wait();
+                    client.BaseAddress = new Uri("https://localhost:7101");
+                    string token = HttpContext.Session.GetString("Token");
 
-                            pagos = JsonConvert.DeserializeObject<List<ListadoPagoDTO>>(tJson.Result);
-                        }
-                        else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
-                        {
-                            return RedirectToAction("Login", "Home");
-                        }
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", token);
+
+                    string url = $"api/PagoWebAPI?desde={fechaDesde:yyyy-MM-dd}&hasta={fechaHasta:yyyy-MM-dd}";
+
+                    var tarea = client.GetAsync(url);
+                    tarea.Wait();
+                    var respuesta = tarea.Result;
+
+                    if (respuesta.IsSuccessStatusCode)
+                    {
+                        var tJson = respuesta.Content.ReadAsStringAsync();
+                        tJson.Wait();
+
+                        pagos = JsonConvert.DeserializeObject<List<ListadoPagoDTO>>(tJson.Result);
+                    }
+                    else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Home");
                     }
                 }
-                catch
-                {
-                    ViewBag.Mensaje = "Error";
-                }
-
-                if (!pagos.Any())
-                    ViewBag.Mensaje = "No se encontraron pagos en el rango de fechas ingresado.";
-
-                return View(pagos);
             }
-            else
+            catch
             {
-                return RedirectToAction("Login", "Home");
+                ViewBag.Mensaje = "Error";
             }
+
+            if (!pagos.Any())
+                ViewBag.Mensaje = "No se encontraron pagos en el rango de fechas ingresado.";
+
+            return View(pagos);
         }
 
         public ActionResult RangoPrecio(decimal? montoMinimo)
         {
-            if (HttpContext.Session.GetString("Token") != null)
+
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
+            if (!montoMinimo.HasValue)
             {
-                int? usuarioId = HttpContext.Session.GetInt32("Usuario");
-                if (!montoMinimo.HasValue)
-                {
-                    ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un monto." : null;
-                    return View(new List<ListadoPagoDTO>());
-                }
+                ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un monto." : null;
+                return View(new List<ListadoPagoDTO>());
+            }
 
-                List<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
+            List<ListadoPagoDTO> pagos = new List<ListadoPagoDTO>();
 
-                try
+            try
+            {
+                using (HttpClient client = new HttpClient())
                 {
-                    using (HttpClient client = new HttpClient())
+                    client.BaseAddress = new Uri("https://localhost:7101");
+                    string token = HttpContext.Session.GetString("Token");
+                    client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+                    Task<HttpResponseMessage> tarea = client.GetAsync($"api/PagoWebAPI/Precio?minimo={montoMinimo}");
+                    tarea.Wait();
+
+                    HttpResponseMessage respuesta = tarea.Result;
+
+                    if (respuesta.IsSuccessStatusCode)
                     {
-                        client.BaseAddress = new Uri("https://localhost:7101");
-                        string token = HttpContext.Session.GetString("Token");
-                        client.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", token);
-                        Task<HttpResponseMessage> tarea = client.GetAsync($"api/PagoWebAPI/Precio?minimo={montoMinimo}");
-                        tarea.Wait();
+                        Task<string> tJson = respuesta.Content.ReadAsStringAsync();
+                        tJson.Wait();
 
-                        HttpResponseMessage respuesta = tarea.Result;
-
-                        if (respuesta.IsSuccessStatusCode)
-                        {
-                            Task<string> tJson = respuesta.Content.ReadAsStringAsync();
-                            tJson.Wait();
-
-                            pagos = JsonConvert.DeserializeObject<List<ListadoPagoDTO>>(tJson.Result);
-                        }
-                        else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
-                        {
-                            return RedirectToAction("Login", "Home");
-                        }
+                        pagos = JsonConvert.DeserializeObject<List<ListadoPagoDTO>>(tJson.Result);
+                    }
+                    else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Home");
                     }
                 }
-                catch
-                {
-                    ViewBag.Mensaje = "Error";
-                }
-
-                if (!pagos.Any())
-                    ViewBag.Mensaje = $"No hay pagos mayores a {montoMinimo}.";
-
-                return View(pagos);
             }
-            else
+            catch
             {
-                return RedirectToAction("Login", "Home");
+                ViewBag.Mensaje = "Error";
             }
+
+            if (!pagos.Any())
+                ViewBag.Mensaje = $"No hay pagos mayores a {montoMinimo}.";
+
+            return View(pagos);
         }
+
+
 
         public ActionResult Details(int id)
         {
@@ -175,9 +177,10 @@ namespace Web.Controllers
 
         public ActionResult CreatePagoUnico()
         {
-            var token = HttpContext.Session.GetString("Token");
-            if (token == null)
+            if (HttpContext.Session.GetString("Token") == null)
                 return RedirectToAction("Login", "Home");
+
+            var token = HttpContext.Session.GetString("Token");
 
             PagoUnicoDTO dto = new PagoUnicoDTO
             {
@@ -212,74 +215,70 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreatePagoUnico(PagoUnicoDTO dto)
         {
-            if (HttpContext.Session.GetString("Token") != null)
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    CargarListasParaFormulario(dto);
-                    return View(dto);
-                }
-
-                int? usuarioId = HttpContext.Session.GetInt32("Usuario");
-                if (usuarioId == null)
-                {
-                    TempData["Error"] = "Debe iniciar sesión nuevamente.";
-                    return RedirectToAction("Login", "Home");
-                }
-
-                PagoUnicoDTO apiDto = new PagoUnicoDTO
-                {
-                    UsuarioId = usuarioId.Value,
-                    GastoId = dto.GastoId,
-                    Descripcion = dto.Descripcion,
-                    Monto = dto.Monto,
-                    MetodoPago = dto.MetodoPago,
-                    FechaPago = dto.FechaPago,
-                    Recibo = dto.Recibo
-                };
-
-                string token = HttpContext.Session.GetString("Token");
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("https://localhost:7101");
-                    client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
-                    Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("api/PagoWebAPI/CrearUnico", apiDto);
-                    tarea.Wait();
-
-                    HttpResponseMessage respuesta = tarea.Result;
-
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        TempData["Exito"] = "Pago único creado correctamente.";
-                        return RedirectToAction(nameof(CreatePagoUnico));
-                    }
-                    else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
-                    {
-                        return RedirectToAction("Login", "Home");
-                    }
-
-                    CargarListasParaFormulario(dto);
-
-                    Task<string> tJson = respuesta.Content.ReadAsStringAsync();
-                    tJson.Wait();
-                    ViewBag.Mensaje = tJson.Result;
-                }
-
+                CargarListasParaFormulario(dto);
                 return View(dto);
             }
-            else
+
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
+            if (usuarioId == null)
             {
+                TempData["Error"] = "Debe iniciar sesión nuevamente.";
                 return RedirectToAction("Login", "Home");
             }
+
+            PagoUnicoDTO apiDto = new PagoUnicoDTO
+            {
+                UsuarioId = usuarioId.Value,
+                GastoId = dto.GastoId,
+                Descripcion = dto.Descripcion,
+                Monto = dto.Monto,
+                MetodoPago = dto.MetodoPago,
+                FechaPago = dto.FechaPago,
+                Recibo = dto.Recibo
+            };
+
+            string token = HttpContext.Session.GetString("Token");
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7101");
+                client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+                Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("api/PagoWebAPI/CrearUnico", apiDto);
+                tarea.Wait();
+
+                HttpResponseMessage respuesta = tarea.Result;
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    TempData["Exito"] = "Pago único creado correctamente.";
+                    return RedirectToAction(nameof(CreatePagoUnico));
+                }
+                else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+                                
+                CargarListasParaFormulario(dto);       
+                
+                Task<string> tJson = respuesta.Content.ReadAsStringAsync();
+                tJson.Wait();
+                ViewBag.Mensaje = tJson.Result;
+            }
+
+            return View(dto);
         }
 
         public ActionResult CreatePagoRecurrente()
         {
-            var token = HttpContext.Session.GetString("Token");
-
-            if (token == null)
+            if (HttpContext.Session.GetString("Token") == null)
                 return RedirectToAction("Login", "Home");
+
+            var token = HttpContext.Session.GetString("Token");
 
             PagoRecurrenteDTO dto = new PagoRecurrenteDTO
             {
@@ -315,80 +314,79 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreatePagoRecurrente(PagoRecurrenteDTO dto)
         {
-            if (HttpContext.Session.GetString("Token") != null)
+
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+
+            int? usuarioId = HttpContext.Session.GetInt32("Usuario");
+            if (!ModelState.IsValid)
             {
-                int? usuarioId = HttpContext.Session.GetInt32("Usuario");
-                if (!ModelState.IsValid)
-                {
-                    CargarListasParaFormulario(dto);
-                    return View(dto);
-                }
-
-                if (dto.FechaDesde.Month == dto.FechaHasta.Month &&
-                    dto.FechaDesde.Year == dto.FechaHasta.Year)
-                {
-                    ViewBag.Mensaje = "Los meses no pueden ser iguales.";
-                    CargarListasParaFormulario(dto);
-                    return View(dto);
-                }
-
-                if (dto.FechaDesde > dto.FechaHasta)
-                {
-                    ViewBag.Mensaje = "Fecha inicio no puede ser mayor.";
-                    CargarListasParaFormulario(dto);
-                    return View(dto);
-                }
-
-                if (usuarioId == null)
-                {
-                    TempData["Error"] = "Debe iniciar sesión nuevamente.";
-                    return RedirectToAction("Login", "Home");
-                }
-
-                PagoRecurrenteDTO apiDto = new PagoRecurrenteDTO
-                {
-                    UsuarioId = usuarioId.Value,
-                    GastoId = dto.GastoId,
-                    Descripcion = dto.Descripcion,
-                    Monto = dto.Monto,
-                    MetodoPago = dto.MetodoPago,
-                    FechaDesde = dto.FechaDesde,
-                    FechaHasta = dto.FechaHasta
-                };
-
-                string token = HttpContext.Session.GetString("Token");
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("https://localhost:7101");
-                    client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
-
-                    Task<HttpResponseMessage> tarea =
-                    client.PostAsJsonAsync("api/PagoWebAPI/CrearRecurrente", apiDto);
-                    tarea.Wait();
-                    HttpResponseMessage respuesta = tarea.Result;
-
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        TempData["Exito"] = "Pago recurrente creado correctamente.";
-                        return RedirectToAction(nameof(CreatePagoRecurrente));
-                    }
-                    else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
-                    {
-                        return RedirectToAction("Login", "Home");
-                    }
-                    CargarListasParaFormulario(dto);
-
-                    Task<string> tJson = respuesta.Content.ReadAsStringAsync();
-                    tJson.Wait();
-                    ViewBag.Mensaje = tJson.Result;
-                }
+                CargarListasParaFormulario(dto);
                 return View(dto);
             }
-            else
+
+            if (dto.FechaDesde.Month == dto.FechaHasta.Month &&
+                dto.FechaDesde.Year == dto.FechaHasta.Year)
             {
+                ViewBag.Mensaje = "Los meses no pueden ser iguales.";
+                CargarListasParaFormulario(dto);
+                return View(dto);
+            }
+
+            if (dto.FechaDesde > dto.FechaHasta)
+            {
+                ViewBag.Mensaje = "Fecha inicio no puede ser mayor.";
+                CargarListasParaFormulario(dto);
+                return View(dto);
+            }
+
+            if (usuarioId == null)
+            {
+                TempData["Error"] = "Debe iniciar sesión nuevamente.";
                 return RedirectToAction("Login", "Home");
             }
+
+            PagoRecurrenteDTO apiDto = new PagoRecurrenteDTO
+            {
+                UsuarioId = usuarioId.Value,
+                GastoId = dto.GastoId,
+                Descripcion = dto.Descripcion,
+                Monto = dto.Monto,
+                MetodoPago = dto.MetodoPago,
+                FechaDesde = dto.FechaDesde,
+                FechaHasta = dto.FechaHasta
+            };
+
+            string token = HttpContext.Session.GetString("Token");
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7101");
+                client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+                Task<HttpResponseMessage> tarea =
+                client.PostAsJsonAsync("api/PagoWebAPI/CrearRecurrente", apiDto);
+                tarea.Wait();
+                HttpResponseMessage respuesta = tarea.Result;
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    TempData["Exito"] = "Pago recurrente creado correctamente.";
+                    return RedirectToAction(nameof(CreatePagoRecurrente));
+                }
+                else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+                                
+                CargarListasParaFormulario(dto);
+
+                Task<string> tJson = respuesta.Content.ReadAsStringAsync();
+                tJson.Wait();
+                ViewBag.Mensaje = tJson.Result;
+            }
+            return View(dto);
+
         }
 
         public ActionResult PagosPorUsuario()
@@ -426,26 +424,31 @@ namespace Web.Controllers
         }
 
         public ActionResult PagosUnicosMontoSuperior(decimal? monto)
-        {
-            if (HttpContext.Session.GetString("Token") != null)
+        {            
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+
+            ViewBag.Monto = monto;
+
+            if (!monto.HasValue || monto.Value <= 0)
             {
-                ViewBag.Monto = monto;
+                ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un monto válido." : null;
+                return View(new List<EquipoDTO>());
+            }
 
-                if (!monto.HasValue || monto.Value <= 0)
-                {
-                    ViewBag.Mensaje = Request.Query.Count > 0 ? "Debe ingresar un monto válido." : null;
-                    return View(new List<EquipoDTO>());
-                }
+            List<EquipoDTO> equipos = new List<EquipoDTO>();
 
-                List<EquipoDTO> equipos = new List<EquipoDTO>();
-
+            try
+            {
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
                     string token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
-                    Task<HttpResponseMessage> tarea = client.GetAsync($"api/PagoWebAPI/equipos/monto/superior/{monto.Value}");
+                        new AuthenticationHeaderValue("Bearer", token);
+
+                    Task<HttpResponseMessage> tarea =
+                        client.GetAsync($"api/PagoWebAPI/equipos/monto/superior/{monto.Value}");
                     tarea.Wait();
 
                     HttpResponseMessage respuesta = tarea.Result;
@@ -456,7 +459,8 @@ namespace Web.Controllers
                         tJson.Wait();
                         equipos = JsonConvert.DeserializeObject<List<EquipoDTO>>(tJson.Result);
                     }
-                    else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized)
+                    else if ((int)respuesta.StatusCode == StatusCodes.Status401Unauthorized ||
+                             (int)respuesta.StatusCode == StatusCodes.Status403Forbidden)
                     {
                         return RedirectToAction("Login", "Home");
                     }
@@ -467,16 +471,16 @@ namespace Web.Controllers
                         ViewBag.Mensaje = tJson.Result;
                     }
                 }
-
-                if (!equipos.Any())
-                    ViewBag.Mensaje = $"No existen equipos cuyos empleados hayan realizado pagos únicos mayores a {monto}.";
-
-                return View(equipos);
             }
-            else
+            catch
             {
-                return RedirectToAction("Login", "Home");
+                ViewBag.Mensaje = "Error inesperado.";
             }
+
+            if (!equipos.Any())
+                ViewBag.Mensaje = $"No existen equipos cuyos empleados hayan realizado pagos únicos mayores a {monto}.";
+
+            return View(equipos);
         }
 
         private void CargarListasParaFormulario(PagoRecurrenteDTO dto)
@@ -484,6 +488,10 @@ namespace Web.Controllers
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
+
+                string token = HttpContext.Session.GetString("Token");
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
 
                 var gastosResp = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
                 if (gastosResp.IsSuccessStatusCode)
@@ -501,6 +509,10 @@ namespace Web.Controllers
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7101");
+
+                string token = HttpContext.Session.GetString("Token");
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
 
                 var gastosResp = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
                 if (gastosResp.IsSuccessStatusCode)
