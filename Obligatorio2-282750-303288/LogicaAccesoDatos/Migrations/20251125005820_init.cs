@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class Obligatorio2 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,7 +77,6 @@ namespace LogicaAccesoDatos.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     RolId = table.Column<int>(type: "int", nullable: false),
-                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EquipoId = table.Column<int>(type: "int", nullable: false),
                     NombreUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -89,6 +88,12 @@ namespace LogicaAccesoDatos.Migrations
                         name: "FK_Usuarios_Equipos_EquipoId",
                         column: x => x.EquipoId,
                         principalTable: "Equipos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Roles_RolId",
+                        column: x => x.RolId,
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -149,6 +154,11 @@ namespace LogicaAccesoDatos.Migrations
                 name: "IX_Usuarios_EquipoId",
                 table: "Usuarios",
                 column: "EquipoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_RolId",
+                table: "Usuarios",
+                column: "RolId");
         }
 
         /// <inheritdoc />
@@ -161,9 +171,6 @@ namespace LogicaAccesoDatos.Migrations
                 name: "Pagos");
 
             migrationBuilder.DropTable(
-                name: "Roles");
-
-            migrationBuilder.DropTable(
                 name: "Gastos");
 
             migrationBuilder.DropTable(
@@ -171,6 +178,9 @@ namespace LogicaAccesoDatos.Migrations
 
             migrationBuilder.DropTable(
                 name: "Equipos");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
         }
     }
 }

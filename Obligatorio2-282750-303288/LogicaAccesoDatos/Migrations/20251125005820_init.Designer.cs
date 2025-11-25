@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ObligatorioContexto))]
-    [Migration("20251122205722_Obligatorio2")]
-    partial class Obligatorio2
+    [Migration("20251125005820_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -183,16 +183,14 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Rol")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("RolId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EquipoId");
+
+                    b.HasIndex("RolId");
 
                     b.ToTable("Usuarios");
                 });
@@ -255,6 +253,12 @@ namespace LogicaAccesoDatos.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("LogicaNegocio.EntidadesNegocio.Rol", "Rol")
+                        .WithMany()
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("LogicaNegocio.ValueObjects.Usuario.Password", "Password", b1 =>
                         {
                             b1.Property<int>("UsuarioId")
@@ -278,6 +282,8 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.Navigation("Password")
                         .IsRequired();
+
+                    b.Navigation("Rol");
                 });
 
             modelBuilder.Entity("LogicaNegocio.EntidadesNegocio.Equipo", b =>

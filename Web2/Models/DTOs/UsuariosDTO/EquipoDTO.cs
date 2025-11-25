@@ -8,7 +8,9 @@ namespace Web.Models.DTOs.UsuariosDTO
 {
     public class EquipoDTO
     {
-        public string Nombre;
+        public int Id { get; set; }
+
+        public string Nombre { get; set; }
         public List<UsuarioDTO> Usuarios { get; set; }
     }
 }
