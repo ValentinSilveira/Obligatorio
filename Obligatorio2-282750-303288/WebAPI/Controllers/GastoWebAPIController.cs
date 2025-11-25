@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion,Empleado")]
         [HttpGet("GetGastos")]
         public IActionResult GetGastos()
         {
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Administracion")]
         [HttpPost("Crear")]
         public IActionResult Crear([FromBody] GastoDTO dto)
         {
@@ -78,7 +78,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Administracion")]
         [HttpGet("{id}")]
         public IActionResult GetGasto(int id)
         {
@@ -103,7 +103,7 @@ namespace WebAPI.Controllers
         /// <param name="id"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion")]
         [HttpPut("Editar/{id}")]
         public IActionResult Editar(int id, [FromBody] DetalleGastoDTO dto)
         {
@@ -119,7 +119,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente,Administracion")]
         [HttpDelete("Eliminar/{id}")]
         public IActionResult Eliminar(int id)
         {

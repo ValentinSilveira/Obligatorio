@@ -9,6 +9,13 @@
 
 <h4>Gasto</h4>
 <hr />
+@if (ViewBag.Exito != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.Exito
+    </div>
+}
+
 @if (ViewBag.Mensaje != null)
 {
     <div class="alert alert-danger">
