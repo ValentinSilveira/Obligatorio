@@ -110,7 +110,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
-                    client.PostAsJsonAsync("/api/GastoWebAPI/Crear", dto);
+                client.PostAsJsonAsync("/api/GastoWebAPI/Crear", dto);
 
                 tarea.Wait();
 
@@ -132,6 +132,8 @@ namespace Web.Controllers
         // GET: GastoController/Edit/5
         public ActionResult Edit(int id)
         {
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
             try
             {
                 if (id <= 0)
@@ -143,6 +145,9 @@ namespace Web.Controllers
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://localhost:7101");
+                    string token = HttpContext.Session.GetString("Token");
+                    client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
                     Task<HttpResponseMessage> tarea = client.GetAsync($"/api/GastoWebAPI/{id}");
                     tarea.Wait();
                     HttpResponseMessage response = tarea.Result;
@@ -156,8 +161,9 @@ namespace Web.Controllers
                 }
                 if (detalleGasto == null)
                 {
-                    ViewBag.Mensaje = "No se encontró el gasto.";
-                    return RedirectToAction(nameof(Index));
+                    ModelState.Clear();
+                    ViewBag.Exito = "Gasto creado correctamente";
+                    return View(new GastoDTO());
                 }
                 return View(detalleGasto);
             }
