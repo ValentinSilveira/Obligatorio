@@ -243,17 +243,29 @@ namespace Web.Controllers
                     string token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
+                    string nombreGastoBorrado = detalleGasto.Nombre;
                     Task<HttpResponseMessage> tarea = client.DeleteAsync($"/api/GastoWebAPI/Eliminar/{id}");
                     tarea.Wait();
                     HttpResponseMessage resp = tarea.Result;
                     if (resp.IsSuccessStatusCode)
                     {
-                        TempData["Exito"] = "Gasto eliminado correctamente.";
+                        TempData["Exito"] = $"Gasto '{nombreGastoBorrado}' eliminado correctamente.";
                         return RedirectToAction(nameof(Index));
                     }
                     Task<string> tareaError = resp.Content.ReadAsStringAsync();
                     tareaError.Wait();
                     ViewBag.Mensaje = tareaError.Result;
+                    Task<HttpResponseMessage> tareaDetalle =
+                    client.GetAsync($"/api/GastoWebAPI/{id}");
+                    tareaDetalle.Wait();
+                    HttpResponseMessage respDetalle = tareaDetalle.Result;
+
+                    if (respDetalle.IsSuccessStatusCode)
+                    {
+                        detalleGasto = respDetalle.Content
+                            .ReadFromJsonAsync<DetalleGastoDTO>()
+                            .Result;
+                    }
                     return View(detalleGasto);
                 }
             }

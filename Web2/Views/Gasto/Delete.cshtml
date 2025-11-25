@@ -1,5 +1,4 @@
-﻿
-@using Web.Models.DTOs.GastosDTO
+﻿@using Web.Models.DTOs.GastosDTO
 @model DetalleGastoDTO
 
 @{
@@ -45,9 +44,11 @@
             @Html.DisplayFor(model => model.Descripcion)
         </dd>
     </dl>
-
     <form asp-action="Delete" method="post">
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Nombre" />
+        <input type="hidden" asp-for="Descripcion" />
+
         <input type="submit" value="Eliminar" class="btn btn-danger" /> |
         <a asp-action="Index" class="btn btn-secondary">Volver</a>
     </form>
