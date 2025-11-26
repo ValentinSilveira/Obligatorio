@@ -315,6 +315,38 @@ namespace Web.Controllers
             return View(auditoria);
         }
 
+        public ActionResult Historial()
+        {
+            if (HttpContext.Session.GetString("Token") == null)
+                return RedirectToAction("Login", "Home");
+
+            List<AuditoriaDTO> auditoria = new();
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(urlBase);
+                string token = HttpContext.Session.GetString("Token");
+
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+
+                var resp = client.GetAsync("GastoWebAPI/gasto/eliminados").Result;
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    string json = resp.Content.ReadAsStringAsync().Result;
+                    auditoria = JsonConvert.DeserializeObject<List<AuditoriaDTO>>(json);
+                }
+                else if (resp.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+            }
+
+            return View(auditoria);
+        }
+
+
         public ActionResult Logout()
         {
             HttpContext.Session.Clear();

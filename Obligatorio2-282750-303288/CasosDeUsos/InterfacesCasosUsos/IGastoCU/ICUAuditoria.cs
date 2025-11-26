@@ -10,6 +10,7 @@ namespace CasosDeUsos.InterfacesCasosUsos.IGastoCU
     public interface ICUAuditoria
     {
         IEnumerable<Auditoria> AuditoriasPorGasto(int idGasto);
+        IEnumerable<Auditoria> ListarAuditorias();
         void RegistrarAuditoria(string usuario, string entidad, string operacion, string detalle, int? entidadId);
     }
 }

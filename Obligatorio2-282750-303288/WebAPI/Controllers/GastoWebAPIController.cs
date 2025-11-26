@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                string usuario = "UsuarioEjemplo";
+                string usuario = User.FindFirst(ClaimTypes.Email)?.Value ?? "Desconocido";
                 CUAltaGasto.Ejecutar(dto, usuario);
 
                 return Ok("Gasto creado correctamente");
@@ -173,6 +173,27 @@ namespace WebAPI.Controllers
             });
 
             return Ok(dto);
+        }
+
+        [Authorize(Roles = "Administracion")]
+        [HttpGet("gasto/eliminados")]
+        public IActionResult AuditoriasGastosEliminados()
+        {
+            var todas = CUAuditoria.ListarAuditorias()
+                                 .Where(a => a.Entidad == "Gasto");
+
+            var idsEliminados = todas
+                        .Where(a => a.Operacion == "Delete")
+                        .Select(a => a.EntidadId)
+                        .Distinct()
+                        .ToList();
+
+            var historial = todas
+                            .Where(a => idsEliminados.Contains(a.EntidadId))
+                            .OrderBy(a => a.EntidadId)
+                            .ThenByDescending(a => a.Fecha);
+
+            return Ok(MapperAuditoria.ListToDTO(historial));
         }
     }
 }
