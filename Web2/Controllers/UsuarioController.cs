@@ -69,7 +69,7 @@ namespace Web.Controllers
                 var token = HttpContext.Session.GetString("Token");
 
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:7101");
+                client.BaseAddress = new Uri(urlBase);
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
@@ -122,7 +122,7 @@ namespace Web.Controllers
 
                 using (HttpClient client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101");
+                    client.BaseAddress = new Uri(urlBase);
                     client.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", token);
 
@@ -266,7 +266,7 @@ namespace Web.Controllers
 
                 using (HttpClient client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101");
+                    client.BaseAddress = new Uri(urlBase);
                     client.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", token);
 
@@ -315,7 +315,7 @@ namespace Web.Controllers
 
                 using (HttpClient client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101");
+                    client.BaseAddress = new Uri(urlBase);
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
                     string emailBorrado = detalleUsuario.Email;
@@ -371,7 +371,7 @@ namespace Web.Controllers
 
                 using (HttpClient client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101");
+                    client.BaseAddress = new Uri(urlBase);
                     client.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", token);
 

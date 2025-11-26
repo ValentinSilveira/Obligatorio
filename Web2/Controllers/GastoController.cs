@@ -11,7 +11,11 @@ namespace Web.Controllers
 {
     public class GastoController : Controller
     {
-
+        public string urlBase = "";
+        public GastoController(IConfiguration configuracion)
+        {            
+            urlBase = configuracion.GetValue<string>("UrlBase") + "GastoWebAPI";
+        }
         //Probando algo para merge 
         // GET: GastoController
         public ActionResult Index()
@@ -24,7 +28,7 @@ namespace Web.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101");
+                    client.BaseAddress = new Uri(urlBase);
                     string token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
@@ -62,7 +66,7 @@ namespace Web.Controllers
 
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
+                client.BaseAddress = new Uri(urlBase);
                 string token = HttpContext.Session.GetString("Token");
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
@@ -109,7 +113,7 @@ namespace Web.Controllers
 
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
+                client.BaseAddress = new Uri(urlBase);
                 string token = HttpContext.Session.GetString("Token");
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
@@ -148,7 +152,7 @@ namespace Web.Controllers
                 DetalleGastoDTO detalleGasto = null;
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101");
+                    client.BaseAddress = new Uri(urlBase);
                     string token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
@@ -189,7 +193,7 @@ namespace Web.Controllers
 
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
+                client.BaseAddress = new Uri(urlBase);
                 string token = HttpContext.Session.GetString("Token");
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
@@ -218,7 +222,7 @@ namespace Web.Controllers
             DetalleGastoDTO dto = new DetalleGastoDTO();
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
+                client.BaseAddress = new Uri(urlBase);
                 string token = HttpContext.Session.GetString("Token");
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
@@ -243,7 +247,7 @@ namespace Web.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7101");
+                    client.BaseAddress = new Uri(urlBase);
                     string token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
@@ -289,7 +293,7 @@ namespace Web.Controllers
 
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:7101");
+                client.BaseAddress = new Uri(urlBase);
                 string token = HttpContext.Session.GetString("Token");
 
                 client.DefaultRequestHeaders.Authorization =
