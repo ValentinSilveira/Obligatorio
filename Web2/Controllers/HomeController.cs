@@ -15,7 +15,7 @@ namespace Web.Controllers
         public HomeController(ILogger<HomeController> logger, IConfiguration configuracion)
         {
             _logger = logger;
-            urlBase = configuracion.GetValue<string>("UrlBase") + "UsuarioWebAPI";
+            urlBase = configuracion.GetValue<string>("urlBase") + "UsuarioWebAPI";
         }
 
         public IActionResult Index()

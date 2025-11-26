@@ -18,7 +18,7 @@ namespace Web.Controllers
         public string urlBase = "";
         public PagoController(IConfiguration configuracion)
         {
-            urlBase = configuracion.GetValue<string>("UrlBase") + "PagoWebAPI";
+            urlBase = configuracion.GetValue<string>("urlBase") + "PagoWebAPI";
         }
         public ActionResult Index(DateTime? fechaDesde, DateTime? fechaHasta)
         {
@@ -63,7 +63,7 @@ namespace Web.Controllers
                     client.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", token);
 
-                    string url = $"api/PagoWebAPI?desde={fechaDesde:yyyy-MM-dd}&hasta={fechaHasta:yyyy-MM-dd}";
+                    string url = $"PagoWebAPI?desde={fechaDesde:yyyy-MM-dd}&hasta={fechaHasta:yyyy-MM-dd}";
 
                     var tarea = client.GetAsync(url);
                     tarea.Wait();
@@ -115,7 +115,7 @@ namespace Web.Controllers
                     string token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
-                    Task<HttpResponseMessage> tarea = client.GetAsync($"api/PagoWebAPI/Precio?minimo={montoMinimo}");
+                    Task<HttpResponseMessage> tarea = client.GetAsync($"PagoWebAPI/Precio?minimo={montoMinimo}");
                     tarea.Wait();
 
                     HttpResponseMessage respuesta = tarea.Result;
@@ -161,7 +161,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
-                var resp = client.GetAsync($"api/PagoWebAPI/pago/id/{id}").Result;
+                var resp = client.GetAsync($"PagoWebAPI/pago/id/{id}").Result;
 
                 if (resp.IsSuccessStatusCode)
                 {
@@ -199,7 +199,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
-                var resp = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
+                var resp = client.GetAsync("GastoWebAPI/GetGastos").Result;
 
                 if (resp.IsSuccessStatusCode)
                 {
@@ -253,7 +253,7 @@ namespace Web.Controllers
                 client.BaseAddress = new Uri(urlBase);
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
-                Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("api/PagoWebAPI/CrearUnico", apiDto);
+                Task<HttpResponseMessage> tarea = client.PostAsJsonAsync("PagoWebAPI/CrearUnico", apiDto);
                 tarea.Wait();
 
                 HttpResponseMessage respuesta = tarea.Result;
@@ -298,7 +298,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
-                var resp = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
+                var resp = client.GetAsync("GastoWebAPI/GetGastos").Result;
 
                 if (resp.IsSuccessStatusCode)
                 {
@@ -370,7 +370,7 @@ namespace Web.Controllers
                 new AuthenticationHeaderValue("Bearer", token);
 
                 Task<HttpResponseMessage> tarea =
-                client.PostAsJsonAsync("api/PagoWebAPI/CrearRecurrente", apiDto);
+                client.PostAsJsonAsync("PagoWebAPI/CrearRecurrente", apiDto);
                 tarea.Wait();
                 HttpResponseMessage respuesta = tarea.Result;
 
@@ -409,7 +409,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
-                var resp = client.GetAsync("api/PagoWebAPI/mis-pagos").Result;
+                var resp = client.GetAsync("PagoWebAPI/mis-pagos").Result;
 
                 if (resp.IsSuccessStatusCode)
                 {
@@ -453,7 +453,7 @@ namespace Web.Controllers
                         new AuthenticationHeaderValue("Bearer", token);
 
                     Task<HttpResponseMessage> tarea =
-                        client.GetAsync($"api/PagoWebAPI/equipos/monto/superior/{monto.Value}");
+                        client.GetAsync($"PagoWebAPI/equipos/monto/superior/{monto.Value}");
                     tarea.Wait();
 
                     HttpResponseMessage respuesta = tarea.Result;
@@ -498,7 +498,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
-                var gastosResp = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
+                var gastosResp = client.GetAsync("GastoWebAPI/GetGastos").Result;
                 if (gastosResp.IsSuccessStatusCode)
                 {
                     var json = gastosResp.Content.ReadAsStringAsync().Result;
@@ -519,7 +519,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
-                var gastosResp = client.GetAsync("api/GastoWebAPI/GetGastos").Result;
+                var gastosResp = client.GetAsync("GastoWebAPI/GetGastos").Result;
                 if (gastosResp.IsSuccessStatusCode)
                 {
                     var json = gastosResp.Content.ReadAsStringAsync().Result;

@@ -14,7 +14,7 @@ namespace Web.Controllers
         public string urlBase = "";
         public GastoController(IConfiguration configuracion)
         {            
-            urlBase = configuracion.GetValue<string>("UrlBase") + "GastoWebAPI";
+            urlBase = configuracion.GetValue<string>("urlBase") + "GastoWebAPI";
         }
         //Probando algo para merge 
         // GET: GastoController
@@ -32,7 +32,7 @@ namespace Web.Controllers
                     string token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
-                    Task<HttpResponseMessage> tarea = client.GetAsync("api/GastoWebAPI/GetGastos");
+                    Task<HttpResponseMessage> tarea = client.GetAsync("GastoWebAPI/GetGastos");
                     tarea.Wait();
                     HttpResponseMessage respuesta = tarea.Result;
 
@@ -71,7 +71,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
-                client.GetAsync($"/api/GastoWebAPI/{id}");
+                client.GetAsync($"GastoWebAPI/{id}");
                 tarea.Wait();
 
                 var resp = tarea.Result;
@@ -118,7 +118,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
-                client.PostAsJsonAsync("/api/GastoWebAPI/Crear", dto);
+                client.PostAsJsonAsync("GastoWebAPI/Crear", dto);
 
                 tarea.Wait();
 
@@ -156,7 +156,7 @@ namespace Web.Controllers
                     string token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
-                    Task<HttpResponseMessage> tarea = client.GetAsync($"/api/GastoWebAPI/{id}");
+                    Task<HttpResponseMessage> tarea = client.GetAsync($"GastoWebAPI/{id}");
                     tarea.Wait();
                     HttpResponseMessage response = tarea.Result;
                     if (response.IsSuccessStatusCode)
@@ -198,7 +198,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
-                client.PutAsJsonAsync($"/api/GastoWebAPI/Editar/{id}", detalleGasto);
+                client.PutAsJsonAsync($"GastoWebAPI/Editar/{id}", detalleGasto);
                 tarea.Wait();
                 HttpResponseMessage resp = tarea.Result;
                 if (resp.IsSuccessStatusCode)
@@ -227,7 +227,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
                 Task<HttpResponseMessage> tarea =
-                client.GetAsync($"/api/GastoWebAPI/{id}");
+                client.GetAsync($"GastoWebAPI/{id}");
                 tarea.Wait();
                 if (tarea.Result.IsSuccessStatusCode)
                     dto = tarea.Result.Content.ReadFromJsonAsync<DetalleGastoDTO>().Result;
@@ -252,7 +252,7 @@ namespace Web.Controllers
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
                     string nombreGastoBorrado = detalleGasto.Nombre;
-                    Task<HttpResponseMessage> tarea = client.DeleteAsync($"/api/GastoWebAPI/Eliminar/{id}");
+                    Task<HttpResponseMessage> tarea = client.DeleteAsync($"GastoWebAPI/Eliminar/{id}");
                     tarea.Wait();
                     HttpResponseMessage resp = tarea.Result;
                     if (resp.IsSuccessStatusCode)
@@ -264,7 +264,7 @@ namespace Web.Controllers
                     tareaError.Wait();
                     ViewBag.Mensaje = tareaError.Result;
                     Task<HttpResponseMessage> tareaDetalle =
-                    client.GetAsync($"/api/GastoWebAPI/{id}");
+                    client.GetAsync($"GastoWebAPI/{id}");
                     tareaDetalle.Wait();
                     HttpResponseMessage respDetalle = tareaDetalle.Result;
 
@@ -299,7 +299,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-                var resp = client.GetAsync($"api/GastoWebAPI/gasto/{id}").Result;
+                var resp = client.GetAsync($"GastoWebAPI/gasto/{id}").Result;
 
                 if (resp.IsSuccessStatusCode)
                 {

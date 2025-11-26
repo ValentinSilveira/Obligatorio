@@ -14,7 +14,7 @@ namespace Web.Controllers
         public string urlBase = "";
         public UsuarioController(IConfiguration configuracion)
         {
-            urlBase = configuracion.GetValue<string>("UrlBase") + "UsuarioWebAPI";
+            urlBase = configuracion.GetValue<string>("urlBase") + "UsuarioWebAPI";
         }
         // GET: UsuarioController        
         public ActionResult Index()
@@ -31,7 +31,7 @@ namespace Web.Controllers
                     HttpClient client = new HttpClient();
                     client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
-                    Task<HttpResponseMessage> tarea = client.GetAsync("https://localhost:7101/api/UsuarioWebAPI/Usuarios");
+                    Task<HttpResponseMessage> tarea = client.GetAsync("https://apiobligatoriop3-hrafdzfnd0b7hghf.brazilsouth-01.azurewebsites.net/api/UsuarioWebAPI/Usuarios");
                     tarea.Wait();
                     HttpResponseMessage respuesta = tarea.Result;
                     if (respuesta.IsSuccessStatusCode)
@@ -73,7 +73,7 @@ namespace Web.Controllers
                 client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-                Task<HttpResponseMessage> tarea = client.GetAsync($"api/UsuarioWebAPI/{id}");
+                Task<HttpResponseMessage> tarea = client.GetAsync($"UsuarioWebAPI/{id}");
                 tarea.Wait();
 
                 HttpResponseMessage respuesta = tarea.Result;
@@ -126,7 +126,7 @@ namespace Web.Controllers
                     client.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", token);
 
-                    var tareaRoles = client.GetAsync("api/UsuarioWebAPI/Roles");
+                    var tareaRoles = client.GetAsync("UsuarioWebAPI/Roles");//agrego $
                     tareaRoles.Wait();
                     var respuestaRoles = tareaRoles.Result;
 
@@ -140,7 +140,7 @@ namespace Web.Controllers
                         return RedirectToAction("Login", "Home");
                     }
 
-                    var tareaEquipos = client.GetAsync("api/UsuarioWebAPI/Equipos");
+                    var tareaEquipos = client.GetAsync("UsuarioWebAPI/Equipos");//aca tmb
                     tareaEquipos.Wait();
                     var respuestaEquipo = tareaEquipos.Result;
 
@@ -271,7 +271,7 @@ namespace Web.Controllers
                         new AuthenticationHeaderValue("Bearer", token);
 
                     Task<HttpResponseMessage> tarea =
-                        client.GetAsync($"api/UsuarioWebAPI/{id}");
+                        client.GetAsync($"UsuarioWebAPI/{id}");
                     tarea.Wait();
 
                     HttpResponseMessage respuesta = tarea.Result;
@@ -320,7 +320,7 @@ namespace Web.Controllers
                     new AuthenticationHeaderValue("Bearer", token);
                     string emailBorrado = detalleUsuario.Email;
                     Task<HttpResponseMessage> tarea =
-                    client.DeleteAsync($"api/UsuarioWebAPI/Eliminar/{id}");
+                    client.DeleteAsync($"UsuarioWebAPI/Eliminar/{id}");
                     tarea.Wait();
 
                     HttpResponseMessage resp = tarea.Result;
@@ -376,7 +376,7 @@ namespace Web.Controllers
                         new AuthenticationHeaderValue("Bearer", token);
 
                     Task<HttpResponseMessage> solicitud =
-                        client.PutAsJsonAsync("api/UsuarioWebAPI/CambiarPassword", dto);
+                        client.PutAsJsonAsync("UsuarioWebAPI/CambiarPassword", dto); //aca tmb
                     solicitud.Wait();
 
                     HttpResponseMessage respuesta = solicitud.Result;
@@ -419,7 +419,7 @@ namespace Web.Controllers
                 {
                     client.BaseAddress = new Uri(urlBase.Replace("UsuarioWebAPI", ""));
 
-                    Task<HttpResponseMessage> tareaRoles = client.GetAsync("UsuarioWebAPI/Roles");
+                    Task<HttpResponseMessage> tareaRoles = client.GetAsync("UsuarioWebAPI/Roles");//aca tmb
                     tareaRoles.Wait();
                     if (tareaRoles.Result.IsSuccessStatusCode)
                     {
@@ -428,7 +428,7 @@ namespace Web.Controllers
                         usuarioDTO.Roles = contenido.Result;
                     }
 
-                    Task<HttpResponseMessage> tareaEquipos = client.GetAsync("UsuarioWebAPI/Equipos");
+                    Task<HttpResponseMessage> tareaEquipos = client.GetAsync("UsuarioWebAPI/Equipos"); // aca tmb
                     tareaEquipos.Wait();
                     if (tareaEquipos.Result.IsSuccessStatusCode)
                     {
