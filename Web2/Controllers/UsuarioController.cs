@@ -132,8 +132,13 @@ namespace Web.Controllers
 
                     if (respuestaRoles.IsSuccessStatusCode)
                     {
-                        usuarioDTO.Roles = respuestaRoles.Content
-                            .ReadFromJsonAsync<List<ListadoRolDTO>>().Result;
+                        var roles = respuestaRoles.Content
+                        .ReadFromJsonAsync<List<ListadoRolDTO>>().Result;
+
+                        usuarioDTO.Roles = roles
+                            .Where(r => r.Descripcion == "Gerente" ||
+                                        r.Descripcion == "Empleado")
+                            .ToList();
                     }
                     else if (respuestaRoles.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
